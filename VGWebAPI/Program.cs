@@ -55,6 +55,7 @@ namespace VGWebAPI
                         await Infrastructure.Persistence.Seeds.DefaultSuperAdmin.SeedAsync(userManager, roleManager);
                     }
 
+
                     //Seed Default Entities
                     //dbInitializer.Initialize();
                     dbInitializer.SeedStatesandLGAs();
@@ -64,8 +65,6 @@ namespace VGWebAPI
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message.ToString());
-                    Console.WriteLine(ex.StackTrace);
                     Log.Warning(ex, "An error occurred seeding the DB");
                 }
                 finally

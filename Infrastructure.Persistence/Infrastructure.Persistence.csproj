@@ -31,9 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Models\AppTroopers\Curfew\" />
-    <Folder Include="Models\AppTroopers\Missing\" />
-    <Folder Include="Models\AppTroopers\Panic\" />
-    <Folder Include="Models\AppTroopers\Wanted\" />
   </ItemGroup>
 
 </Project>
