@@ -22,7 +22,7 @@ namespace Domain.Entities.AppTroopers.SecurityTip
         [ForeignKey("AdminAuthorizerID")]
         public virtual ApplicationUser AdminAuthorizer { get; set; }
 
-        //VGNGA Authorizer
+        //VGNGA Authorized
         public bool isVGNGAAuthorized { get; set; }
         public string VGNGAAuthorizerID { get; set; }
 
