@@ -37,7 +37,7 @@ namespace Infrastructure.Identity
                     configuration.GetConnectionString("IdentityConnection"),
                     b => b.MigrationsAssembly(typeof(IdentityContext).Assembly.FullName)));
             }
-            services.AddIdentity<ApplicationUser, IdentityRole>(opt =>
+            services.AddIdentity<ApplicationUserr, IdentityRole>(opt =>
             {
 
                 opt.Password.RequireDigit = false;

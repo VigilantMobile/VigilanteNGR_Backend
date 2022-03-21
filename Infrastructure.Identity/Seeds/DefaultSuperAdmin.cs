@@ -15,7 +15,7 @@ namespace Infrastructure.Identity.Seeds
 {
     public static class DefaultSuperAdmin
     {
-        public static async Task SeedAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedAsync(UserManager<ApplicationUserr> userManager, RoleManager<IdentityRole> roleManager)
         {
             var superAdminRoleClaim = new Claim("Role", "SuperAdmin");
             var godModeClaim = new Claim("SuperAccess", "GodMode");
@@ -28,7 +28,7 @@ namespace Infrastructure.Identity.Seeds
             var canConfigureSettingsCreateClaim = new Claim("CanConfigureSettings", "settings.create");
 
             //Seed Default User
-            var superAdminUser = new ApplicationUser
+            var superAdminUser = new ApplicationUserr
             {
                 UserName = "superadmin",
                 Email = "anthony.odu@hotmail.com",

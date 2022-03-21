@@ -32,6 +32,7 @@ namespace Domain.Entities.AppTroopers.Missing
 
         //Admin Authorization
         public bool isAdminAuthorized { get; set; } 
+
         public string AdminAuthorizerID { get; set; }
         [ForeignKey("AdminAuthorizerID")]
         public virtual ApplicationUser AdminAuthorizer { get; set; }

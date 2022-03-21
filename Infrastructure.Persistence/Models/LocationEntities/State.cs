@@ -1,6 +1,7 @@
 ﻿using Domain.Common;
 using Domain.Entities.AppTroopers.SecurityTip;
 using Infrastructure.Persistence.Models.Identity;
+using Infrastructure.Persistence.Models.Identity.Location;
 using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
@@ -16,15 +17,15 @@ namespace Infrastructure.Persistence.Models.LocationEntities
         public string NPFStatePhone { get; set; }
         public string NPFStateAuthorityAddress { get; set; }
 
-        [ForeignKey("ApplicationUser")]
-        public string StateSuperAdminId { get; set; }
-        public virtual ICollection<ApplicationUser> NPFOperators { get; set; }
-        public virtual ICollection<ApplicationUser> NPFAdmins { get; set; }
-        public virtual ICollection<ApplicationUser> VigilanteOperators { get; set; }
-        public virtual ICollection<ApplicationUser> VigilanteAdmins { get; set; }
-        public int? SecurityTipId { get; set; }
+        // NPF Users
+        public virtual ICollection<NPFStateOperator> NPFStateOperators { get; set; }
+        public virtual ICollection<NPFStateAdmin> NPFStateAdmins { get; set; }
 
-        public virtual SecurityTip SecurityTip { get; set; }
+        // VGNGA Users
+
+        // Official Vigilante Users
+
+        public ICollection<SecurityTip> SecurityTips { get; set; }
         public decimal shapeLength { get; set; }
         public decimal shapeArea { get; set; }
         public Geometry Boundary { get; set; }

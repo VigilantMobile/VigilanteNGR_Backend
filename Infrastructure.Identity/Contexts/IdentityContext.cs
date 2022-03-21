@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Infrastructure.Identity.Contexts
 {
-    public class IdentityContext : IdentityDbContext<ApplicationUser>
+    public class IdentityContext : IdentityDbContext<ApplicationUserr>
     {
         public DbSet<CustomClaims> CustomClaims { get; set; }
         public IdentityContext(DbContextOptions<IdentityContext> options) : base(options)
@@ -20,7 +20,7 @@ namespace Infrastructure.Identity.Contexts
 
             builder.HasDefaultSchema("Identity");
 
-            builder.Entity<ApplicationUser>(entity =>
+            builder.Entity<ApplicationUserr>(entity =>
             {
                 entity.ToTable(name: "User");
             });

@@ -12,7 +12,7 @@ namespace Domain.Entities.AppTroopers.Panic
 {
     public class Panic : AuditableBaseEntity
     {
-        public string IniatiatorId { get; set; }
+        public string ApplicationUserId { get; set; }
         public virtual ApplicationUser Initiator { get; set; }
         public string PanicStatus { get; set; }
         public int CommuteId { get; set; }

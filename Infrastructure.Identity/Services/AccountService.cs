@@ -33,9 +33,9 @@ namespace Infrastructure.Identity.Services
     {
         private readonly IdentityContext _context;
 
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<ApplicationUserr> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly SignInManager<ApplicationUserr> _signInManager;
         private readonly IEmailService _emailService;
         private readonly JWTSettings _jwtSettings;
         private readonly VGNGAEmailSenders _emailSenderAddresses;
@@ -43,12 +43,12 @@ namespace Infrastructure.Identity.Services
         private readonly IRandomNumberGeneratorInterface _randomNumberGenerator;
         private IHttpContextAccessor _accessor;
 
-        public AccountService(UserManager<ApplicationUser> userManager,
+        public AccountService(UserManager<ApplicationUserr> userManager,
             RoleManager<IdentityRole> roleManager,
             IOptions<JWTSettings> jwtSettings,
             IOptions<VGNGAEmailSenders> emailSenderAddresses,
             IDateTimeService dateTimeService,
-            SignInManager<ApplicationUser> signInManager,
+            SignInManager<ApplicationUserr> signInManager,
             IEmailService emailService,
             IRandomNumberGeneratorInterface randomNumberGenerator,
             IdentityContext context,
@@ -137,7 +137,7 @@ namespace Infrastructure.Identity.Services
 
                 //throw new ApiException($"User already exists.");
             }
-            var user = new ApplicationUser
+            var user = new ApplicationUserr
             {
 
                 Email = request.Email,
@@ -202,7 +202,7 @@ namespace Infrastructure.Identity.Services
 
             string defaultPassword = _randomNumberGenerator.GenerateRandomNumber(6, Mode.AlphaNumeric);
 
-            var user = new ApplicationUser
+            var user = new ApplicationUserr
             {
                 Email = request.Email,
                 FirstName = request.FirstName,
@@ -260,7 +260,7 @@ namespace Infrastructure.Identity.Services
 
 
 
-        private async Task<JwtSecurityToken> GenerateJWToken(ApplicationUser user)
+        private async Task<JwtSecurityToken> GenerateJWToken(ApplicationUserr user)
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
@@ -308,7 +308,7 @@ namespace Infrastructure.Identity.Services
             return BitConverter.ToString(randomBytes).Replace("-", "");
         }
 
-        private async Task<string> SendVerificationEmail(ApplicationUser user, string origin)
+        private async Task<string> SendVerificationEmail(ApplicationUserr user, string origin)
         {
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -474,7 +474,7 @@ namespace Infrastructure.Identity.Services
 
 
 
-        public ApplicationUser GetById(string id)
+        public ApplicationUserr GetById(string id)
         {
             return _context.Users.Find(id);
         }
