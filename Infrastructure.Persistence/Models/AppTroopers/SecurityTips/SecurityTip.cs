@@ -18,18 +18,16 @@ namespace Domain.Entities.AppTroopers.SecurityTip
 
         //Admin Authorizer
         public bool isAdminAuthorized { get; set; } // 
+
+
+        [ForeignKey("VGNGAStaffAuthorizer")]
         public string AdminAuthorizerID { get; set; }
-        [ForeignKey("AdminAuthorizerID")]
-        public virtual ApplicationUser AdminAuthorizer { get; set; }
+        public virtual VGNGAStaff VGNGAStaffAuthorizer { get; set; }
 
-        //VGNGA Authorized
-        public bool isVGNGAAuthorized { get; set; }
-        public string VGNGAAuthorizerID { get; set; }
 
-        [ForeignKey("VGNGAAuthorizerID")]
-        public virtual ApplicationUser VGNGAAuthorizer { get; set; }
 
-        //Coverage Type - based on broadcaster
+
+        //Coverage Type - based on broadcaster => Nullable for each or Generic
         [ForeignKey("Settlement")]
         public int? SettlementId { get; set; }
 

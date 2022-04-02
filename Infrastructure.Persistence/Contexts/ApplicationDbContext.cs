@@ -1,10 +1,16 @@
 ﻿using Application.Interfaces;
 using Domain.Common;
 using Domain.Entities;
+using Domain.Entities.AppTroopers.Missing;
+using Domain.Entities.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.Wanted;
+using Domain.Entities.CompanyEntities;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Models;
+using Infrastructure.Persistence.Models.AppTroopers.Curfew;
 using Infrastructure.Persistence.Models.Identity;
+using Infrastructure.Persistence.Models.Identity.Location;
 using Infrastructure.Persistence.Models.LocationEntities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -34,9 +40,21 @@ namespace Infrastructure.Persistence.Contexts
         public DbSet<DemographicEntitiesCoordinatesJSON>  demographicEntitiesCoordinatesJSONs { get; set; }
 
         //Identity
-        public DbSet<State> States { get; set; }
         public DbSet<CustomClaims> CustomClaims { get; set; }
-
+        //state
+        public DbSet<NPFStateAdmin> NPFStateAdmins { get; set; }
+        public DbSet<NPFStateOperator> NPFStateOperator { get; set; }
+        //lga
+        public DbSet<NPFLGAAdmin> NPFLGAAdmin { get; set; }
+        public DbSet<NPFLGAOperator> NPFLGAOperator { get; set; }
+        //town
+        public DbSet<NPFTownAdmin> NPFTownAdmin { get; set; }
+        public DbSet<NPFTownOperator> NPFTownOperator { get; set; }
+        //settlement
+        public DbSet<NPFSettlementAdmin> NPFSettlementAdmin { get; set; }
+        public DbSet<NPFSettlementOperator> NPFSettlementOperator { get; set; }
+        // staff
+        public DbSet<VGNGAStaff> VGNGAStaff { get; set; }
 
 
         //Location
@@ -44,19 +62,40 @@ namespace Infrastructure.Persistence.Contexts
         public DbSet<LGA> LGAs { get; set; }
         public DbSet<Town> Towns { get; set; }
         public DbSet<Settlement> Settlements { get; set; }
+        public DbSet<LGABoundaryPoints> LGABoundaryPoints { get; set; }
+        public DbSet<TownBoundaryPoints> TownBoundaryPoints { get; set; }
 
-        //Identity
 
         //App Troopers
+        //Security Tip
         public DbSet<SecurityTipCategory> SecurityTipCategories { get; set; }
-        public DbSet<SecurityTip> SecurityTips { get; set; }
-        //
+        public DbSet<SecurityTip> SecurityTips { get; set; }        //
         public DbSet<BroadcasterType> BroadcasterTypes { get; set; }
         public DbSet<BroadcastLevel> BroadcastLevels { get; set; }
         public DbSet<AlertLevel> AlertLevels { get; set; }
 
+        //Panic
+        public DbSet<Panic> PanicRecords { get; set; }
+        public DbSet<Commute> CommuteRecords { get; set; }
+
+        //Curfew
+        public DbSet<StateCurfew> StateCurfew { get; set; }
+        public DbSet<LGACurfew> LGACurfew { get; set; }
+        public DbSet<TownCurfew> TownCurfew { get; set; }
+        public DbSet<SettlementCurfew> SettlementCurfew { get; set; }
+
+        //Missing
+        public DbSet<MissingPerson> MissingPerson { get; set; }
+        public DbSet<MissingItem> MissingItem { get; set; }
+
+        //Wanted
+        public DbSet<WantedPerson> WantedPerson { get; set; }
+
         //Audit
         public DbSet<Audit> AuditLogs { get; set; }
+
+        //Department
+        public DbSet<Department> Departments { get; set; }
 
         //Test
         public DbSet<Product> Products { get; set; }

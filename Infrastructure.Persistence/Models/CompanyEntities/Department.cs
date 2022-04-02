@@ -1,4 +1,5 @@
 ﻿using Domain.Common;
+using Infrastructure.Persistence.Models.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,10 +14,12 @@ namespace Domain.Entities.CompanyEntities
         public string Email { get; set; }
         public string Phone { get; set; }
 
-        [ForeignKey("ApplicationUser")]
+        [ForeignKey("HOD")]
         public string HodId { get; set; }
+        public virtual VGNGAStaff HOD { get; set; }
 
-        [ForeignKey("ApplicationUser")]
+        [ForeignKey("Secretary")]
         public string SecretaryId { get; set; }
+        public virtual VGNGAStaff Secretary { get; set; }
     }
 }

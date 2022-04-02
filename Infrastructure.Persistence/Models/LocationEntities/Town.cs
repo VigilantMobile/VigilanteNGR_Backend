@@ -20,9 +20,6 @@ namespace Infrastructure.Persistence.Models.LocationEntities
         public string NPFTownAuthorityAddress { get; set; }
         public string NPFPhone { get; set; }
 
-        [ForeignKey("NPFTownAdmin")]
-        public string NPFTownAdminId { get; set; }
-        public NPFTownAdmin NPFTownAdmin { get; set; }
 
         // VGNGA Users
         public virtual ICollection<ApplicationUser> VigilanteNGAdmins { get; set; }

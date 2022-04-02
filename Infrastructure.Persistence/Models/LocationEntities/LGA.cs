@@ -18,9 +18,6 @@ namespace Infrastructure.Persistence.Models.LocationEntities
         public int StateId { get; set; }
         public State State { get; set; }
 
-        [ForeignKey("NPFLGAAdmin")]
-        public string NPFLGAAdminId { get; set; }
-        public NPFLGAAdmin NPFLGAAdmin { get; set; }
 
         public string NPFLGAAuthorityAddress { get; set; }
         public string NPFPhone { get; set; }
