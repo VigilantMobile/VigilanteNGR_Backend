@@ -18,7 +18,8 @@ namespace Domain.Entities.AppTroopers.Panic
         public Town DepartureTown { get; set; }
         public string DepartureCoordinates { get; set; }
         public string DestinationTownAddress { get; set; }
-        public Town DestinationTownId { get; set; }
+
+        public Town DestinationTown { get; set; }
         public string DestinationDestinationCoordinates { get; set; }
 
         //Visiting
@@ -30,6 +31,7 @@ namespace Domain.Entities.AppTroopers.Panic
         [Required]
         public int PanicIntervalInMinutes { get; set; }
         public string CommuteStatus { get; set; }
+        public string PanicStatus { get; set; }
         public bool PanicInitiated { get; set; }
     }
 }

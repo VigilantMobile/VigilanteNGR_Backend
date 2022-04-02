@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Infrastructure.Persistence.Models.Identity.Location
 {
-    public class NPFStateAdmin : ApplicationUser
+    public class OfficialVigilanteStateAdmin : ApplicationUser
     {
         public bool IsSuperAdmin { get; set; }
 

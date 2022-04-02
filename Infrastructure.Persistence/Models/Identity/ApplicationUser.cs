@@ -5,6 +5,7 @@ using Infrastructure.Persistence.Models.LocationEntities;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Infrastructure.Persistence.Models.Identity
@@ -24,9 +25,29 @@ namespace Infrastructure.Persistence.Models.Identity
         public string LastName { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
-        public string LocationID { get; set; }
-        public string TempLocationID { get; set; }
-        public string LastCurrentLocationID { get; set; }
+
+        //State
+        [ForeignKey("State")]
+        public int StateId { get; set; }
+        public State State { get; set; }
+
+        //LGA
+        [ForeignKey("LGA")]
+        public int LGAId { get; set; }
+        public LGA LGA { get; set; }
+
+        //Town
+        [ForeignKey("Town")]
+        public int TownId { get; set; }
+        public Town Town { get; set; }
+
+        //Settlement
+        [ForeignKey("Settlement")]
+        public int SettlementId { get; set; }
+        public Settlement Settlement { get; set; }
+
+        public string LastLocationCoordinates{ get; set; }
+
         public string UniqueReferalCode { get; set; }
         public DateTime DateOfBirth { get; set; }
         public bool FirstTimePromoUsed { get; set; }
@@ -37,10 +58,6 @@ namespace Infrastructure.Persistence.Models.Identity
         public string LastModifiedBy { get; set; }
         public DateTime LastModified { get; set; }
         public List<RefreshToken> RefreshTokens { get; set; }
-
-        //staff id 
-        public bool isVGNGAStaff { get; set; }
-        public string StaffId { get; set; }
 
         // </Location>
         public bool OwnsToken(string token)

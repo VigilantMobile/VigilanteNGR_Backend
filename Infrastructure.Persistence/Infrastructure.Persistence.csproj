@@ -29,8 +29,4 @@
     <ProjectReference Include="..\Infrastructure.Shared\Infrastructure.Shared.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\AppTroopers\Curfew\" />
-  </ItemGroup>
-
 </Project>

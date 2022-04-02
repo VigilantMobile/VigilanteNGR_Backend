@@ -11,6 +11,8 @@ namespace Infrastructure.Persistence.Models.Identity.Location
 {
     public class NPFTownAdmin : ApplicationUser
     {
+        public bool IsSuperAdmin { get; set; }
+
         public virtual ICollection<Town> Towns { get; set; }
     }
 }

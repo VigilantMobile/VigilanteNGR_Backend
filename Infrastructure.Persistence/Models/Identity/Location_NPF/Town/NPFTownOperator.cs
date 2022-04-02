@@ -7,7 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Infrastructure.Persistence.Models.Identity.Location_NPF.LGA
+namespace Infrastructure.Persistence.Models.Identity.Location
 {
     public class NPFTownOperator : ApplicationUser
     {

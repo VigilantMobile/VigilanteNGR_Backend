@@ -41,33 +41,31 @@ namespace Domain.Entities.AppTroopers.SecurityTip
 
         [ForeignKey("State")]
         public int? StateId { get; set; }
-
-        //Coverage collections
-        public virtual ICollection<State> StatesBroadcastedTo { get; set; }
-        public virtual ICollection<LGA> LGAsBroadcastedTo { get; set; }
-        public virtual ICollection<Town> TownsBroadcastedTo { get; set; }
-        public virtual ICollection<Settlement> SettlementsBroadcastedTo { get; set; }
-        //
+        
 
         [ForeignKey("BroadcasterType")]
-        public int BroadcasterTypeId { get; set; }  //e.g. verified user, official NPF
+        public int BroadcasterTypeId { get; set; }
+        public BroadcasterType BroadcasterType { get; set; } //e.g. verified user, official NPF
 
         //broadcaster
+
+        [ForeignKey("ApplicationUser")]
         public string BroadcasterUserId { get; set; }
-        [ForeignKey("BroadcasterUserId")]
-        public virtual ApplicationUser Broadcaster { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
 
         [ForeignKey("SecurityTipCategory")]
         public int SecurityTipCategoryId { get; set; }
+        public SecurityTipCategory SecurityTipCategory { get; set; }
 
         //
         [ForeignKey("AlertLevel")]
         public int AlertLevelId { get; set; }
+        public AlertLevel AlertLevel { get; set; }
 
 
         [ForeignKey("BroadcastLevel")]
         public int BroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
-
+        public BroadcastLevel BroadcastLevel { get; set; }
 
     }
 }

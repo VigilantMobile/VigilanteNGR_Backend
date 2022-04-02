@@ -32,7 +32,13 @@ namespace Infrastructure.Persistence.Contexts
         }
         
         public DbSet<DemographicEntitiesCoordinatesJSON>  demographicEntitiesCoordinatesJSONs { get; set; }
-        
+
+        //Identity
+        public DbSet<State> States { get; set; }
+        public DbSet<CustomClaims> CustomClaims { get; set; }
+
+
+
         //Location
         public DbSet<State> States { get; set; }
         public DbSet<LGA> LGAs { get; set; }
@@ -40,7 +46,6 @@ namespace Infrastructure.Persistence.Contexts
         public DbSet<Settlement> Settlements { get; set; }
 
         //Identity
-        public DbSet<CustomClaims> CustomClaims { get; set; }
 
         //App Troopers
         public DbSet<SecurityTipCategory> SecurityTipCategories { get; set; }
@@ -123,100 +128,26 @@ namespace Infrastructure.Persistence.Contexts
                 entity.ToTable("UserTokens");
             });
 
+
             builder.Entity<CustomClaims>(entity =>
             {
                 entity.ToTable("CustomClaims");
             });
 
-            //Location Entities with ApplicationUser Relationships
-            //State 4
+           
+            //State 
             builder.Entity<State>().Property(p => p.Boundary).HasColumnType("geography");
-
-            builder.Entity<State>().HasMany(t => t.NPFAdmins)
-                   .WithOne(g => g.NPFAdminState)
-                   .HasForeignKey(g => g.NPFAdminStateId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<State>().HasMany(t => t.NPFOperators)
-                    .WithOne(g => g.NPFOperatorState)
-                    .HasForeignKey(g => g.NPFOperatorStateId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<State>().HasMany(t => t.VigilanteAdmins)
-                    .WithOne(g => g.VigilanteAdminState)
-                    .HasForeignKey(g => g.VigilanteAdminStateId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<State>().HasMany(t => t.VigilanteOperators)
-                 .WithOne(g => g.VigilanteOperatorState)
-                 .HasForeignKey(g => g.VigilanteOperatorStateId).OnDelete(DeleteBehavior.Restrict);
 
             //LGA
             builder.Entity<LGA>().Property(p => p.Boundary).HasColumnType("geography");
 
-
-
-            builder.Entity<LGA>().HasMany(t => t.NPFAdmins)
-                  .WithOne(g => g.NPFAdminLGA)
-                  .HasForeignKey(g => g.NPFAdminLGAId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<LGA>().HasMany(t => t.NPFOperators)
-                    .WithOne(g => g.NPFOperatorLGA)
-                    .HasForeignKey(g => g.NPFOperatorLGAId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<LGA>().HasMany(t => t.VigilanteAdmins)
-                    .WithOne(g => g.VigilanteAdminLGA)
-                    .HasForeignKey(g => g.VigilanteAdminLGAId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<LGA>().HasMany(t => t.VigilanteOperators)
-                     .WithOne(g => g.VigilanteOperatorLGA)
-                     .HasForeignKey(g => g.VigilanteOperatorLGAId).OnDelete(DeleteBehavior.Restrict);
-
             //Town
-            builder.Entity<Town>().HasMany(t => t.NPFAdmins)
-                  .WithOne(g => g.NPFAdminTown)
-                  .HasForeignKey(g => g.NPFAdminTownId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Town>().HasMany(t => t.NPFOperators)
-                    .WithOne(g => g.NPFOperatorTown)
-                    .HasForeignKey(g => g.NPFOperatorTownId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Town>().HasMany(t => t.VigilanteAdmins)
-                    .WithOne(g => g.VigilanteAdminTown)
-                    .HasForeignKey(g => g.VigilanteAdminTownId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Town>().HasMany(t => t.VigilanteOperators)
-                    .WithOne(g => g.VigilanteOperatorTown)
-                    .HasForeignKey(g => g.VigilanteOperatorTownId).OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Town>().Property(p => p.Boundary).HasColumnType("geography");
 
             //Settlement
-            builder.Entity<Settlement>().HasMany(t => t.NPFAdmins)
-                  .WithOne(g => g.NPFAdminSettlement)
-                  .HasForeignKey(g => g.NPFAdminSettlementId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Settlement>().HasMany(t => t.NPFOperators)
-                    .WithOne(g => g.NPFOperatorSettlement)
-                    .HasForeignKey(g => g.NPFOperatorSettlementId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Settlement>().HasMany(t => t.VigilanteAdmins)
-                    .WithOne(g => g.VigilanteAdminSettlement)
-                    .HasForeignKey(g => g.VigilanteAdminSettlementId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Settlement>().HasMany(t => t.VigilanteOperators)
-                    .WithOne(g => g.VigilanteOperatorSettlement)
-                    .HasForeignKey(g => g.VigilanteOperatorSettlementId).OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Settlement>().Property(p => p.Boundary).HasColumnType("geography");
 
             //Security Tip -> App User
-            builder.Entity<SecurityTip>().HasOne(t => t.AdminAuthorizer)
-                 .WithMany(g => g.AdminAuthorizedTips)
-                 .HasForeignKey(g => g.AdminAuthorizerID).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<SecurityTip>().HasOne(t => t.VGNGAAuthorizer)
-                 .WithMany(g => g.VGNGAAuthorizedTips)
-                 .HasForeignKey(g => g.VGNGAAuthorizerID).OnDelete(DeleteBehavior.Restrict);
-
-
-            builder.Entity<SecurityTip>().HasOne(t => t.Broadcaster)
-                 .WithMany(g => g.BroadcasterTips)
-                 .HasForeignKey(g => g.BroadcasterUserId).OnDelete(DeleteBehavior.Restrict);
-
 
             //All Decimals will have 18,6 Range
             foreach (var property in builder.Model.GetEntityTypes()

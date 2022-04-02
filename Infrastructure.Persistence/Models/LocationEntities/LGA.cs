@@ -16,20 +16,27 @@ namespace Infrastructure.Persistence.Models.LocationEntities
 
         [ForeignKey("State")]
         public int StateId { get; set; }
+        public State State { get; set; }
 
-        [ForeignKey("ApplicationUser")]
-        public string LGASuperAdminId { get; set; }
+        [ForeignKey("NPFLGAAdmin")]
+        public string NPFLGAAdminId { get; set; }
+        public NPFLGAAdmin NPFLGAAdmin { get; set; }
+
         public string NPFLGAAuthorityAddress { get; set; }
         public string NPFPhone { get; set; }
         public bool isCapital { get; set; }
 
-        // NPF Users
-        public virtual ICollection<NPFLGAOperator> NPFLGAOperators { get; set; }
-        public virtual ICollection<NPFLGAAdmin> NPFLGAAdmins { get; set; }
-
         // VGNGA Users
+        public virtual ICollection<ApplicationUser> VigilanteNGAdmins { get; set; }
+        public virtual ICollection<ApplicationUser> VigilanteNGOperators { get; set; }
+
+        // NPF Users
+        public virtual ICollection<NPFLGAAdmin> NPFLGAAdmins { get; set; }
+        public virtual ICollection<NPFLGAOperator> NPFLGAOperators { get; set; }
 
         // Official Vigilante Users
+        public virtual ICollection<OfficialVigilanteLGAAdmin> OfficialVigilanteLGAAdmins { get; set; }
+        public virtual ICollection<OfficialVigilanteLGAOperator> OfficialVigilanteLGAOperators{ get; set; }
 
         public ICollection<SecurityTip> SecurityTips { get; set; }
 

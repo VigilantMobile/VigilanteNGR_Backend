@@ -11,6 +11,8 @@ namespace Infrastructure.Persistence.Models.Identity.Location
 {
     public class NPFLGAAdmin : ApplicationUser
     {
+        public bool IsSuperAdmin { get; set; }
+
         public virtual ICollection<LGA> LGAs { get; set; }
     }
 }

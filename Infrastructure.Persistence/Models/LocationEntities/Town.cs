@@ -1,6 +1,8 @@
 ﻿using Domain.Common;
 using Domain.Entities.AppTroopers.SecurityTip;
 using Infrastructure.Persistence.Models.Identity;
+using Infrastructure.Persistence.Models.Identity.Location;
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,16 +16,28 @@ namespace Infrastructure.Persistence.Models.LocationEntities
 
         [ForeignKey("LGA")]
         public int LGAId { get; set; }
-        public string NPFAddress { get; set; }
+        public LGA LGA { get; set; }
+        public string NPFTownAuthorityAddress { get; set; }
         public string NPFPhone { get; set; }
-        [ForeignKey("ApplicationUser")]
-        public string TownSuperAdminId { get; set; }
-        public int? SecurityTipId { get; set; }
 
-        public virtual SecurityTip SecurityTip { get; set; }
-        public virtual ICollection<ApplicationUser> NPFOperators { get; set; }
-        public virtual ICollection<ApplicationUser> NPFAdmins { get; set; }
-        public virtual ICollection<ApplicationUser> VigilanteOperators { get; set; }
-        public virtual ICollection<ApplicationUser> VigilanteAdmins { get; set; }
+        [ForeignKey("NPFTownAdmin")]
+        public string NPFTownAdminId { get; set; }
+        public NPFTownAdmin NPFTownAdmin { get; set; }
+
+        // VGNGA Users
+        public virtual ICollection<ApplicationUser> VigilanteNGAdmins { get; set; }
+        public virtual ICollection<ApplicationUser> VigilanteNGOperators { get; set; }
+
+        // NPF Users
+        public virtual ICollection<NPFTownAdmin> NPFTownAdmins { get; set; }
+        public virtual ICollection<NPFTownOperator> NPFTownOperators { get; set; }
+
+        // Official Vigilante Users
+        public virtual ICollection<OfficialVigilanteTownAdmin> OfficialVigilanteTownAdmins { get; set; }
+        public virtual ICollection<OfficialVigilanteTownOperator> OfficialVigilanteTownOperators { get; set; }
+
+        public ICollection<SecurityTip> SecurityTips { get; set; }
+
+        public Geometry Boundary { get; set; }
     }
 }

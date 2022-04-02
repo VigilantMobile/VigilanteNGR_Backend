@@ -1,5 +1,6 @@
 ﻿using Domain.Common;
 using Domain.Common.Enums;
+using Domain.Entities.AppTroopers.SecurityTip;
 using Infrastructure.Persistence.Models.Identity;
 using Infrastructure.Persistence.Models.LocationEntities;
 using System;
@@ -29,15 +30,31 @@ namespace Domain.Entities.AppTroopers.Missing
 
         [ForeignKey("Town")]
         public int TownId { get; set; }
+        public Town Town { get; set; }
+
+
+        [ForeignKey("Settlement")]
+        public int SettlementId { get; set; }
+        public Settlement Settlement { get; set; }
 
         //Admin Authorization
-        public bool isAdminAuthorized { get; set; } 
+        public bool isAdminAuthorized { get; set; }
 
+
+        [ForeignKey("ApplicationUser")]
+        public string LoserId { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
+
+
+        [ForeignKey("VGNGAStaff")]
         public string AdminAuthorizerID { get; set; }
-        [ForeignKey("AdminAuthorizerID")]
-        public virtual ApplicationUser AdminAuthorizer { get; set; }
+        public virtual VGNGAStaff VGNGAStaff { get; set; }
+        
+
 
         [ForeignKey("BroadcastLevel")]
-        public int BroadcastLevelId { get; set; } 
+        public int BroadcastLevelId { get; set; }
+        public BroadcastLevel BroadcastLevel { get; set; }
+
     }
 }

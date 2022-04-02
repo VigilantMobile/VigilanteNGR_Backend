@@ -9,10 +9,9 @@ using System.Text;
 
 namespace Infrastructure.Persistence.Models.Identity.Location
 {
-    public class NPFStateAdmin : ApplicationUser
+    public class OfficialVigilanteTownAdmin : ApplicationUser
     {
         public bool IsSuperAdmin { get; set; }
-
-        public virtual ICollection<State> States { get; set; }
+        public virtual ICollection<Town> Towns { get; set; }
     }
 }
