@@ -48,6 +48,11 @@ namespace VGWebAPI
                         await Infrastructure.Persistence.Seeds.DefaultRoles.SeedAsync(userManager, roleManager);
                     }
 
+                    //dbInitializer.Initialize();
+                    //dbInitializer.SeedStatesandLGAs();
+                    //dbInitializer.SeedAppTrooperHelpers();
+                    Log.Information("Finished Seeding Default Data");
+
                     //Seed Users
                     if (!userManager.Users.Any())
                     {
@@ -57,10 +62,7 @@ namespace VGWebAPI
 
 
                     //Seed Default Entities
-                    dbInitializer.Initialize();
-                    dbInitializer.SeedStatesandLGAs();
-                    dbInitializer.SeedAppTrooperHelpers();
-                    Log.Information("Finished Seeding Default Data");
+
                     Log.Information("Application Starting");
                 }
                 catch (Exception ex)

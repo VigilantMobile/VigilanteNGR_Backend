@@ -92,13 +92,15 @@ namespace Infrastructure.Persistence.Models.Identity
 
         //Town
         [ForeignKey("Town")]
-        public int TownId { get; set; }
+        public int? TownId { get; set; }
         public Town Town { get; set; }
 
         //Settlement
         [ForeignKey("Settlement")]
-        public int SettlementId { get; set; }
+        public int? SettlementId { get; set; }
         public Settlement Settlement { get; set; }
+
+
         public string LastLocationCoordinates { get; set; }
         public string UniqueReferalCode { get; set; }
         public DateTime DateOfBirth { get; set; }
@@ -115,6 +117,5 @@ namespace Infrastructure.Persistence.Models.Identity
         public virtual ICollection<SecurityTip> SecurityTips { get; set; }
         public virtual ICollection<MissingPerson> MissingPeople { get; set; }
         public virtual ICollection<MissingItem> MissingItems { get; set; }
-
     }
 }
