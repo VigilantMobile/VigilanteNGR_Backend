@@ -1,5 +1,7 @@
 ﻿using Domain.Common;
 using Domain.Common.Enums;
+using Domain.Entities.AppTroopers.SecurityTip;
+using Infrastructure.Persistence.Enums;
 using Infrastructure.Persistence.Models.Identity;
 using Infrastructure.Persistence.Models.LocationEntities;
 using System;
@@ -34,16 +36,22 @@ namespace Domain.Entities.AppTroopers.Wanted
 
         [ForeignKey("Town")]
         public int TownId { get; set; }
+        public virtual Town Town { get; set; }
+
+        [ForeignKey("Settlement")]
+        public int SettlementId { get; set; }
+        public virtual Settlement Settlement { get; set; }
+
 
         //NPF Authorization
-        public bool isNPFAuthorized { get; set; } // 
+        public bool isAuthorized { get; set; } // 
         public string NPFAuthorizerID { get; set; }
-        [ForeignKey("NPFAuthorizerID")]
-        public virtual ApplicationUser AdminAuthorizer { get; set; }
+        public NPFAuthorityType NPFAuthorityType { get; set; }
 
+        [Required]
         [ForeignKey("BroadcastLevel")]
         public int BroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
-
+        public virtual BroadcastLevel BroadcastLevel { get; set; }
 
     }
 }

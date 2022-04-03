@@ -100,205 +100,214 @@ namespace Infrastructure.Persistence.Services
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
             //var geometryFactory = new OgcCompliantGeometryFactory();
 
-            List<StateNamesandIds> stateNamesandIdsList = new List<StateNamesandIds>();
-            using (var serviceScope = _scopeFactory.CreateScope())
-            {
-                using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
+           try
+           {
+                List<StateNamesandIds> stateNamesandIdsList = new List<StateNamesandIds>();
+                using (var serviceScope = _scopeFactory.CreateScope())
                 {
-                    #region seed states
-                    //Seed States and MultiPolygons for States
-                    if (!(context.States.Any()))
+                    using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
                     {
-                        string StatesMultiploygonsJSON = File.ReadAllText(Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"JSONDocs" + Path.DirectorySeparatorChar + "ngstatesboundaries.json"));
-
-                        //save JSON string for state
-                        //var SatesJSONDemographic = new DemographicEntitiesCoordinatesJSON
-                        //{
-                        //    DemographicType = "State",
-                        //    JsonString = StatesMultiploygonsJSON
-                        //};
-                        //context.demographicEntitiesCoordinatesJSONs.Add(SatesJSONDemographic);
-
-                        List<StatesMPs> statesMultipolygons = JsonConvert.DeserializeObject<List<StatesMPs>>(StatesMultiploygonsJSON);
-
-                        foreach (var state in statesMultipolygons)
+                        #region seed states
+                        //Seed States and MultiPolygons for States
+                        if (!(context.States.Any()))
                         {
-                            MultiPolygon multiPolygon = (MultiPolygon)wktReader.Read(state.WKT);
+                            string StatesMultiploygonsJSON = File.ReadAllText(Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"JSONDocs" + Path.DirectorySeparatorChar + "ngstatesboundaries.json"));
 
-                            var reversedmultiPolygon = MakeMultiPolygonCounterClockWise(multiPolygon);
+                            //save JSON string for state
+                            //var SatesJSONDemographic = new DemographicEntitiesCoordinatesJSON
+                            //{
+                            //    DemographicType = "State",
+                            //    JsonString = StatesMultiploygonsJSON
+                            //};
+                            //context.demographicEntitiesCoordinatesJSONs.Add(SatesJSONDemographic);
 
-                            var stateEntity = new State
+                            List<StatesMPs> statesMultipolygons = JsonConvert.DeserializeObject<List<StatesMPs>>(StatesMultiploygonsJSON);
+
+                            foreach (var state in statesMultipolygons)
                             {
-                                Name = state.admin1Name,
-                                Boundary = reversedmultiPolygon,
-                                shapeArea = (decimal)state.Shape_Area,
-                                shapeLength = (decimal)state.Shape_Leng,
-                                Created = DateTime.UtcNow.AddHours(1)                                
-                            };
-                            context.States.Add(stateEntity);
-                            context.SaveChanges();
+                                MultiPolygon multiPolygon = (MultiPolygon)wktReader.Read(state.WKT);
 
-                            StateNamesandIds nameIdPair = new StateNamesandIds
-                            {
-                                stateId = stateEntity.Id,
-                                stateName = stateEntity.Name
-                            };
+                                var reversedmultiPolygon = MakeMultiPolygonCounterClockWise(multiPolygon);
 
-                            stateNamesandIdsList.Add(nameIdPair);
-                        }
-                    }
-
-                    #endregion seed states
-                    #region seed LGAs
-                    if (!(context.LGAs.Any()))
-                    {
-                        //get all state names and Ids
-                        if (!stateNamesandIdsList.Any())
-                        {
-                            stateNamesandIdsList =
-                                (from s in context.States
-                                 select new StateNamesandIds
-                                 {
-                                     stateId = s.Id,
-                                     stateName = s.Name
-                                 }).ToList();
-                        }
-
-                        string lgaPolygonsJSON = File.ReadAllText(Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"JSONDocs" + Path.DirectorySeparatorChar + "towns_in_nigeria.json"));
-
-                        //save JSON string for lga
-                        //var lgaJSONDemographic = new DemographicEntitiesCoordinatesJSON
-                        //{
-                        //    DemographicType = "LGA",
-                        //    JsonString = lgaPolygonsJSON
-                        //};
-                        //context.demographicEntitiesCoordinatesJSONs.Add(lgaJSONDemographic);
-
-
-                        LGAPolygons lgasPolygons = JsonConvert.DeserializeObject<LGAPolygons>(lgaPolygonsJSON);
-
-                        foreach (var lga in lgasPolygons.features)
-                        {
-                            if (lga.geometry.type == "MultiPolygon")
-                            {
-                                var geoArrayList = lga.geometry.coordinates.ToObject<object[][][]>();
-                                Polygon[] polygons = new Polygon[geoArrayList.Length];//list of polygons
-
-                                for (int i = 0; i < geoArrayList.Length; i++) //each set, of polygons 4
+                                var stateEntity = new State
                                 {
-
-                                    for (int j = 0; j < geoArrayList[i][j].Length; j++) //each set of coordinates e.g. 17
-                                    {
-                                        Coordinate[] imageOutlineCoordinates = new Coordinate[geoArrayList[i][j].Length];
-
-                                        for (int k = 0; k < geoArrayList[i][j].Length; k++)
-                                        {
-                                            double[] coordinates = new double[2];
-
-                                            coordinates[0] = geoArrayList[i][j][k][0];
-                                            coordinates[1] = geoArrayList[i][j][k][1];
-
-                                            Coordinate coordinate = new Coordinate(coordinates[0], coordinates[1]);
-
-                                            imageOutlineCoordinates[k] = coordinate;
-                                        };
-
-                                        Polygon polygon = geometryFactory.CreatePolygon(imageOutlineCoordinates);
-                                        var reversedPolygon = MakePolygonCounterClockWise(polygon);
-                                        polygons[i] = reversedPolygon;
-                                        break;
-                                    }
-                                };
-
-                                //and eventually save to a multipolygon
-                                MultiPolygon multipolygon = geometryFactory.CreateMultiPolygon(polygons);
-                                //var reversedMultiPolygon = MakeMultiPolygonCounterClockWise(multipolygon);
-
-                                var lgaEntity = new LGA
-                                {
-                                    Name = lga.properties.NAME_2,
-                                    Boundary = multipolygon,
-                                    StateId = stateNamesandIdsList.Where(x => x.stateName == lga.properties.NAME_1).FirstOrDefault().stateId,
-
-                                };
-
-                                context.LGAs.Add(lgaEntity);
-                            }
-
-                            // Geography type is Polygon
-                            else if (lga.geometry.type == "Polygon")
-                            {
-                                var geoArrayList = lga.geometry.coordinates[0].ToObject<object[][]>();
-
-                                Coordinate[] imageOutlineCoordinates = new Coordinate[geoArrayList.Length];
-                                // extract coordinates in each feature
-                                for (int i = 0; i < geoArrayList.Length; i++)
-                                {
-                                    double[] coordinates = new double[2];
-
-                                    //double[] arr = properList[i].Cast<double>().ToArray();
-
-                                    coordinates[0] = geoArrayList[i][0];
-                                    coordinates[1] = geoArrayList[i][1];
-
-                                    Coordinate coordinate = new Coordinate(coordinates[0], coordinates[1]);
-
-                                    imageOutlineCoordinates[i] = coordinate;
-                                };
-
-                                Polygon polygon = geometryFactory.CreatePolygon(imageOutlineCoordinates);
-
-                                var reversedPolygon = MakePolygonCounterClockWise(polygon);
-
-                                var lgaEntity = new LGA
-                                {
-                                    Name = lga.properties.NAME_2,
-                                    Boundary = reversedPolygon,
-                                    StateId = stateNamesandIdsList.Where(x => x.stateName == lga.properties.NAME_1).FirstOrDefault().stateId,
+                                    Name = state.admin1Name,
+                                    Boundary = reversedmultiPolygon,
+                                    shapeArea = (decimal)state.Shape_Area,
+                                    shapeLength = (decimal)state.Shape_Leng,
                                     Created = DateTime.UtcNow.AddHours(1)
+                                };
+                                context.States.Add(stateEntity);
+                                context.SaveChanges();
 
+                                StateNamesandIds nameIdPair = new StateNamesandIds
+                                {
+                                    stateId = stateEntity.Id,
+                                    stateName = stateEntity.Name
                                 };
 
-                                context.LGAs.Add(lgaEntity);
+                                stateNamesandIdsList.Add(nameIdPair);
                             }
-                            context.SaveChanges();
                         }
+
+                        #endregion seed states
+                        #region seed LGAs
+                        if (!(context.LGAs.Any()))
+                        {
+                            //get all state names and Ids
+                            if (!stateNamesandIdsList.Any())
+                            {
+                                stateNamesandIdsList =
+                                    (from s in context.States
+                                     select new StateNamesandIds
+                                     {
+                                         stateId = s.Id,
+                                         stateName = s.Name
+                                     }).ToList();
+                            }
+
+                            string lgaPolygonsJSON = File.ReadAllText(Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"JSONDocs" + Path.DirectorySeparatorChar + "towns_in_nigeria.json"));
+
+                            //save JSON string for lga
+                            //var lgaJSONDemographic = new DemographicEntitiesCoordinatesJSON
+                            //{
+                            //    DemographicType = "LGA",
+                            //    JsonString = lgaPolygonsJSON
+                            //};
+                            //context.demographicEntitiesCoordinatesJSONs.Add(lgaJSONDemographic);
+
+
+                            LGAPolygons lgasPolygons = JsonConvert.DeserializeObject<LGAPolygons>(lgaPolygonsJSON);
+
+                            foreach (var lga in lgasPolygons.features)
+                            {
+                                if (lga.geometry.type == "MultiPolygon")
+                                {
+                                    var geoArrayList = lga.geometry.coordinates.ToObject<object[][][]>();
+                                    Polygon[] polygons = new Polygon[geoArrayList.Length];//list of polygons
+
+                                    for (int i = 0; i < geoArrayList.Length; i++) //each set, of polygons 4
+                                    {
+
+                                        for (int j = 0; j < geoArrayList[i][j].Length; j++) //each set of coordinates e.g. 17
+                                        {
+                                            Coordinate[] imageOutlineCoordinates = new Coordinate[geoArrayList[i][j].Length];
+
+                                            for (int k = 0; k < geoArrayList[i][j].Length; k++)
+                                            {
+                                                double[] coordinates = new double[2];
+
+                                                coordinates[0] = geoArrayList[i][j][k][0];
+                                                coordinates[1] = geoArrayList[i][j][k][1];
+
+                                                Coordinate coordinate = new Coordinate(coordinates[0], coordinates[1]);
+
+                                                imageOutlineCoordinates[k] = coordinate;
+                                            };
+
+                                            Polygon polygon = geometryFactory.CreatePolygon(imageOutlineCoordinates);
+                                            var reversedPolygon = MakePolygonCounterClockWise(polygon);
+                                            polygons[i] = reversedPolygon;
+                                            break;
+                                        }
+                                    };
+
+                                    //and eventually save to a multipolygon
+                                    MultiPolygon multipolygon = geometryFactory.CreateMultiPolygon(polygons);
+                                    //var reversedMultiPolygon = MakeMultiPolygonCounterClockWise(multipolygon);
+
+                                    var lgaEntity = new LGA
+                                    {
+                                        Name = lga.properties.NAME_2,
+                                        Boundary = multipolygon,
+                                        StateId = stateNamesandIdsList.Where(x => x.stateName == lga.properties.NAME_1).FirstOrDefault().stateId,
+
+                                    };
+
+                                    context.LGAs.Add(lgaEntity);
+                                }
+
+                                // Geography type is Polygon
+                                else if (lga.geometry.type == "Polygon")
+                                {
+                                    var geoArrayList = lga.geometry.coordinates[0].ToObject<object[][]>();
+
+                                    Coordinate[] imageOutlineCoordinates = new Coordinate[geoArrayList.Length];
+                                    // extract coordinates in each feature
+                                    for (int i = 0; i < geoArrayList.Length; i++)
+                                    {
+                                        double[] coordinates = new double[2];
+
+                                        //double[] arr = properList[i].Cast<double>().ToArray();
+
+                                        coordinates[0] = geoArrayList[i][0];
+                                        coordinates[1] = geoArrayList[i][1];
+
+                                        Coordinate coordinate = new Coordinate(coordinates[0], coordinates[1]);
+
+                                        imageOutlineCoordinates[i] = coordinate;
+                                    };
+
+                                    Polygon polygon = geometryFactory.CreatePolygon(imageOutlineCoordinates);
+
+                                    var reversedPolygon = MakePolygonCounterClockWise(polygon);
+
+                                    var lgaEntity = new LGA
+                                    {
+                                        Name = lga.properties.NAME_2,
+                                        Boundary = reversedPolygon,
+                                        StateId = stateNamesandIdsList.Where(x => x.stateName == lga.properties.NAME_1).FirstOrDefault().stateId,
+                                        Created = DateTime.UtcNow.AddHours(1)
+
+                                    };
+
+                                    context.LGAs.Add(lgaEntity);
+                                }
+                                context.SaveChanges();
+                            }
+                        }
+                        #endregion seed LGAs
                     }
-                    #endregion seed LGAs
                 }
-            }
+           }
+            catch (Exception ex)
+           {
+                Console.WriteLine(ex.Message + $" {ex.InnerException.Message}");
+           }
         }
 
         public void SeedAppTrooperHelpers()
         {
             //Default Alert Levels
-
-            using (var serviceScope = _scopeFactory.CreateScope())
+            try
             {
-                using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
-                {
 
-                    #region seed alert levels
-                    //Seed default alert levels
-                    if (!(context.AlertLevels.Any()))
+                using (var serviceScope = _scopeFactory.CreateScope())
+                {
+                    using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
                     {
-                        IList<AlertLevel> newAlertLevels = new List<AlertLevel>() {
+
+                        #region seed alert levels
+                        //Seed default alert levels
+                        if (!(context.AlertLevels.Any()))
+                        {
+                            IList<AlertLevel> newAlertLevels = new List<AlertLevel>() {
                         new AlertLevel() { Name = "Neutral", Description = "Neutral", alertLevel = AlertLevelEnum.Neutral, Created = DateTime.UtcNow.AddHours(1)},
                         new AlertLevel() { Name = "Moderate", Description = "Moderate", alertLevel = AlertLevelEnum.Moderate, Created = DateTime.UtcNow.AddHours(1)},
                         new AlertLevel() { Name = "High", Description = "High", alertLevel = AlertLevelEnum.High, Created = DateTime.UtcNow.AddHours(1)},
                         new AlertLevel() { Name = "Critical", Description = "Critical", alertLevel = AlertLevelEnum.Critical, Created = DateTime.UtcNow.AddHours(1)},
                         };
 
-                        context.AlertLevels.AddRange(newAlertLevels);
-                    }
+                            context.AlertLevels.AddRange(newAlertLevels);
+                        }
 
-                    #endregion seed alert levels
+                        #endregion seed alert levels
 
-                    #region seed broadcast levels
-                    //Seed default broadcast levels
-                    if (!(context.BroadcastLevels.Any()))
-                    {
-                        IList<BroadcastLevel> broadcastLevels = new List<BroadcastLevel>() {
+                        #region seed broadcast levels
+                        //Seed default broadcast levels
+                        if (!(context.BroadcastLevels.Any()))
+                        {
+                            IList<BroadcastLevel> broadcastLevels = new List<BroadcastLevel>() {
                         new BroadcastLevel() { Name = "Settlement", Description = "Settlement", broadcastLevel = BroadcastLevelEnum.Settlement, Created = DateTime.UtcNow.AddHours(1)},
                         new BroadcastLevel() { Name = "Town", Description = "Town",  broadcastLevel = BroadcastLevelEnum.Town, Created = DateTime.UtcNow.AddHours(1)},
                         new BroadcastLevel() { Name = "LGA", Description = "LGA",  broadcastLevel = BroadcastLevelEnum.LGA, Created = DateTime.UtcNow.AddHours(1)},
@@ -306,15 +315,15 @@ namespace Infrastructure.Persistence.Services
                         new BroadcastLevel() { Name = "Nationwide", Description = "Nationwide",  broadcastLevel = BroadcastLevelEnum.Nationwide, Created = DateTime.UtcNow.AddHours(1)}
                         };
 
-                        context.BroadcastLevels.AddRange(broadcastLevels);
-                    }
-                    #endregion seed broadcast levels
+                            context.BroadcastLevels.AddRange(broadcastLevels);
+                        }
+                        #endregion seed broadcast levels
 
-                    #region seed broadcaster types
-                    //Seed default broadcast levels
-                    if (!(context.BroadcasterTypes.Any()))
-                    {
-                        IList<BroadcasterType> broadcasterTypes = new List<BroadcasterType>() {
+                        #region seed broadcaster types
+                        //Seed default broadcast levels
+                        if (!(context.BroadcasterTypes.Any()))
+                        {
+                            IList<BroadcasterType> broadcasterTypes = new List<BroadcasterType>() {
                         new BroadcasterType() { Name = "Settlement Vigilante Authority", Description = "Settlement Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialSettlementVigilante, Created = DateTime.UtcNow.AddHours(1)},
 
                         new BroadcasterType() { Name = "Town Vigilante Authority", Description = "Town Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialTownVigilante, Created = DateTime.UtcNow.AddHours(1)},
@@ -345,13 +354,18 @@ namespace Infrastructure.Persistence.Services
                            new BroadcasterType() { Name = "Official VGNGA", Description = "Official VGNGA",  Broadcaster = BroadcasterTypeEnum.OfficialVGNGA, Created = DateTime.UtcNow.AddHours(1)},
 
                         };
-                        context.BroadcasterTypes.AddRange(broadcasterTypes);
+                            context.BroadcasterTypes.AddRange(broadcasterTypes);
+                        }
+
+                        context.SaveChanges();
+
+                        #endregion seed broadcaster types
                     }
-
-                    context.SaveChanges();
-
-                    #endregion seed broadcaster types
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message + $": {ex.InnerException.Message}");
             }
         }
     }

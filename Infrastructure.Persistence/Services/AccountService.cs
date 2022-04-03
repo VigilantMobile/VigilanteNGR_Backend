@@ -112,12 +112,12 @@ namespace Infrastructure.Persistence.Services
             //var refreshToken = GenerateRefreshToken(ipAddress);
             //response.RefreshToken = refreshToken.Token;
 
-            if (user.RefreshTokens.Any(a => a.IsActive))
+            if (user.RefreshTokenExpiry < DateTime.UtcNow.AddHours(1))
             //if (!(user.RefreshTokens.Count < 1))
             {
-                var activeRefreshToken = user.RefreshTokens.Where(a => a.IsActive == true).FirstOrDefault();
-                response.RefreshToken = activeRefreshToken.Token;
-                response.RefreshTokenExpiration = activeRefreshToken.Expires;
+                var activeRefreshToken = user.RefreshToken;
+                response.RefreshToken = activeRefreshToken;
+                response.RefreshTokenExpiration = user.RefreshTokenExpiry;
             }
 
             else
@@ -125,7 +125,7 @@ namespace Infrastructure.Persistence.Services
                 var refreshToken = GenerateRefreshToken(ipAddress);
                 response.RefreshToken = refreshToken.Token;
                 response.RefreshTokenExpiration = refreshToken.Expires;
-                user.RefreshTokens.Add(refreshToken);
+                user.RefreshToken = refreshToken.Token;
                _context.Update(user);
                _context.SaveChanges();
             }
@@ -238,7 +238,6 @@ namespace Infrastructure.Persistence.Services
                 EmailConfirmed = false,
                 PhoneNumberConfirmed = false,
                 PasswordHash = defaultPassword,
-                isVGNGAStaff = true    
             };
 
             var userWithSameEmail = await _userManager.FindByEmailAsync(request.Email);
@@ -420,7 +419,7 @@ namespace Infrastructure.Persistence.Services
         {
             var authenticationModel = new AuthenticationResponse();
 
-            var user = _context.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
+            var user = _context.Users.SingleOrDefault(u => u.RefreshToken == token);
 
             if (user == null)
             {
@@ -431,19 +430,20 @@ namespace Infrastructure.Persistence.Services
                 throw new ApiException($"Token did not match any users");
             }
 
-            var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
+            var refreshToken = user.RefreshToken;
 
-            if (!refreshToken.IsActive)
+            if (user.RefreshTokenExpiry < DateTime.UtcNow.AddHours(1))
             {
                 throw new ApiException($"Refresh Token is Inactive.");
             }
 
             //Revoke Current Refresh Token
-            refreshToken.Revoked = DateTime.UtcNow;
+          
 
             //Generate new Refresh Token and save to Database
             var newRefreshToken = GenerateRefreshToken();
-            user.RefreshTokens.Add(newRefreshToken);
+            user.RefreshToken = newRefreshToken.Token;
+            user.RefreshTokenExpiry = newRefreshToken.Expires;
 
             _context.Update(user);
             _context.SaveChanges();
@@ -464,21 +464,21 @@ namespace Infrastructure.Persistence.Services
         //revoke token
         public bool RevokeToken(string token)
         {
-            var user = _context.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
+            var user = _context.Users.SingleOrDefault(u => u.RefreshToken == token);
 
             // return false if no user found with token
             if (user == null) return false;
 
-            var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
+            var refreshToken = user.RefreshToken;
 
             // return false if token is not active
-            if (!refreshToken.IsActive) return false;
+            if (user.RefreshTokenExpiry <DateTime.UtcNow.AddHours(1)) return false;
 
             // revoke token and save
-            refreshToken.Revoked = DateTime.UtcNow;
+            user.RefreshTokenExpiry = DateTime.UtcNow;
 
-            //_context.Update(user);
-            //_context.SaveChanges();
+            _context.Update(user);
+            _context.SaveChanges();
 
             return true;
         }

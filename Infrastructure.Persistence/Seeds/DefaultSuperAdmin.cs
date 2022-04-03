@@ -28,7 +28,7 @@ namespace Infrastructure.Persistence.Seeds
             var staffCreateClaim = new Claim("CanCreateStaff", "staff.create");
             var canConfigureSettingsCreateClaim = new Claim("CanConfigureSettings", "settings.create");
 
-            //Seed Default User
+            //Seed Admin
             var superAdminUser = new ApplicationUser
             {
                 UserName = "superadmin",
@@ -36,7 +36,9 @@ namespace Infrastructure.Persistence.Seeds
                 FirstName = "Anthony",
                 LastName = "Odu",
                 EmailConfirmed = true,
-                PhoneNumberConfirmed = true,                 
+                PhoneNumberConfirmed = true,
+                StateId = 25,
+                LGAId = 514
             };
 
             if (userManager.Users.All(u => u.Id != superAdminUser.Id))

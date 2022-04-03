@@ -13,6 +13,7 @@ namespace Infrastructure.Persistence.Models.LocationEntities
     {
         [ForeignKey("LGA")]
         public string LGAId { get; set; }
-        public Polygon BoundaryCoordinates { get; set; }
+        public virtual LGA LGA { get; set; }
+        public Geometry BoundaryCoordinates { get; set; }
     }
 }

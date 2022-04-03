@@ -105,7 +105,7 @@ namespace Infrastructure.Identity.Services
 
 
 
-        public async Task<string> AddRoleAsync(AddRoleModel model)
+        public async Task<string> AddRoleAsync(AddToRoleModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)

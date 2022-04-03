@@ -12,10 +12,17 @@ namespace Domain.Entities.AppTroopers.Panic
 {
     public class Panic : AuditableBaseEntity
     {
-        public string IniatiatorId { get; set; }
-        public virtual ApplicationUser Initiator { get; set; }
+
+        [Required]
+        [ForeignKey("ApplicationUser")]
+        public string PanicInitiator { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
+
         public string PanicStatus { get; set; }
+
+        [Required]
+        [ForeignKey("Commute")]
         public int CommuteId { get; set; }
-        public  Commute CommuteDetails { get; set; }       
+        public virtual Commute Commute { get; set; }
     }
 }
