@@ -13,6 +13,7 @@ namespace Infrastructure.Persistence.Models.LocationEntities
     {
         [ForeignKey("Town")]
         public string TownId { get; set; }
-        public Polygon BoundaryCoordinates { get; set; }
+        public virtual Town Town { get; set; }
+        public Geometry BoundaryCoordinates { get; set; }
     }
 }

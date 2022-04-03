@@ -35,21 +35,21 @@ namespace Infrastructure.Identity.Services
     {
         private readonly IdentityContext _identityContext;
 
-        private readonly UserManager<ApplicationUserr> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly SignInManager<ApplicationUserr> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailService _emailService;
         private readonly JWTSettings _jwtSettings;
         private readonly VGNGAEmailSenders _emailSenderAddresses;
         private readonly IDateTimeService _dateTimeService;
         private readonly IRandomNumberGeneratorInterface _randomNumberGenerator;
 
-        public UserRolesManagerService(UserManager<ApplicationUserr> userManager,
+        public UserRolesManagerService(UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IOptions<JWTSettings> jwtSettings,
             IOptions<VGNGAEmailSenders> emailSenderAddresses,
             IDateTimeService dateTimeService,
-            SignInManager<ApplicationUserr> signInManager,
+            SignInManager<ApplicationUser> signInManager,
             IEmailService emailService,
             IRandomNumberGeneratorInterface randomNumberGenerator,
             IdentityContext identityContext)
@@ -117,7 +117,7 @@ namespace Infrastructure.Identity.Services
         {
             var userRolesList = new List<UserRolesViewModel>();
             var staffAndRoles = new GetAllStaffRolesViewModel();
-            List<ApplicationUserr> applicationUsers = new List<ApplicationUserr>();
+            List<ApplicationUser> applicationUsers = new List<ApplicationUser>();
 
             var customerRole = await _roleManager.FindByNameAsync(Application.Enums.Roles.Customer.ToString());
             var superAdminRole = await _roleManager.FindByNameAsync(Application.Enums.Roles.SuperAdmin.ToString());
@@ -130,7 +130,7 @@ namespace Infrastructure.Identity.Services
                 applicationUsers.Add(staffUser);
             }
 
-            foreach (ApplicationUserr user in applicationUsers)
+            foreach (ApplicationUser user in applicationUsers)
             {
                 var thisViewModel = new UserRolesViewModel();
                 thisViewModel.UserId = user.Id;
@@ -306,12 +306,12 @@ namespace Infrastructure.Identity.Services
         }
 
         //for in service use
-        private async Task<List<string>> GetUserRoles(ApplicationUserr user)
+        private async Task<List<string>> GetUserRoles(ApplicationUser user)
         {
             return new List<string>(await _userManager.GetRolesAsync(user));
         }
 
-        public ApplicationUserr GetById(string id)
+        public ApplicationUser GetById(string id)
         {
             return _identityContext.Users.Find(id);
         }

@@ -24,6 +24,6 @@ namespace Application.Interfaces
         Task<Response<string>> ResetPassword(ResetPasswordRequest model); 
         
         bool RevokeToken(string token); 
-        ApplicationUserr GetById(string id);
+        ApplicationUser GetById(string id);
     }
 }

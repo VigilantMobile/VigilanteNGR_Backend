@@ -4,22 +4,29 @@ using Infrastructure.Persistence.Models.Identity;
 using Infrastructure.Persistence.Models.LocationEntities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Domain.Entities.AppTroopers.SecurityTip
 {
-    public class SecurityTip2 : AuditableBaseEntity
+    public class SecurityTip : AuditableBaseEntity
     {
+        [Required]
         public string Subject { get; set; }
+        [Required]
         public string Body { get; set; }
         public string Description { get; set; }
+        [Required]
         public string Source { get; set; }
 
 
         //broadcaster
+        [Required]
+        [ForeignKey("ApplicationUser")]
+        public string BroadcasterId { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
 
-        public string BroadcasterUserId { get; set; } //No FK
 
         //Admin Authorization
         public bool isAdminAuthorized { get; set; } // 
@@ -29,26 +36,28 @@ namespace Domain.Entities.AppTroopers.SecurityTip
         public virtual VGNGAStaff VGNGAAdminAuthorizer { get; set; }
 
         //Coverage Type - based on broadcaster => Nullable for each or Generic
-        public string LocationId { get; set; } //No FK
+        [Required]
+        public int LocationId { get; set; } //No FK
 
+        [Required]
         [ForeignKey("BroadcastLevel")]
         public int BroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
-        public BroadcastLevel BroadcastLevel { get; set; }
+        public virtual BroadcastLevel BroadcastLevel { get; set; }
 
+        [Required]
         [ForeignKey("BroadcasterType")]
         public int BroadcasterTypeId { get; set; }
-        public BroadcasterType BroadcasterType { get; set; }
+        public virtual BroadcasterType BroadcasterType { get; set; }
 
-
+        [Required]
         [ForeignKey("SecurityTipCategory")]
         public int SecurityTipCategoryId { get; set; }
-        public SecurityTipCategory SecurityTipCategory { get; set; }
+        public virtual SecurityTipCategory SecurityTipCategory { get; set; }
 
         //
+        [Required]
         [ForeignKey("AlertLevel")]
         public int AlertLevelId { get; set; }
-        public AlertLevel AlertLevel { get; set; }
-
-
+        public virtual AlertLevel AlertLevel { get; set; }
     }
 }

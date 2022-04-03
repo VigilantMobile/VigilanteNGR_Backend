@@ -57,11 +57,11 @@ namespace VGWebAPI
 
 
                     //Seed Default Entities
-                    //dbInitializer.Initialize();
+                    dbInitializer.Initialize();
                     dbInitializer.SeedStatesandLGAs();
-                    // dbInitializer.SeedAppTrooperHelpers();
-                    //Log.Information("Finished Seeding Default Data");
-                    //Log.Information("Application Starting");
+                    dbInitializer.SeedAppTrooperHelpers();
+                    Log.Information("Finished Seeding Default Data");
+                    Log.Information("Application Starting");
                 }
                 catch (Exception ex)
                 {

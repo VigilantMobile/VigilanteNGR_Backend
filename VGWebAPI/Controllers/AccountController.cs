@@ -214,7 +214,7 @@ namespace VGWebAPI.Controllers
             try
             {
                 var user = _accountService.GetById(id);
-                return Ok(user.RefreshTokens);
+                return Ok(user.RefreshToken);
             }
             catch (Exception ex)
             {

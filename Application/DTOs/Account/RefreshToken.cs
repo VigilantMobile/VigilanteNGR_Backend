@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Application.DTOs.Account
 {
-    [Owned]
+    //[Owned]
     public class RefreshToken
     {
         public int Id { get; set; }

@@ -33,21 +33,21 @@ namespace Infrastructure.Identity.Services
     public class RoleManagerService : IRoleManagerService
     {
         private readonly IdentityContext _identityContext;
-        private readonly UserManager<ApplicationUserr> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly SignInManager<ApplicationUserr> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailService _emailService;
         private readonly JWTSettings _jwtSettings;
         private readonly VGNGAEmailSenders _emailSenderAddresses;
         private readonly IDateTimeService _dateTimeService;
         private readonly IRandomNumberGeneratorInterface _randomNumberGenerator;
 
-        public RoleManagerService(UserManager<ApplicationUserr> userManager,
+        public RoleManagerService(UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IOptions<JWTSettings> jwtSettings,
             IOptions<VGNGAEmailSenders> emailSenderAddresses,
             IDateTimeService dateTimeService,
-            SignInManager<ApplicationUserr> signInManager,
+            SignInManager<ApplicationUser> signInManager,
             IEmailService emailService,
             IRandomNumberGeneratorInterface randomNumberGenerator,
             IdentityContext identityContext)
@@ -338,7 +338,7 @@ namespace Infrastructure.Identity.Services
             return await GetRoleClaims(manageAllRoleClaimsRequest.RoleId);
         }
 
-        public ApplicationUserr GetById(string id)
+        public ApplicationUser GetById(string id)
         {
             return _identityContext.Users.Find(id);
         }

@@ -53,6 +53,7 @@ namespace Infrastructure.Persistence.Contexts
         //settlement
         public DbSet<NPFSettlementAdmin> NPFSettlementAdmin { get; set; }
         public DbSet<NPFSettlementOperator> NPFSettlementOperator { get; set; }
+
         // staff
         public DbSet<VGNGAStaff> VGNGAStaff { get; set; }
 
@@ -62,9 +63,6 @@ namespace Infrastructure.Persistence.Contexts
         public DbSet<LGA> LGAs { get; set; }
         public DbSet<Town> Towns { get; set; }
         public DbSet<Settlement> Settlements { get; set; }
-        public DbSet<LGABoundaryPoints> LGABoundaryPoints { get; set; }
-        public DbSet<TownBoundaryPoints> TownBoundaryPoints { get; set; }
-
 
         //App Troopers
         //Security Tip
@@ -173,12 +171,22 @@ namespace Infrastructure.Persistence.Contexts
                 entity.ToTable("CustomClaims");
             });
 
-           
+
+
+
+
+
+            // Geometry Types 
+
+
             //State 
+
             builder.Entity<State>().Property(p => p.Boundary).HasColumnType("geography");
 
             //LGA
-            builder.Entity<LGA>().Property(p => p.Boundary).HasColumnType("geography");
+            builder.Entity<LGA>()
+                
+                .Property(p => p.Boundary).HasColumnType("geography");
 
             //Town
             builder.Entity<Town>().Property(p => p.Boundary).HasColumnType("geography");
@@ -186,7 +194,115 @@ namespace Infrastructure.Persistence.Contexts
             //Settlement
             builder.Entity<Settlement>().Property(p => p.Boundary).HasColumnType("geography");
 
-            //Security Tip -> App User
+            //RELATIONSHIPS //-------------------------------------------------------------------------------------------------------------
+
+
+            //Identity
+
+            builder.Entity<ApplicationUser>().HasOne(s => s.State)
+             .WithMany(g => g.Customers).HasForeignKey(s => s.StateId).OnDelete(DeleteBehavior.Restrict);
+
+
+
+            //State
+            builder.Entity<VGNGAStaff>()
+             .HasMany(x => x.VGNGAAdminStates)
+            .WithMany(x => x.VGNGAStateAdmins);
+
+            builder.Entity<VGNGAStaff>()
+            .HasMany(x => x.VGNGAOperatorStates)
+           .WithMany(x => x.VGNGAStateOperators);
+
+
+            //LGA
+            builder.Entity<ApplicationUser>().HasOne(s => s.LGA)
+            .WithMany(g => g.Customers).HasForeignKey(s => s.LGAId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<VGNGAStaff>()
+           .HasMany(x => x.VGNGAOperatorLGAs)
+           .WithMany(x => x.VGNGALGAOperators);
+
+            builder.Entity<VGNGAStaff>()
+              .HasMany(x => x.VGNGAAdminLGAs)
+              .WithMany(x => x.VGNGALGAAdmins);
+
+            //Town
+            builder.Entity<ApplicationUser>().HasOne(s => s.Town)
+            .WithMany(g => g.Customers).HasForeignKey(s => s.TownId).OnDelete(DeleteBehavior.Restrict);
+
+
+            builder.Entity<VGNGAStaff>()
+            .HasMany(x => x.VGNGAAdminTowns)
+            .WithMany(x => x.VGNGATownAdmins);
+
+            builder.Entity<VGNGAStaff>()
+            .HasMany(x => x.VGNGAOperatorTowns)
+            .WithMany(x => x.VGNGATownOperators);
+
+            //Settlement
+            builder.Entity<ApplicationUser>().HasOne(s => s.Settlement)
+            .WithMany(g => g.Customers).HasForeignKey(s => s.SettlementId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<VGNGAStaff>()
+           .HasMany(x => x.VGNGAAdminSettlements)
+           .WithMany(x => x.VGNGASettlementAdmins);
+
+            builder.Entity<VGNGAStaff>()
+            .HasMany(x => x.VGNGAOperatorSettlements)
+            .WithMany(x => x.VGNGASettlementOperators);
+
+            builder.Entity<VGNGAStaff>()
+            .HasMany(x => x.VGNGAOperatorSettlements)
+            .WithMany(x => x.VGNGASettlementOperators);
+
+            //Commute
+            //Town Commutes
+            builder.Entity<Commute>().HasOne(s => s.DepartureTown)
+            .WithMany(g => g.DepartureTownCommutes).HasForeignKey(s => s.DepartureTownId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Commute>().HasOne(s => s.DestinationTown)
+           .WithMany(g => g.DestinationTownCommutes).HasForeignKey(s => s.DestinationTownId).OnDelete(DeleteBehavior.Restrict);
+
+            //SettlementCommutes
+            builder.Entity<Commute>().HasOne(s => s.DepartureSettlement)
+           .WithMany(g => g.DepartureSettlementCommutes).HasForeignKey(s => s.DepartureSettlementId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Commute>().HasOne(s => s.DestinationSettlement)
+           .WithMany(g => g.DestinationSettlementCommutes).HasForeignKey(s => s.DestinationSettlementId).OnDelete(DeleteBehavior.Restrict);
+
+            // Departments
+            builder.Entity<VGNGAStaff>().HasOne(s => s.Department)
+            .WithMany(g => g.VGNGAStaff).HasForeignKey(s => s.DepartmentId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Department>().HasOne(s => s.HOD)
+           .WithMany(g => g.HODDepartments).HasForeignKey(s => s.HodId).OnDelete(DeleteBehavior.Restrict).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Department>().HasOne(s => s.Secretary)
+            .WithMany(g => g.SecretaryDepartments).HasForeignKey(s => s.SecretaryId).OnDelete(DeleteBehavior.Restrict);
+
+
+
+            //wanted
+            builder.Entity<WantedPerson>().HasOne(s => s.Town)
+           .WithMany(g => g.TownWantedPeople).HasForeignKey(s => s.TownId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<WantedPerson>().HasOne(s => s.Settlement)
+            .WithMany(g => g.SettlementWantedPeople).HasForeignKey(s => s.SettlementId).OnDelete(DeleteBehavior.Restrict);
+
+            //missing
+            builder.Entity<MissingPerson>().HasOne(s => s.Town)
+           .WithMany(g => g.TownMissingPeople).HasForeignKey(s => s.TownId).OnDelete(DeleteBehavior.Restrict);
+
+
+            builder.Entity<MissingPerson>().HasOne(s => s.Settlement)
+           .WithMany(g => g.SettlementMissingPeople).HasForeignKey(s => s.SettlementId).OnDelete(DeleteBehavior.Restrict);
+
+            //missing items
+            builder.Entity<MissingItem>().HasOne(s => s.Town)
+          .WithMany(g => g.TownMissingItems).HasForeignKey(s => s.TownId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<MissingItem>().HasOne(s => s.Settlement)
+           .WithMany(g => g.SettlementMissingItems).HasForeignKey(s => s.SettlementId).OnDelete(DeleteBehavior.Restrict);
 
             //All Decimals will have 18,6 Range
             foreach (var property in builder.Model.GetEntityTypes()

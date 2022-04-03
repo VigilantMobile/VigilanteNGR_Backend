@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Infrastructure.Identity.Models
 {
-    public class ApplicationUserr : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
-        public ApplicationUserr()
+        public ApplicationUser()
         {
             this.FirstTimePromoUsed = false;
             this.CurrentPromoUsed = false;

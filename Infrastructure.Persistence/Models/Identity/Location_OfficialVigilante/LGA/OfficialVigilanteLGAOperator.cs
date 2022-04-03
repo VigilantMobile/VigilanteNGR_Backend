@@ -14,4 +14,3 @@ namespace Infrastructure.Persistence.Models.Identity.Location
         public virtual ICollection<LGA> LGAs { get; set; }
     }
 }
-}

@@ -25,17 +25,17 @@ namespace Domain.Entities.AppTroopers.Missing
         [MaxLength(150)]
         public string Description { get; set; }
         public string IdNumber { get; set; }
-        public string description { get; set; }
         public DateTime DateLastSeen { get; set; }
 
+        [Required]
         [ForeignKey("Town")]
         public int TownId { get; set; }
-        public Town Town { get; set; }
+        public virtual Town Town { get; set; }
 
-
+        [Required]
         [ForeignKey("Settlement")]
         public int SettlementId { get; set; }
-        public Settlement Settlement { get; set; }
+        public virtual Settlement Settlement { get; set; }
 
         //Admin Authorization
         public bool isAdminAuthorized { get; set; }
@@ -54,7 +54,7 @@ namespace Domain.Entities.AppTroopers.Missing
 
         [ForeignKey("BroadcastLevel")]
         public int BroadcastLevelId { get; set; }
-        public BroadcastLevel BroadcastLevel { get; set; }
+        public virtual BroadcastLevel BroadcastLevel { get; set; }
 
     }
 }

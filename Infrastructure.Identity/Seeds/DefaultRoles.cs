@@ -12,7 +12,7 @@ namespace Infrastructure.Identity.Seeds
 {
     public static class DefaultRoles
     {
-        public static async Task SeedAsync(UserManager<ApplicationUserr> userManager, RoleManager<IdentityRole> roleManager)
+        public static async Task SeedAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
 
             //Get default Claims

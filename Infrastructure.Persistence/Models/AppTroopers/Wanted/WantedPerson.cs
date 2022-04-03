@@ -36,12 +36,11 @@ namespace Domain.Entities.AppTroopers.Wanted
 
         [ForeignKey("Town")]
         public int TownId { get; set; }
-        public Town State { get; set; }
-
+        public virtual Town Town { get; set; }
 
         [ForeignKey("Settlement")]
         public int SettlementId { get; set; }
-        public Settlement Settlement { get; set; }
+        public virtual Settlement Settlement { get; set; }
 
 
         //NPF Authorization
@@ -49,10 +48,10 @@ namespace Domain.Entities.AppTroopers.Wanted
         public string NPFAuthorizerID { get; set; }
         public NPFAuthorityType NPFAuthorityType { get; set; }
 
-
+        [Required]
         [ForeignKey("BroadcastLevel")]
         public int BroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
-        public BroadcastLevel BroadcastLevel { get; set; }
+        public virtual BroadcastLevel BroadcastLevel { get; set; }
 
     }
 }

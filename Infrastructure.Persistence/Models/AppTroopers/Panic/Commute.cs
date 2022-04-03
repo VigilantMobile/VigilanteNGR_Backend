@@ -12,15 +12,48 @@ namespace Domain.Entities.AppTroopers.Panic
 {
     public class Commute : AuditableBaseEntity
     {
+        public string DepartureCoordinates { get; set; }
+
+        //Departure
         [Required]
         [MaxLength(150)]
+
+        //Town
+        //Departure
+        [ForeignKey("DepartureTown")]
+        public int DepartureTownId { get; set; }
+        public virtual Town DepartureTown { get; set; }
+
+        [Required]
         public string DepartureTownAddress { get; set; }
-        public Town DepartureTown { get; set; }
-        public string DepartureCoordinates { get; set; }
+
+   
+
+        //Destination
+        [ForeignKey("DestinationTown")]
+        public int DestinationTownId { get; set; }
+        public virtual Town DestinationTown { get; set; }
+        public string DestinationCoordinates { get; set; }
+        [Required]
         public string DestinationTownAddress { get; set; }
 
-        public Town DestinationTown { get; set; }
-        public string DestinationDestinationCoordinates { get; set; }
+
+        //Settlement
+        //Departure
+        [ForeignKey("DepartureSettlement")]
+        public int DepartureSettlementId { get; set; }
+        public virtual Settlement DepartureSettlement { get; set; }
+
+        [Required]
+        public string DepartureSettlementAddress { get; set; }
+
+        //Destination
+        //Destination
+        [ForeignKey("DestinationSettlement")]
+        public int DestinationSettlementId { get; set; }
+        public virtual Settlement DestinationSettlement { get; set; }
+        public string DestinationSettlementAddress { get; set; }
+
 
         //Visiting
         public string VisiteeName { get; set; }
