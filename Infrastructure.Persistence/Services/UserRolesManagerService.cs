@@ -26,8 +26,8 @@ using Infrastructure.Shared.Services;
 using Application.DTOs.Account.RoleManagement;
 using Microsoft.EntityFrameworkCore;
 using Application.DTOs.Account.UserRoleManagement;
-using Infrastructure.Persistence.Models.Identity;
 using Infrastructure.Persistence.Models;
+using Domain.Entities.Identity;
 
 namespace Infrastructure.Identity.Services
 {

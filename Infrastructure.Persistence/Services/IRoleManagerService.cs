@@ -1,6 +1,7 @@
 ﻿using Application.DTOs.Account;
 using Application.DTOs.Account.RoleManagement;
 using Application.Wrappers;
+using Domain.Entities.Identity;
 using Infrastructure.Persistence.Models;
 using Microsoft.AspNetCore.Identity;
 using System;

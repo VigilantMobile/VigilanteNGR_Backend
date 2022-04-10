@@ -1,9 +1,9 @@
 ﻿using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Wrappers;
+using Domain.Entities.Identity;
 using Domain.Settings;
 using Infrastructure.Persistence.Contexts;
-using Infrastructure.Persistence.Models.Identity;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Persistence.Repository;
 using Infrastructure.Persistence.Services;

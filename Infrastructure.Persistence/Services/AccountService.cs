@@ -26,10 +26,10 @@ using Infrastructure.Shared.Services;
 using Microsoft.AspNetCore.Http;
 using Infrastructure.Persistence.Helpers;
 using Infrastructure.Persistence.Models;
-using Infrastructure.Persistence.Models.Identity;
 using RestSharp;
 using RestSharp;
 using RestSharp.Authenticators;
+using Domain.Entities.Identity;
 
 namespace Infrastructure.Persistence.Services
 {
@@ -193,7 +193,6 @@ namespace Infrastructure.Persistence.Services
 
                     CustomerRegistrationResponse response = new CustomerRegistrationResponse { Message = "Account Created Successfully.", UserAlreadyExists = false };
                     return new Response<CustomerRegistrationResponse>(response, message: $"Your account has been created successfuly. ");
-
                 }
                 else
                 {

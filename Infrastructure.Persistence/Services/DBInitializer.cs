@@ -1,9 +1,9 @@
 ﻿using Domain.Common.Enums;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.LocationEntities;
 using Infrastructure.Persistence.Contexts;
 using Infrastructure.Persistence.Models;
-using Infrastructure.Persistence.Models.LocationEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite;
@@ -102,7 +102,7 @@ namespace Infrastructure.Persistence.Services
 
            try
            {
-                List<StateNamesandIds> stateNamesandIdsList = new List<StateNamesandIds>();
+                List<StateNamesandIdsVM> stateNamesandIdsList = new List<StateNamesandIdsVM>();
                 using (var serviceScope = _scopeFactory.CreateScope())
                 {
                     using (var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>())
@@ -121,7 +121,7 @@ namespace Infrastructure.Persistence.Services
                             //};
                             //context.demographicEntitiesCoordinatesJSONs.Add(SatesJSONDemographic);
 
-                            List<StatesMPs> statesMultipolygons = JsonConvert.DeserializeObject<List<StatesMPs>>(StatesMultiploygonsJSON);
+                            List<StatesMultiPolygons> statesMultipolygons = JsonConvert.DeserializeObject<List<StatesMultiPolygons>>(StatesMultiploygonsJSON);
 
                             foreach (var state in statesMultipolygons)
                             {
@@ -140,7 +140,7 @@ namespace Infrastructure.Persistence.Services
                                 context.States.Add(stateEntity);
                                 context.SaveChanges();
 
-                                StateNamesandIds nameIdPair = new StateNamesandIds
+                                StateNamesandIdsVM nameIdPair = new StateNamesandIdsVM
                                 {
                                     stateId = stateEntity.Id,
                                     stateName = stateEntity.Name
@@ -159,7 +159,7 @@ namespace Infrastructure.Persistence.Services
                             {
                                 stateNamesandIdsList =
                                     (from s in context.States
-                                     select new StateNamesandIds
+                                     select new StateNamesandIdsVM
                                      {
                                          stateId = s.Id,
                                          stateName = s.Name

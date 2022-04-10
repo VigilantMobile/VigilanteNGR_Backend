@@ -1,4 +1,4 @@
-﻿using Infrastructure.Persistence.Enums;
+﻿using Domain.Common.Enums;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Newtonsoft.Json;
 using System;
