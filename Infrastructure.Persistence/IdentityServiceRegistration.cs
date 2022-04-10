@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetTopologySuite.Geometries;
-using Infrastructure.Persistence.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Domain.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

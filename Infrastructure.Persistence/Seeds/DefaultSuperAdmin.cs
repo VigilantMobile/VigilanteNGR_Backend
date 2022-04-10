@@ -1,6 +1,6 @@
 ﻿using Application.Enums;
+using Domain.Entities.Identity;
 using Infrastructure.Persistence.Models;
-using Infrastructure.Persistence.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Org.BouncyCastle.Crypto.Prng.Drbg;

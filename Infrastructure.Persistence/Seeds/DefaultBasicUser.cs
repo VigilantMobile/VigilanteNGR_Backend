@@ -1,5 +1,5 @@
 ﻿using Application.Enums;
-using Infrastructure.Persistence.Models.Identity;
+using Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;

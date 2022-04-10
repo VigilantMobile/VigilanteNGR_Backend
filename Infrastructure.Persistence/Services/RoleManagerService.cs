@@ -25,8 +25,8 @@ using Infrastructure.Persistence.Contexts;
 using Infrastructure.Shared.Services;
 using Application.DTOs.Account.RoleManagement;
 using Microsoft.EntityFrameworkCore;
-using Infrastructure.Persistence.Models.Identity;
 using Infrastructure.Persistence.Models;
+using Domain.Entities.Identity;
 
 namespace Infrastructure.Identity.Services
 {
@@ -105,7 +105,7 @@ namespace Infrastructure.Identity.Services
 
 
 
-        public async Task<string> AddRoleAsync(AddToRoleModel model)
+        public async Task<string> AddUserRoleAsync(AddToRoleModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
@@ -223,10 +223,6 @@ namespace Infrastructure.Identity.Services
 
             return new Response<List<RolesAndClaimsResponse>>(rolesAndClaimsResponse, $" User Custom Claims successfully retrieved.");
         }
-
-
-
-
 
         // configure all role claims
         public async Task<Response<List<RolesAndClaimsResponse>>> ConfigureAllRolesandClaims(List<ManageRoleClaimsRequest> manageAllRoleClaimsRequest)

@@ -7,7 +7,7 @@ using Application.Enums;
 using System.Security.Claims;
 using System.Linq;
 using Infrastructure.Persistence.Models;
-using Infrastructure.Persistence.Models.Identity;
+using Domain.Entities.Identity;
 
 namespace Infrastructure.Persistence.Seeds
 {

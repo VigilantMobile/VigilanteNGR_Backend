@@ -9,7 +9,7 @@ using Newtonsoft.Json.Converters;
 
 namespace Infrastructure.Persistence.Models
 {
-    public class StatesMPs
+    public class StatesMultiPolygons
     {
         public string admin1Name { get; set; }
         public string admin1Pcod { get; set; }

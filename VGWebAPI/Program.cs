@@ -1,4 +1,3 @@
-using Infrastructure.Persistence.Models.Identity;
 using Infrastructure.Persistence.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Azure.Identity;
+using Domain.Entities.Identity;
 
 namespace VGWebAPI
 {

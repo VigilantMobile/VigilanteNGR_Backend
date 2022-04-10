@@ -56,6 +56,194 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("AuditLogs");
                 });
 
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Curfew.LGACurfew", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AdminAuthorizerID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DailyEndHour")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DailyStartHour")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("LGAId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdminAuthorizerID");
+
+                    b.HasIndex("LGAId");
+
+                    b.ToTable("LGACurfew");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Curfew.SettlementCurfew", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AdminAuthorizerID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DailyEndHour")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DailyStartHour")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SettlementId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdminAuthorizerID");
+
+                    b.HasIndex("SettlementId");
+
+                    b.ToTable("SettlementCurfew");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Curfew.StateCurfew", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AdminAuthorizerID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DailyEndHour")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DailyStartHour")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StateId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdminAuthorizerID");
+
+                    b.HasIndex("StateId");
+
+                    b.ToTable("StateCurfew");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Curfew.TownCurfew", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AdminAuthorizerID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DailyEndHour")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DailyStartHour")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("TownId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdminAuthorizerID");
+
+                    b.HasIndex("TownId");
+
+                    b.ToTable("TownCurfew");
+                });
+
             modelBuilder.Entity("Domain.Entities.AppTroopers.Missing.MissingItem", b =>
                 {
                     b.Property<int>("Id")
@@ -197,8 +385,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<bool>("isAdminAuthorized")
                         .HasColumnType("bit");
 
-                    b.Property<int>("photoUrl")
-                        .HasColumnType("int");
+                    b.Property<string>("photoUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -704,294 +892,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Departments");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Barcode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Rate")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.AppTroopers.Curfew.LGACurfew", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AdminAuthorizerID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DailyEndHour")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DailyStartHour")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("LGAId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdminAuthorizerID");
-
-                    b.HasIndex("LGAId");
-
-                    b.ToTable("LGACurfew");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.AppTroopers.Curfew.SettlementCurfew", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AdminAuthorizerID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DailyEndHour")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DailyStartHour")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SettlementId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdminAuthorizerID");
-
-                    b.HasIndex("SettlementId");
-
-                    b.ToTable("SettlementCurfew");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.AppTroopers.Curfew.StateCurfew", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AdminAuthorizerID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DailyEndHour")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DailyStartHour")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("StateId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdminAuthorizerID");
-
-                    b.HasIndex("StateId");
-
-                    b.ToTable("StateCurfew");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.AppTroopers.Curfew.TownCurfew", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("AdminAuthorizerID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DailyEndHour")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DailyStartHour")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("TownId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdminAuthorizerID");
-
-                    b.HasIndex("TownId");
-
-                    b.ToTable("TownCurfew");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.CustomClaims", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FriendlyName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CustomClaims");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.DemographicEntitiesCoordinatesJSON", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DemographicType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("JsonString")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("demographicEntitiesCoordinatesJSONs");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.ApplicationUser", b =>
+            modelBuilder.Entity("Domain.Entities.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -1133,7 +1034,40 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("ApplicationUser");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.LGA", b =>
+            modelBuilder.Entity("Domain.Entities.Identity.CustomClaims", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FriendlyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CustomClaims");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LocationEntities.LGA", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1178,7 +1112,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("LGAs");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.Settlement", b =>
+            modelBuilder.Entity("Domain.Entities.LocationEntities.Settlement", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1220,7 +1154,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Settlements");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.State", b =>
+            modelBuilder.Entity("Domain.Entities.LocationEntities.State", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1263,7 +1197,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("States");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.Town", b =>
+            modelBuilder.Entity("Domain.Entities.LocationEntities.Town", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1303,6 +1237,72 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("LGAId");
 
                     b.ToTable("Towns");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Barcode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Rate")
+                        .HasColumnType("decimal(18,6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Infrastructure.Persistence.Models.DemographicEntitiesCoordinatesJSON", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DemographicType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JsonString")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("demographicEntitiesCoordinatesJSONs");
                 });
 
             modelBuilder.Entity("LGANPFLGAAdmin", b =>
@@ -1796,98 +1796,26 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("TownVGNGAStaff1");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.NPFLGAAdmin", b =>
+            modelBuilder.Entity("Domain.Entities.Identity.Identity.OfficialVigilanteLGAAdmin", b =>
                 {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
 
                     b.Property<bool>("IsSuperAdmin")
                         .HasColumnType("bit");
 
-                    b.HasDiscriminator().HasValue("NPFLGAAdmin");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.NPFLGAOperator", b =>
-                {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
-
-                    b.HasDiscriminator().HasValue("NPFLGAOperator");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.NPFSettlementAdmin", b =>
-                {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
-
-                    b.Property<bool>("IsSuperAdmin")
-                        .HasColumnType("bit")
-                        .HasColumnName("NPFSettlementAdmin_IsSuperAdmin");
-
-                    b.HasDiscriminator().HasValue("NPFSettlementAdmin");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.NPFSettlementOperator", b =>
-                {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
-
-                    b.HasDiscriminator().HasValue("NPFSettlementOperator");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.NPFStateAdmin", b =>
-                {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
-
-                    b.Property<bool>("IsSuperAdmin")
-                        .HasColumnType("bit")
-                        .HasColumnName("NPFStateAdmin_IsSuperAdmin");
-
-                    b.HasDiscriminator().HasValue("NPFStateAdmin");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.NPFStateOperator", b =>
-                {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
-
-                    b.HasDiscriminator().HasValue("NPFStateOperator");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.NPFTownAdmin", b =>
-                {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
-
-                    b.Property<bool>("IsSuperAdmin")
-                        .HasColumnType("bit")
-                        .HasColumnName("NPFTownAdmin_IsSuperAdmin");
-
-                    b.HasDiscriminator().HasValue("NPFTownAdmin");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.NPFTownOperator", b =>
-                {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
-
-                    b.HasDiscriminator().HasValue("NPFTownOperator");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteLGAAdmin", b =>
-                {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
-
-                    b.Property<bool>("IsSuperAdmin")
-                        .HasColumnType("bit")
-                        .HasColumnName("OfficialVigilanteLGAAdmin_IsSuperAdmin");
-
                     b.HasDiscriminator().HasValue("OfficialVigilanteLGAAdmin");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteLGAOperator", b =>
+            modelBuilder.Entity("Domain.Entities.Identity.Identity.OfficialVigilanteLGAOperator", b =>
                 {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
 
                     b.HasDiscriminator().HasValue("OfficialVigilanteLGAOperator");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteSettlementAdmin", b =>
+            modelBuilder.Entity("Domain.Entities.Identity.Identity.OfficialVigilanteSettlementAdmin", b =>
                 {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
 
                     b.Property<bool>("IsSuperAdmin")
                         .HasColumnType("bit")
@@ -1896,16 +1824,16 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasDiscriminator().HasValue("OfficialVigilanteSettlementAdmin");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteSettlementOperator", b =>
+            modelBuilder.Entity("Domain.Entities.Identity.Identity.OfficialVigilanteSettlementOperator", b =>
                 {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
 
                     b.HasDiscriminator().HasValue("OfficialVigilanteSettlementOperator");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteStateAdmin", b =>
+            modelBuilder.Entity("Domain.Entities.Identity.Identity.OfficialVigilanteStateAdmin", b =>
                 {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
 
                     b.Property<bool>("IsSuperAdmin")
                         .HasColumnType("bit")
@@ -1914,16 +1842,16 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasDiscriminator().HasValue("OfficialVigilanteStateAdmin");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteStateOperator", b =>
+            modelBuilder.Entity("Domain.Entities.Identity.Identity.OfficialVigilanteStateOperator", b =>
                 {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
 
                     b.HasDiscriminator().HasValue("OfficialVigilanteStateOperator");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteTownAdmin", b =>
+            modelBuilder.Entity("Domain.Entities.Identity.Identity.OfficialVigilanteTownAdmin", b =>
                 {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
 
                     b.Property<bool>("IsSuperAdmin")
                         .HasColumnType("bit")
@@ -1932,16 +1860,88 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasDiscriminator().HasValue("OfficialVigilanteTownAdmin");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteTownOperator", b =>
+            modelBuilder.Entity("Domain.Entities.Identity.Location.NPFLGAAdmin", b =>
                 {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
+
+                    b.Property<bool>("IsSuperAdmin")
+                        .HasColumnType("bit")
+                        .HasColumnName("NPFLGAAdmin_IsSuperAdmin");
+
+                    b.HasDiscriminator().HasValue("NPFLGAAdmin");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identity.Location.NPFLGAOperator", b =>
+                {
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
+
+                    b.HasDiscriminator().HasValue("NPFLGAOperator");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identity.Location.NPFSettlementAdmin", b =>
+                {
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
+
+                    b.Property<bool>("IsSuperAdmin")
+                        .HasColumnType("bit")
+                        .HasColumnName("NPFSettlementAdmin_IsSuperAdmin");
+
+                    b.HasDiscriminator().HasValue("NPFSettlementAdmin");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identity.Location.NPFSettlementOperator", b =>
+                {
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
+
+                    b.HasDiscriminator().HasValue("NPFSettlementOperator");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identity.Location.NPFStateAdmin", b =>
+                {
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
+
+                    b.Property<bool>("IsSuperAdmin")
+                        .HasColumnType("bit")
+                        .HasColumnName("NPFStateAdmin_IsSuperAdmin");
+
+                    b.HasDiscriminator().HasValue("NPFStateAdmin");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identity.Location.NPFStateOperator", b =>
+                {
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
+
+                    b.HasDiscriminator().HasValue("NPFStateOperator");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identity.Location.NPFTownAdmin", b =>
+                {
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
+
+                    b.Property<bool>("IsSuperAdmin")
+                        .HasColumnType("bit")
+                        .HasColumnName("NPFTownAdmin_IsSuperAdmin");
+
+                    b.HasDiscriminator().HasValue("NPFTownAdmin");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identity.Location.NPFTownOperator", b =>
+                {
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
+
+                    b.HasDiscriminator().HasValue("NPFTownOperator");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identity.Location.OfficialVigilanteTownOperator", b =>
+                {
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
 
                     b.HasDiscriminator().HasValue("OfficialVigilanteTownOperator");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.VGNGAStaff", b =>
+            modelBuilder.Entity("Domain.Entities.Identity.VGNGAStaff", b =>
                 {
-                    b.HasBaseType("Infrastructure.Persistence.Models.Identity.ApplicationUser");
+                    b.HasBaseType("Domain.Entities.Identity.ApplicationUser");
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
@@ -1960,9 +1960,85 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasDiscriminator().HasValue("VGNGAStaff");
                 });
 
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Curfew.LGACurfew", b =>
+                {
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", "VGNGAStaff")
+                        .WithMany("LGACurfew")
+                        .HasForeignKey("AdminAuthorizerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.LocationEntities.LGA", "LGA")
+                        .WithMany()
+                        .HasForeignKey("LGAId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LGA");
+
+                    b.Navigation("VGNGAStaff");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Curfew.SettlementCurfew", b =>
+                {
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", "VGNGAStaff")
+                        .WithMany("SettlementCurfew")
+                        .HasForeignKey("AdminAuthorizerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", "Settlement")
+                        .WithMany()
+                        .HasForeignKey("SettlementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Settlement");
+
+                    b.Navigation("VGNGAStaff");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Curfew.StateCurfew", b =>
+                {
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", "VGNGAStaff")
+                        .WithMany("StateCurfew")
+                        .HasForeignKey("AdminAuthorizerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.LocationEntities.State", "State")
+                        .WithMany()
+                        .HasForeignKey("StateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("State");
+
+                    b.Navigation("VGNGAStaff");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Curfew.TownCurfew", b =>
+                {
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", "VGNGAStaff")
+                        .WithMany("TownCurfew")
+                        .HasForeignKey("AdminAuthorizerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "Town")
+                        .WithMany()
+                        .HasForeignKey("TownId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Town");
+
+                    b.Navigation("VGNGAStaff");
+                });
+
             modelBuilder.Entity("Domain.Entities.AppTroopers.Missing.MissingItem", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", "VGNGAStaff")
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", "VGNGAStaff")
                         .WithMany()
                         .HasForeignKey("AdminAuthorizerID");
 
@@ -1972,17 +2048,17 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.ApplicationUser", "ApplicationUser")
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "ApplicationUser")
                         .WithMany("MissingItems")
                         .HasForeignKey("LoserId");
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", "Settlement")
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", "Settlement")
                         .WithMany("SettlementMissingItems")
                         .HasForeignKey("SettlementId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", "Town")
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "Town")
                         .WithMany("TownMissingItems")
                         .HasForeignKey("TownId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2001,7 +2077,7 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.Missing.MissingPerson", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", "VGNGAStaff")
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", "VGNGAStaff")
                         .WithMany()
                         .HasForeignKey("AdminAuthorizerID");
 
@@ -2011,17 +2087,17 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.ApplicationUser", "ApplicationUser")
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "ApplicationUser")
                         .WithMany("MissingPeople")
                         .HasForeignKey("LoserId");
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", "Settlement")
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", "Settlement")
                         .WithMany("SettlementMissingPeople")
                         .HasForeignKey("SettlementId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", "Town")
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "Town")
                         .WithMany("TownMissingPeople")
                         .HasForeignKey("TownId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -2039,25 +2115,25 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.Commute", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", "DepartureSettlement")
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", "DepartureSettlement")
                         .WithMany("DepartureSettlementCommutes")
                         .HasForeignKey("DepartureSettlementId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", "DepartureTown")
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "DepartureTown")
                         .WithMany("DepartureTownCommutes")
                         .HasForeignKey("DepartureTownId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", "DestinationSettlement")
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", "DestinationSettlement")
                         .WithMany("DestinationSettlementCommutes")
                         .HasForeignKey("DestinationSettlementId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", "DestinationTown")
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "DestinationTown")
                         .WithMany("DestinationTownCommutes")
                         .HasForeignKey("DestinationTownId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2080,7 +2156,7 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.ApplicationUser", "ApplicationUser")
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "ApplicationUser")
                         .WithMany()
                         .HasForeignKey("PanicInitiator")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2105,7 +2181,7 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.ApplicationUser", "ApplicationUser")
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "ApplicationUser")
                         .WithMany("SecurityTips")
                         .HasForeignKey("BroadcasterId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2117,7 +2193,7 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.LGA", null)
+                    b.HasOne("Domain.Entities.LocationEntities.LGA", null)
                         .WithMany("SecurityTips")
                         .HasForeignKey("LGAId");
 
@@ -2127,19 +2203,19 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", null)
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", null)
                         .WithMany("SecurityTips")
                         .HasForeignKey("SettlementId");
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.State", null)
+                    b.HasOne("Domain.Entities.LocationEntities.State", null)
                         .WithMany("SecurityTips")
                         .HasForeignKey("StateId");
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", null)
+                    b.HasOne("Domain.Entities.LocationEntities.Town", null)
                         .WithMany("SecurityTips")
                         .HasForeignKey("TownId");
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", "VGNGAAdminAuthorizer")
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", "VGNGAAdminAuthorizer")
                         .WithMany("VGNGAAdminApprovedSecurityTips")
                         .HasForeignKey("VGNGAAdminAuthorizerId");
 
@@ -2164,13 +2240,13 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", "Settlement")
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", "Settlement")
                         .WithMany("SettlementWantedPeople")
                         .HasForeignKey("SettlementId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", "Town")
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "Town")
                         .WithMany("TownWantedPeople")
                         .HasForeignKey("TownId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -2185,12 +2261,12 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.CompanyEntities.Department", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", "HOD")
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", "HOD")
                         .WithMany("HODDepartments")
                         .HasForeignKey("HodId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", "Secretary")
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", "Secretary")
                         .WithMany("SecretaryDepartments")
                         .HasForeignKey("SecretaryId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -2200,102 +2276,26 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Secretary");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.AppTroopers.Curfew.LGACurfew", b =>
+            modelBuilder.Entity("Domain.Entities.Identity.ApplicationUser", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", "VGNGAStaff")
-                        .WithMany("LGACurfew")
-                        .HasForeignKey("AdminAuthorizerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.LGA", "LGA")
-                        .WithMany()
-                        .HasForeignKey("LGAId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("LGA");
-
-                    b.Navigation("VGNGAStaff");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.AppTroopers.Curfew.SettlementCurfew", b =>
-                {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", "VGNGAStaff")
-                        .WithMany("SettlementCurfew")
-                        .HasForeignKey("AdminAuthorizerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", "Settlement")
-                        .WithMany()
-                        .HasForeignKey("SettlementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Settlement");
-
-                    b.Navigation("VGNGAStaff");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.AppTroopers.Curfew.StateCurfew", b =>
-                {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", "VGNGAStaff")
-                        .WithMany("StateCurfew")
-                        .HasForeignKey("AdminAuthorizerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.State", "State")
-                        .WithMany()
-                        .HasForeignKey("StateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("State");
-
-                    b.Navigation("VGNGAStaff");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.AppTroopers.Curfew.TownCurfew", b =>
-                {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", "VGNGAStaff")
-                        .WithMany("TownCurfew")
-                        .HasForeignKey("AdminAuthorizerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", "Town")
-                        .WithMany()
-                        .HasForeignKey("TownId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Town");
-
-                    b.Navigation("VGNGAStaff");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.ApplicationUser", b =>
-                {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.LGA", "LGA")
+                    b.HasOne("Domain.Entities.LocationEntities.LGA", "LGA")
                         .WithMany("Customers")
                         .HasForeignKey("LGAId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", "Settlement")
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", "Settlement")
                         .WithMany("Customers")
                         .HasForeignKey("SettlementId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.State", "State")
+                    b.HasOne("Domain.Entities.LocationEntities.State", "State")
                         .WithMany("Customers")
                         .HasForeignKey("StateId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", "Town")
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "Town")
                         .WithMany("Customers")
                         .HasForeignKey("TownId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -2309,9 +2309,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Town");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.LGA", b =>
+            modelBuilder.Entity("Domain.Entities.LocationEntities.LGA", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.State", "State")
+                    b.HasOne("Domain.Entities.LocationEntities.State", "State")
                         .WithMany("LGAs")
                         .HasForeignKey("StateId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2320,9 +2320,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("State");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.Settlement", b =>
+            modelBuilder.Entity("Domain.Entities.LocationEntities.Settlement", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", "Town")
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "Town")
                         .WithMany("Settlements")
                         .HasForeignKey("TownId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2331,9 +2331,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Town");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.Town", b =>
+            modelBuilder.Entity("Domain.Entities.LocationEntities.Town", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.LGA", "LGA")
+                    b.HasOne("Domain.Entities.LocationEntities.LGA", "LGA")
                         .WithMany("Towns")
                         .HasForeignKey("LGAId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2344,13 +2344,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("LGANPFLGAAdmin", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.LGA", null)
+                    b.HasOne("Domain.Entities.LocationEntities.LGA", null)
                         .WithMany()
                         .HasForeignKey("LGAsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.NPFLGAAdmin", null)
+                    b.HasOne("Domain.Entities.Identity.Location.NPFLGAAdmin", null)
                         .WithMany()
                         .HasForeignKey("NPFLGAAdminsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2359,13 +2359,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("LGANPFLGAOperator", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.LGA", null)
+                    b.HasOne("Domain.Entities.LocationEntities.LGA", null)
                         .WithMany()
                         .HasForeignKey("LGAsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.NPFLGAOperator", null)
+                    b.HasOne("Domain.Entities.Identity.Location.NPFLGAOperator", null)
                         .WithMany()
                         .HasForeignKey("NPFLGAOperatorsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2374,13 +2374,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("LGAOfficialVigilanteLGAAdmin", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.LGA", null)
+                    b.HasOne("Domain.Entities.LocationEntities.LGA", null)
                         .WithMany()
                         .HasForeignKey("LGAsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteLGAAdmin", null)
+                    b.HasOne("Domain.Entities.Identity.Identity.OfficialVigilanteLGAAdmin", null)
                         .WithMany()
                         .HasForeignKey("OfficialVigilanteLGAAdminsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2389,13 +2389,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("LGAOfficialVigilanteLGAOperator", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.LGA", null)
+                    b.HasOne("Domain.Entities.LocationEntities.LGA", null)
                         .WithMany()
                         .HasForeignKey("LGAsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteLGAOperator", null)
+                    b.HasOne("Domain.Entities.Identity.Identity.OfficialVigilanteLGAOperator", null)
                         .WithMany()
                         .HasForeignKey("OfficialVigilanteLGAOperatorsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2404,13 +2404,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("LGAVGNGAStaff", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", null)
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", null)
                         .WithMany()
                         .HasForeignKey("VGNGALGAOperatorsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.LGA", null)
+                    b.HasOne("Domain.Entities.LocationEntities.LGA", null)
                         .WithMany()
                         .HasForeignKey("VGNGAOperatorLGAsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2419,13 +2419,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("LGAVGNGAStaff1", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.LGA", null)
+                    b.HasOne("Domain.Entities.LocationEntities.LGA", null)
                         .WithMany()
                         .HasForeignKey("VGNGAAdminLGAsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", null)
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", null)
                         .WithMany()
                         .HasForeignKey("VGNGALGAAdminsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2443,7 +2443,7 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.ApplicationUser", null)
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2452,7 +2452,7 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.ApplicationUser", null)
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2467,7 +2467,7 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.ApplicationUser", null)
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2476,7 +2476,7 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.ApplicationUser", null)
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2485,13 +2485,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("NPFSettlementAdminSettlement", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.NPFSettlementAdmin", null)
+                    b.HasOne("Domain.Entities.Identity.Location.NPFSettlementAdmin", null)
                         .WithMany()
                         .HasForeignKey("NPFSettlementAdminsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", null)
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", null)
                         .WithMany()
                         .HasForeignKey("SettlementsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2500,13 +2500,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("NPFSettlementOperatorSettlement", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.NPFSettlementOperator", null)
+                    b.HasOne("Domain.Entities.Identity.Location.NPFSettlementOperator", null)
                         .WithMany()
                         .HasForeignKey("NPFSettlementOperatorsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", null)
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", null)
                         .WithMany()
                         .HasForeignKey("SettlementsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2515,13 +2515,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("NPFStateAdminState", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.NPFStateAdmin", null)
+                    b.HasOne("Domain.Entities.Identity.Location.NPFStateAdmin", null)
                         .WithMany()
                         .HasForeignKey("NPFStateAdminsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.State", null)
+                    b.HasOne("Domain.Entities.LocationEntities.State", null)
                         .WithMany()
                         .HasForeignKey("StatesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2530,13 +2530,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("NPFStateOperatorState", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.NPFStateOperator", null)
+                    b.HasOne("Domain.Entities.Identity.Location.NPFStateOperator", null)
                         .WithMany()
                         .HasForeignKey("NPFStateOperatorsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.State", null)
+                    b.HasOne("Domain.Entities.LocationEntities.State", null)
                         .WithMany()
                         .HasForeignKey("StatesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2545,13 +2545,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("NPFTownAdminTown", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.NPFTownAdmin", null)
+                    b.HasOne("Domain.Entities.Identity.Location.NPFTownAdmin", null)
                         .WithMany()
                         .HasForeignKey("NPFTownAdminsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", null)
+                    b.HasOne("Domain.Entities.LocationEntities.Town", null)
                         .WithMany()
                         .HasForeignKey("TownsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2560,13 +2560,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("NPFTownOperatorTown", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.NPFTownOperator", null)
+                    b.HasOne("Domain.Entities.Identity.Location.NPFTownOperator", null)
                         .WithMany()
                         .HasForeignKey("NPFTownOperatorsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", null)
+                    b.HasOne("Domain.Entities.LocationEntities.Town", null)
                         .WithMany()
                         .HasForeignKey("TownsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2575,13 +2575,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("OfficialVigilanteSettlementAdminSettlement", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteSettlementAdmin", null)
+                    b.HasOne("Domain.Entities.Identity.Identity.OfficialVigilanteSettlementAdmin", null)
                         .WithMany()
                         .HasForeignKey("OfficialVigilanteSettlementAdminsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", null)
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", null)
                         .WithMany()
                         .HasForeignKey("SettlementsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2590,13 +2590,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("OfficialVigilanteSettlementOperatorSettlement", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteSettlementOperator", null)
+                    b.HasOne("Domain.Entities.Identity.Identity.OfficialVigilanteSettlementOperator", null)
                         .WithMany()
                         .HasForeignKey("OfficialVigilanteSettlementOperatorsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", null)
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", null)
                         .WithMany()
                         .HasForeignKey("SettlementsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2605,13 +2605,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("OfficialVigilanteStateAdminState", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteStateAdmin", null)
+                    b.HasOne("Domain.Entities.Identity.Identity.OfficialVigilanteStateAdmin", null)
                         .WithMany()
                         .HasForeignKey("OfficialVigilanteStateAdminsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.State", null)
+                    b.HasOne("Domain.Entities.LocationEntities.State", null)
                         .WithMany()
                         .HasForeignKey("StatesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2620,13 +2620,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("OfficialVigilanteStateOperatorState", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteStateOperator", null)
+                    b.HasOne("Domain.Entities.Identity.Identity.OfficialVigilanteStateOperator", null)
                         .WithMany()
                         .HasForeignKey("OfficialVigilanteStateOperatorsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.State", null)
+                    b.HasOne("Domain.Entities.LocationEntities.State", null)
                         .WithMany()
                         .HasForeignKey("StatesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2635,13 +2635,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("OfficialVigilanteTownAdminTown", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteTownAdmin", null)
+                    b.HasOne("Domain.Entities.Identity.Identity.OfficialVigilanteTownAdmin", null)
                         .WithMany()
                         .HasForeignKey("OfficialVigilanteTownAdminsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", null)
+                    b.HasOne("Domain.Entities.LocationEntities.Town", null)
                         .WithMany()
                         .HasForeignKey("TownsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2650,13 +2650,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("OfficialVigilanteTownOperatorTown", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.Location.OfficialVigilanteTownOperator", null)
+                    b.HasOne("Domain.Entities.Identity.Location.OfficialVigilanteTownOperator", null)
                         .WithMany()
                         .HasForeignKey("OfficialVigilanteTownOperatorsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", null)
+                    b.HasOne("Domain.Entities.LocationEntities.Town", null)
                         .WithMany()
                         .HasForeignKey("TownsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2665,13 +2665,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("SettlementVGNGAStaff", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", null)
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", null)
                         .WithMany()
                         .HasForeignKey("VGNGAAdminSettlementsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", null)
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", null)
                         .WithMany()
                         .HasForeignKey("VGNGASettlementAdminsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2680,13 +2680,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("SettlementVGNGAStaff1", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", null)
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", null)
                         .WithMany()
                         .HasForeignKey("VGNGAOperatorSettlementsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", null)
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", null)
                         .WithMany()
                         .HasForeignKey("VGNGASettlementOperatorsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2695,13 +2695,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("StateVGNGAStaff", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.State", null)
+                    b.HasOne("Domain.Entities.LocationEntities.State", null)
                         .WithMany()
                         .HasForeignKey("VGNGAAdminStatesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", null)
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", null)
                         .WithMany()
                         .HasForeignKey("VGNGAStateAdminsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2710,13 +2710,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("StateVGNGAStaff1", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.State", null)
+                    b.HasOne("Domain.Entities.LocationEntities.State", null)
                         .WithMany()
                         .HasForeignKey("VGNGAOperatorStatesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", null)
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", null)
                         .WithMany()
                         .HasForeignKey("VGNGAStateOperatorsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2725,13 +2725,13 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("TownVGNGAStaff", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", null)
+                    b.HasOne("Domain.Entities.LocationEntities.Town", null)
                         .WithMany()
                         .HasForeignKey("VGNGAAdminTownsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", null)
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", null)
                         .WithMany()
                         .HasForeignKey("VGNGATownAdminsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -2740,20 +2740,20 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("TownVGNGAStaff1", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", null)
+                    b.HasOne("Domain.Entities.LocationEntities.Town", null)
                         .WithMany()
                         .HasForeignKey("VGNGAOperatorTownsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.VGNGAStaff", null)
+                    b.HasOne("Domain.Entities.Identity.VGNGAStaff", null)
                         .WithMany()
                         .HasForeignKey("VGNGATownOperatorsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.VGNGAStaff", b =>
+            modelBuilder.Entity("Domain.Entities.Identity.VGNGAStaff", b =>
                 {
                     b.HasOne("Domain.Entities.CompanyEntities.Department", "Department")
                         .WithMany("VGNGAStaff")
@@ -2789,7 +2789,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("VGNGAStaff");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.ApplicationUser", b =>
+            modelBuilder.Entity("Domain.Entities.Identity.ApplicationUser", b =>
                 {
                     b.Navigation("MissingItems");
 
@@ -2798,7 +2798,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("SecurityTips");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.LGA", b =>
+            modelBuilder.Entity("Domain.Entities.LocationEntities.LGA", b =>
                 {
                     b.Navigation("Customers");
 
@@ -2807,7 +2807,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Towns");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.Settlement", b =>
+            modelBuilder.Entity("Domain.Entities.LocationEntities.Settlement", b =>
                 {
                     b.Navigation("Customers");
 
@@ -2824,7 +2824,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("SettlementWantedPeople");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.State", b =>
+            modelBuilder.Entity("Domain.Entities.LocationEntities.State", b =>
                 {
                     b.Navigation("Customers");
 
@@ -2833,7 +2833,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("SecurityTips");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.Town", b =>
+            modelBuilder.Entity("Domain.Entities.LocationEntities.Town", b =>
                 {
                     b.Navigation("Customers");
 
@@ -2852,7 +2852,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("TownWantedPeople");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.VGNGAStaff", b =>
+            modelBuilder.Entity("Domain.Entities.Identity.VGNGAStaff", b =>
                 {
                     b.Navigation("HODDepartments");
 

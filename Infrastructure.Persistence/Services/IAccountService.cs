@@ -1,6 +1,6 @@
 ﻿using Application.DTOs.Account;
 using Application.Wrappers;
-using Infrastructure.Persistence.Models.Identity;
+using Domain.Entities.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;

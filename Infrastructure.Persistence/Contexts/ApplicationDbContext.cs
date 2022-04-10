@@ -1,17 +1,17 @@
 ﻿using Application.Interfaces;
 using Domain.Common;
 using Domain.Entities;
+using Domain.Entities.AppTroopers.Curfew;
 using Domain.Entities.AppTroopers.Missing;
 using Domain.Entities.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.SecurityTip;
 using Domain.Entities.AppTroopers.Wanted;
 using Domain.Entities.CompanyEntities;
+using Domain.Entities.Identity;
+using Domain.Entities.Identity.Location;
+using Domain.Entities.LocationEntities;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Models;
-using Infrastructure.Persistence.Models.AppTroopers.Curfew;
-using Infrastructure.Persistence.Models.Identity;
-using Infrastructure.Persistence.Models.Identity.Location;
-using Infrastructure.Persistence.Models.LocationEntities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +22,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Domain.Common.Enums;
+using Domain.Entities.Identity.Identity;
 
 namespace Infrastructure.Persistence.Contexts
 {
@@ -41,6 +43,7 @@ namespace Infrastructure.Persistence.Contexts
 
         //Identity
         public DbSet<CustomClaims> CustomClaims { get; set; }
+        //NPF
         //state
         public DbSet<NPFStateAdmin> NPFStateAdmins { get; set; }
         public DbSet<NPFStateOperator> NPFStateOperator { get; set; }
@@ -53,6 +56,19 @@ namespace Infrastructure.Persistence.Contexts
         //settlement
         public DbSet<NPFSettlementAdmin> NPFSettlementAdmin { get; set; }
         public DbSet<NPFSettlementOperator> NPFSettlementOperator { get; set; }
+
+        //OfficialVigilante
+        public DbSet<OfficialVigilanteStateAdmin> OfficialVigilanteStateAdmins { get; set; }
+        public DbSet<OfficialVigilanteStateOperator> OfficialVigilanteStateOperators { get; set; }
+        //lga
+        public DbSet<OfficialVigilanteLGAAdmin> OfficialVigilanteLGAAdmins { get; set; }
+        public DbSet<OfficialVigilanteLGAOperator> OfficialVigilanteLGAOperators { get; set; }
+        //town
+        public DbSet<OfficialVigilanteTownAdmin> OfficialVigilanteTownAdmins { get; set; }
+        public DbSet<OfficialVigilanteTownOperator> OfficialVigilanteTownOperators { get; set; }
+        //settlement
+        public DbSet<OfficialVigilanteSettlementAdmin> OfficialVigilanteSettlementAdmins { get; set; }
+        public DbSet<OfficialVigilanteSettlementOperator> OfficialVigilanteSettlementOperators { get; set; }
 
         // staff
         public DbSet<VGNGAStaff> VGNGAStaff { get; set; }
@@ -194,6 +210,9 @@ namespace Infrastructure.Persistence.Contexts
             //Settlement
             builder.Entity<Settlement>().Property(p => p.Boundary).HasColumnType("geography");
 
+            
+            
+            
             //RELATIONSHIPS //-------------------------------------------------------------------------------------------------------------
 
 
@@ -337,12 +356,12 @@ namespace Infrastructure.Persistence.Contexts
                     switch (entry.State)
                     {
                         case EntityState.Added:
-                            auditEntry.AuditType = Enums.AuditType.Create;
+                            auditEntry.AuditType = Domain.Common.Enums.AuditType.Create;
                             auditEntry.NewValues[propertyName] = property.CurrentValue;
                             break;
 
                         case EntityState.Deleted:
-                            auditEntry.AuditType = Enums.AuditType.Delete;
+                            auditEntry.AuditType = Domain.Common.Enums.AuditType.Delete;
                             auditEntry.OldValues[propertyName] = property.OriginalValue;
                             break;
 
@@ -350,7 +369,7 @@ namespace Infrastructure.Persistence.Contexts
                             if (property.IsModified)
                             {
                                 auditEntry.ChangedColumns.Add(propertyName);
-                                auditEntry.AuditType = Enums.AuditType.Update;
+                                auditEntry.AuditType = Domain.Common.Enums.AuditType.Update;
                                 auditEntry.OldValues[propertyName] = property.OriginalValue;
                                 auditEntry.NewValues[propertyName] = property.CurrentValue;
                             }
