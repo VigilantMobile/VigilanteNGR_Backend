@@ -7,7 +7,6 @@ namespace Application.DTOs.Account
 {
     public class CustomerRegisterRequest
     {
-        [Required]
         public string FirstName { get; set; }
 
         public string MiddleName { get; set; }
@@ -28,6 +27,14 @@ namespace Application.DTOs.Account
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
 
+        public int StateId { get; set; }
+
+        [Required]
+        public int LGAId { get; set; }
+
+        public int TownId { get; set; }
+
+        public int SettlementId { get; set; }
 
     }
 

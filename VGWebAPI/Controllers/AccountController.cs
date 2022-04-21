@@ -5,13 +5,11 @@ using System.Threading.Tasks;
 using Application.DTOs.Account;
 using Application.Exceptions;
 using Application.Interfaces;
+using Infrastructure.Persistence.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-
-
-
 
 
 namespace VGWebAPI.Controllers
@@ -29,107 +27,63 @@ namespace VGWebAPI.Controllers
             _logger = logger;
         }
 
-
         [HttpPost("authenticate")]
         public async Task<IActionResult> AuthenticateAsync(AuthenticationRequest request)
         {
-            try
-            {
-                var result = await _accountService.AuthenticateAsync(request, GenerateIPAddress());
-                SetRefreshTokenInCookie(result.Data.RefreshToken);
-                return Ok(result);
-
-                //return Ok(await _accountService.AuthenticateAsync(request, GenerateIPAddress()));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-                throw new ApiException(ex.Message.ToString());
-            }
+            var result = await _accountService.AuthenticateAsync(request, GenerateIPAddress());
+            SetRefreshTokenInCookie(result.Data.RefreshToken);
+            return Ok(result);
         }
 
         [HttpPost("register")]
-
         public async Task<IActionResult> RegisterAsync(CustomerRegisterRequest request)
         {
-            try
-            {
-                var origin = Request.Headers["origin"].ToString();
-                return Ok(await _accountService.RegisterCustomerAsync(request, origin));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-                throw new ApiException(ex.Message.ToString());
-            }
+          
+            var origin = Request.Headers["origin"].ToString();
+            return Ok(await _accountService.RegisterCustomerAsync(request, origin));
+          
+        }
+
+        [HttpPost("update-customer-profile")]
+        public async Task<IActionResult> UpdateCustomerProfile(UpdateProfileRequest request)
+        {
+            var origin = Request.Headers["origin"].ToString();
+            return Ok(await _accountService.UpdateCustomerProfileAsync(request, origin));
         }
 
         [Authorize(Roles = "SuperAdmin, Admin")]
-        [HttpPost("createstaff")]
+        [HttpPost("create-staff")]
 
         public async Task<IActionResult> RegisterStaffAsync(StaffRegisterRequest request)
         {
-            try
-            {
-                var origin = Request.Headers["origin"];
-                return Ok(await _accountService.RegisterStaffAsync(request, origin));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-                throw new ApiException(ex.Message.ToString());
-            }
+           
+            var origin = Request.Headers["origin"];
+            return Ok(await _accountService.RegisterStaffAsync(request, origin));
         }
 
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmailAsync([FromQuery]string userId, [FromQuery]string code)
         {          
-            try
-            {
-                var origin = Request.Headers["origin"];
-                return Ok(await _accountService.ConfirmEmailAsync(userId, code));
-
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-                throw new ApiException(ex.Message.ToString());
-            }
+            var origin = Request.Headers["origin"];
+            return Ok(await _accountService.ConfirmEmailAsync(userId, code));
         }
 
 
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest model)
         {          
-            try
-            {
-                await _accountService.ForgotPassword(model, Request.Headers["origin"]);
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-                throw new ApiException(ex.Message.ToString());
-            }
+            await _accountService.ForgotPassword(model, Request.Headers["origin"]);
+            return Ok();
         }
 
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword(ResetPasswordRequest model)
         {          
-            try
-            {
-                return Ok(await _accountService.ResetPassword(model));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-                throw new ApiException(ex.Message.ToString());
-            }
+            return Ok(await _accountService.ResetPassword(model));
         }
 
         private string GenerateIPAddress()
         {
-
             try
             {
                 if (Request.Headers.ContainsKey("X-Forwarded-For"))
@@ -148,27 +102,19 @@ namespace VGWebAPI.Controllers
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest model)
         {        
-            try
-            {
-                // accept token from request body or cookie
-                string refreshToken = model.Token ?? Request.Cookies["refreshToken"];
-                var response = await _accountService.RefreshTokenAsync(refreshToken);
-                if (!string.IsNullOrEmpty(response.Data.RefreshToken))
-                    SetRefreshTokenInCookie(response.Data.RefreshToken);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-                throw new ApiException(ex.Message.ToString());
-            }
+            // accept token from request body or cookie
+            string refreshToken = model.Token ?? Request.Cookies["refreshToken"];
+            var response = await _accountService.RefreshTokenAsync(refreshToken);
+            if (!string.IsNullOrEmpty(response.Data.RefreshToken))
+            SetRefreshTokenInCookie(response.Data.RefreshToken);
+            return Ok(response);
+            
         }
 
         [HttpPost("revoke-token")]
         public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenRequest model)
         {
-            try
-            {
+           
                 string token = model.Token ?? Request.Cookies["refreshToken"];
 
                 if (string.IsNullOrEmpty(token))
@@ -180,12 +126,6 @@ namespace VGWebAPI.Controllers
                     return NotFound(new { message = "Token not found" });
 
                 return Ok(new { message = "Token revoked" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-                throw new ApiException(ex.Message.ToString());
-            }
         }
 
 
@@ -211,19 +151,9 @@ namespace VGWebAPI.Controllers
         [HttpPost("tokens/{id}")]
         public IActionResult GetRefreshTokens(string id)
         {
-            try
-            {
-                var user = _accountService.GetById(id);
-                return Ok(user.RefreshToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message, ex);
-                throw new ApiException(ex.Message.ToString());
-            }
+            var user = _accountService.GetById(id);
+            return Ok(user.RefreshToken);
         }
-
-
 
         //[HttpPost("addrole")]
         //[Authorize(Roles = "Admin, SuperAdmin")]

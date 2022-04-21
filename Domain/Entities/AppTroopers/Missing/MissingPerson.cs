@@ -52,8 +52,7 @@ namespace Domain.Entities.AppTroopers.Missing
 
         [ForeignKey("VGNGAStaff")]
         public string AdminAuthorizerID { get; set; }
-        public virtual VGNGAStaff VGNGAStaff { get; set; }
-
+        public virtual ApplicationUser VGNGAStaff { get; set; }
 
         [ForeignKey("BroadcastLevel")]
         public int BroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID

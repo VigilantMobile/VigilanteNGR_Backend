@@ -1,6 +1,5 @@
 using Application;
 using Application.Interfaces;
-using Infrastructure.Identity;
 using Infrastructure.Persistence;
 using Infrastructure.Shared;
 using Microsoft.AspNetCore.Builder;

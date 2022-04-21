@@ -26,8 +26,6 @@ namespace Domain.Entities.AppTroopers.Panic
         [Required]
         public string DepartureTownAddress { get; set; }
 
-   
-
         //Destination
         [ForeignKey("DestinationTown")]
         public int DestinationTownId { get; set; }
@@ -47,7 +45,6 @@ namespace Domain.Entities.AppTroopers.Panic
         public string DepartureSettlementAddress { get; set; }
 
         //Destination
-        //Destination
         [ForeignKey("DestinationSettlement")]
         public int DestinationSettlementId { get; set; }
         public virtual Settlement DestinationSettlement { get; set; }
@@ -62,8 +59,8 @@ namespace Domain.Entities.AppTroopers.Panic
 
         [Required]
         public int PanicIntervalInMinutes { get; set; }
-        public string CommuteStatus { get; set; }
-        public string PanicStatus { get; set; }
+        public CommuteStatus CommuteStatus { get; set; }
+        public PanicStatus PanicStatus { get; set; }
         public bool PanicInitiated { get; set; }
     }
 }

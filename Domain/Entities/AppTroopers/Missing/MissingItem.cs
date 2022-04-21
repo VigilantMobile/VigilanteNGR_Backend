@@ -27,28 +27,26 @@ namespace Domain.Entities.AppTroopers.Missing
         public string IdNumber { get; set; }
         public DateTime DateLastSeen { get; set; }
 
-        [Required]
         [ForeignKey("Town")]
-        public int TownId { get; set; }
+        public int? TownId { get; set; }
         public virtual Town Town { get; set; }
 
-        [Required]
         [ForeignKey("Settlement")]
-        public int SettlementId { get; set; }
+        public int? SettlementId { get; set; }
         public virtual Settlement Settlement { get; set; }
 
         //Admin Authorization
         public bool isAdminAuthorized { get; set; }
 
 
-        [ForeignKey("ApplicationUser")]
+        [ForeignKey("LoserId")]
         public string LoserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
 
 
-        [ForeignKey("VGNGAStaff")]
+        [ForeignKey("AdminAuthorizerID")]
         public string AdminAuthorizerID { get; set; }
-        public virtual VGNGAStaff VGNGAStaff { get; set; }
+        public virtual ApplicationUser VGNGAStaff { get; set; }
         
 
 

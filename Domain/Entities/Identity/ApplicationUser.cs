@@ -1,6 +1,10 @@
 ﻿using Domain.Common;
+using Domain.Common.Enums;
+using Domain.Entities.AppTroopers.Curfew;
 using Domain.Entities.AppTroopers.Missing;
+using Domain.Entities.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.CompanyEntities;
 using Domain.Entities.LocationEntities;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -16,7 +20,7 @@ namespace Domain.Entities.Identity
         {
             this.FirstTimePromoUsed = false;
             this.CurrentPromoUsed = false;
-            this.ActiveStatus = false;
+            this.isActive = false;
         }
 
         public string FirstName { get; set; }
@@ -28,40 +32,69 @@ namespace Domain.Entities.Identity
         //State
         [ForeignKey("State")]
         public int StateId { get; set; }
-        public State State { get; set; }
+        public State CustomerState { get; set; }
 
         //LGA
         [ForeignKey("LGA")]
         public int LGAId { get; set; }
-        public LGA LGA { get; set; }
+        public LGA CustomerLGA { get; set; }
 
         //Town
         [ForeignKey("Town")]
         public int? TownId { get; set; }
-        public Town Town { get; set; }
+        public Town CustomerTown { get; set; }
 
         //Settlement
         [ForeignKey("Settlement")]
         public int? SettlementId { get; set; }
-        public Settlement Settlement { get; set; }
+        public Settlement CustomerSettlement { get; set; }
 
-
-        public string LastLocationCoordinates { get; set; }
         public string UniqueReferalCode { get; set; }
         public DateTime DateOfBirth { get; set; }
         public bool FirstTimePromoUsed { get; set; }
-        public bool ActiveStatus { get; set; }
+        public bool isActive { get; set; }
         public bool CurrentPromoUsed { get; set; }
+
+        // VGNGA Staff Fields //
+
+        [ForeignKey("Department")]
+        public int? DepartmentId { get; set; }
+        public virtual Department Department { get; set; }
+
+        public string StaffId { get; set; }
+        public decimal Salary { get; set; }
+        public string SalaryCurrency { get; set; }
+        public bool IsAppSuperAdmin { get; set; }
+        public bool IsAppAdmin { get; set; }
+        public bool IsAppOperator { get; set; }
+        public virtual ICollection<Department> SecretaryDepartments { get; set; }
+        public virtual ICollection<Department> HODDepartments { get; set; }
+        public virtual ICollection<State> InternalStaffStates { get; set; }
+        public virtual ICollection<LGA> InternalStaffLGAs { get; set; }
+        public virtual ICollection<Town> InternalStaffTowns { get; set; }
+        public virtual ICollection<Settlement> InternalStaffSettlements { get; set; }
+        public virtual ICollection<Curfew> AdminAuthorizedCurfews { get; set; }
+        public virtual ICollection<Curfew> OperatorIniatedCurfews { get; set; }
+        public virtual ICollection<TrustedPerson> TrustedPeople { get; set; }
+
+        //External Staff fields
+        public ExternalStaffType ExternalStaffType { get; set; }
+        public bool IsExternalSuperAdmin { get; set; }
+        public bool IsExternalAdmin { get; set; }
+        public bool IsExternalOperator { get; set; }
+        public virtual ICollection<SecurityTip> ExternalStaffIniatedTips { get; set; }
+        public virtual ICollection<SecurityTip> ExternalStaffAuthorizedTips { get; set; }
+        //
+
         public string CreatedBy { get; set; }
         public DateTime Created { get; set; }
         public string LastModifiedBy { get; set; }
         public DateTime LastModified { get; set; }
         public string RefreshToken { get; set; }
         public DateTime RefreshTokenExpiry { get; set; }
-
-        public virtual ICollection<SecurityTip> SecurityTips { get; set; }
-        public virtual ICollection<MissingPerson> MissingPeople { get; set; }
-        public virtual ICollection<MissingItem> MissingItems { get; set; }
+        public virtual ICollection<SecurityTip> CustomerSecurityTips { get; set; }
+        public virtual ICollection<MissingPerson> CustomerMissingPeople { get; set; }
+        public virtual ICollection<MissingItem> CustomerMissingItems { get; set; }
     }
 }
 

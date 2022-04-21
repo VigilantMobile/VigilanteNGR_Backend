@@ -4,8 +4,6 @@ using Domain.Entities.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.SecurityTip;
 using Domain.Entities.AppTroopers.Wanted;
 using Domain.Entities.Identity;
-using Domain.Entities.Identity.Identity;
-using Domain.Entities.Identity.Location;
 using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
@@ -20,7 +18,6 @@ namespace Domain.Entities.LocationEntities
         [Required]
         public string Name { get; set; }
 
-        [Required]
         [ForeignKey("LGA")]
         public int LGAId { get; set; }
         public virtual LGA LGA { get; set; }
@@ -31,16 +28,10 @@ namespace Domain.Entities.LocationEntities
         public virtual ICollection<ApplicationUser> Customers { get; set; }
 
         // VGNGA Users
-        public virtual ICollection<VGNGAStaff> VGNGATownAdmins { get; set; }
-        public virtual ICollection<VGNGAStaff> VGNGATownOperators { get; set; }
+        public virtual ICollection<ApplicationUser> VGNGATownStaff { get; set; }
 
-        // NPF Users
-        public virtual ICollection<NPFTownAdmin> NPFTownAdmins { get; set; }
-        public virtual ICollection<NPFTownOperator> NPFTownOperators { get; set; }
-
-        // Official Vigilante Users
-        public virtual ICollection<OfficialVigilanteTownAdmin> OfficialVigilanteTownAdmins { get; set; }
-        public virtual ICollection<OfficialVigilanteTownOperator> OfficialVigilanteTownOperators { get; set; }
+        // External
+        //public virtual ICollection<ApplicationUser> ExternalTownStaff { get; set; }
 
         public virtual ICollection<Settlement> Settlements { get; set; }
 

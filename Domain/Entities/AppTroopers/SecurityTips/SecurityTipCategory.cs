@@ -15,6 +15,5 @@ namespace Domain.Entities.AppTroopers.SecurityTip
         public string CategoryName { get; set; }
         public string Description { get; set; }
         public virtual ICollection<SecurityTip> SecurityTips { get; set; }
-
     }
 }

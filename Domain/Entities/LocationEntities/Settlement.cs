@@ -4,8 +4,6 @@ using Domain.Entities.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.SecurityTip;
 using Domain.Entities.AppTroopers.Wanted;
 using Domain.Entities.Identity;
-using Domain.Entities.Identity.Identity;
-using Domain.Entities.Identity.Location;
 using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
@@ -30,18 +28,11 @@ namespace Domain.Entities.LocationEntities
 
         //Customers
         public virtual ICollection<ApplicationUser> Customers { get; set; }
-
         // VGNGA Users
-        public virtual ICollection<VGNGAStaff> VGNGASettlementAdmins { get; set; }
-        public virtual ICollection<VGNGAStaff> VGNGASettlementOperators { get; set; }
+        public virtual ICollection<ApplicationUser> VGNGASettlementStaff { get; set; }
 
-        // NPF Users
-        public virtual ICollection<NPFSettlementAdmin> NPFSettlementAdmins { get; set; }
-        public virtual ICollection<NPFSettlementOperator> NPFSettlementOperators { get; set; }
-
-        // Official Vigilante Users
-        public virtual ICollection<OfficialVigilanteSettlementAdmin> OfficialVigilanteSettlementAdmins { get; set; }
-        public virtual ICollection<OfficialVigilanteSettlementOperator> OfficialVigilanteSettlementOperators { get; set; }
+        // External
+        //public virtual ICollection<ApplicationUser> ExternalSettlementStaff { get; set; }
 
         //SecurityTip
         public ICollection<SecurityTip> SecurityTips { get; set; }
