@@ -13,6 +13,7 @@ namespace Domain.Entities.AppTroopers.SecurityTip
     {
         [Required]
         public string Subject { get; set; }
+
         [Required]
         public string Body { get; set; }
         public string Description { get; set; }
@@ -30,9 +31,19 @@ namespace Domain.Entities.AppTroopers.SecurityTip
         //Admin Authorization
         public bool isAdminAuthorized { get; set; } // 
 
-        [ForeignKey("VGNGAStaffAuthorizer")]
+        [ForeignKey("VGNGAAdminAuthorizer")]
         public string AdminAuthorizerID { get; set; }
-        public virtual VGNGAStaff VGNGAAdminAuthorizer { get; set; }
+        public virtual ApplicationUser VGNGAAdminAuthorizer { get; set; }
+
+        //External
+
+        [ForeignKey("ExternalIniator")]
+        public string ExternalInitiatorId { get; set; }
+        public virtual ApplicationUser ExternalInitiator { get; set; }
+
+        [ForeignKey("ExternalAuthorizer")]
+        public string ExternalAuthorizerId { get; set; }
+        public virtual ApplicationUser ExternalAuthorizer { get; set; }
 
         //Coverage Type - based on broadcaster => Nullable for each or Generic
         [Required]

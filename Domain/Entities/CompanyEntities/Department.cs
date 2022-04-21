@@ -18,12 +18,12 @@ namespace Domain.Entities.CompanyEntities
 
         [ForeignKey("HOD")]
         public string HodId { get; set; }
-        public virtual VGNGAStaff HOD { get; set; }
+        public virtual ApplicationUser HOD { get; set; }
 
         [ForeignKey("Secretary")]
         public string SecretaryId { get; set; }
-        public virtual VGNGAStaff Secretary { get; set; }
+        public virtual ApplicationUser Secretary { get; set; }
 
-        public ICollection<VGNGAStaff> VGNGAStaff { get; set; }
+        public ICollection<ApplicationUser> VGNGAStaff { get; set; }
     }
 }

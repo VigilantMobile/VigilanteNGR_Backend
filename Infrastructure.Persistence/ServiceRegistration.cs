@@ -1,10 +1,16 @@
 ﻿using Application.Interfaces;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Repositories.AppTroopers.Panic;
+using Application.Interfaces.Repositories.AppTroopers.SecurityTip;
+using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
 using Domain.Entities.Identity;
 using Domain.Settings;
 using Infrastructure.Persistence.Contexts;
 using Infrastructure.Persistence.Repositories;
+using Infrastructure.Persistence.Repositories.Location;
+using Infrastructure.Persistence.Repositories.Panic;
+using Infrastructure.Persistence.Repositories.SecurityTip;
 using Infrastructure.Persistence.Repository;
 using Infrastructure.Persistence.Services;
 using Infrastructure.Shared.Services;
@@ -50,7 +56,6 @@ namespace Infrastructure.Persistence
 
             })
             .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
-
 
             #region Services
             services.AddTransient<IAccountService, AccountService>();
@@ -169,6 +174,18 @@ namespace Infrastructure.Persistence
             #region Repositories
             services.AddTransient(typeof(IGenericRepositoryAsync<>), typeof(GenericRepositoryAsync<>));
             services.AddTransient<IProductRepositoryAsync, ProductRepositoryAsync>();
+            //User Profile
+
+            //App Troopers
+            services.AddTransient<ISecurityTipCategoryRepositorysync, SecurityTipCategoryRepositoryAsync>();
+
+            //Location
+            services.AddTransient<ITownRepositoryAsync, TownRepositoryAsync>();
+            services.AddTransient<ILGARepositoryAsync, LGARepositoryAsync>();
+
+            //Panic
+            services.AddTransient<ITrustedPersonRepositoryAsync, TrustedPersonRepositoryAsync>();
+
             #endregion
 
             #region DbInitializer

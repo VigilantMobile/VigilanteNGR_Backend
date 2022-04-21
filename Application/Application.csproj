@@ -25,6 +25,9 @@
 
   <ItemGroup>
     <Folder Include="DTOs\Account\AppTroopers\" />
+    <Folder Include="Features\AppTroopers\Panic\TrustedPerson\Queries\GetAllTrustedPeopleForUser\" />
+    <Folder Include="Features\Location\LGA\Commands\" />
+    <Folder Include="Interfaces\Account\" />
   </ItemGroup>
 
 </Project>

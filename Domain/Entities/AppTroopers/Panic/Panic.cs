@@ -17,7 +17,8 @@ namespace Domain.Entities.AppTroopers.Panic
         public string PanicInitiator { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
 
-        public string PanicStatus { get; set; }
+        public PanicStatus PanicStatus { get; set; }
+        public PanicType PanicType { get; set; }
 
         [Required]
         [ForeignKey("Commute")]

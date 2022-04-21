@@ -1,0 +1,53 @@
+﻿using Application.Exceptions;
+using Application.Interfaces;
+using Application.Interfaces.Repositories;
+using Application.Interfaces.Repositories.Location;
+using Application.Wrappers;
+using Domain.Entities;
+using Domain.Entities.AppTroopers.Panic;
+using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.LocationEntities;
+using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Application.Features.Location
+{
+    public class DeleteDistrictByIdCommand : IRequest<Response<Town>>
+    {
+        public int Id { get; set; }
+        public class DeleteDistrictByIdCommandHandler : IRequestHandler<DeleteDistrictByIdCommand, Response<Town>>
+        {
+            private readonly ITownRepositoryAsync _townRepositoryAsync;
+            private readonly IUserAccessor _userAccessor;
+
+            public DeleteDistrictByIdCommandHandler(ITownRepositoryAsync townRepositoryAsync, IUserAccessor userAccessor)
+            {
+                _townRepositoryAsync = townRepositoryAsync;
+                _userAccessor = userAccessor;
+            }
+            public async Task<Response<Town>> Handle(DeleteDistrictByIdCommand command, CancellationToken cancellationToken)
+            {
+                string UpdatedBy = _userAccessor.GetUserId();
+
+                var town = await _townRepositoryAsync.GetByIdAsync(command.Id);
+
+                if (town == null)
+                {
+                    throw new ApiException($"Town not found.");
+                }
+                else
+                {
+                    await _townRepositoryAsync.DeleteAsync(town);
+
+                    return new Response<Town>(town, $"Town {town.Name} successfully deleted", successStatus: true);
+
+                }
+            }
+        }
+    }
+}

@@ -1,8 +1,6 @@
 ﻿using Domain.Common;
 using Domain.Entities.AppTroopers.SecurityTip;
 using Domain.Entities.Identity;
-using Domain.Entities.Identity.Identity;
-using Domain.Entities.Identity.Location;
 using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
@@ -23,16 +21,15 @@ namespace Domain.Entities.LocationEntities
         // Customer
         public virtual ICollection<ApplicationUser> Customers { get; set; }
         // VGNGA Users
-        public virtual ICollection<VGNGAStaff> VGNGAStateAdmins { get; set; }
-        public virtual ICollection<VGNGAStaff> VGNGAStateOperators { get; set; }
+        public virtual ICollection<ApplicationUser> VGNGAStateStaff { get; set; }
 
-        // NPF Users
-        public virtual ICollection<NPFStateOperator> NPFStateOperators { get; set; }
-        public virtual ICollection<NPFStateAdmin> NPFStateAdmins { get; set; }
+        // External
+        //public virtual ICollection<ApplicationUser> ExternalStateStaff { get; set; }
+
+        //public virtual ICollection<ApplicationUser> NPFStateAdmins { get; set; }
 
         // Official Vigilante Users
-        public virtual ICollection<OfficialVigilanteStateOperator> OfficialVigilanteStateOperators { get; set; }
-        public virtual ICollection<OfficialVigilanteStateAdmin> OfficialVigilanteStateAdmins { get; set; }
+        //public virtual ICollection<ApplicationUser> OfficialVigilanteStateAdmins { get; set; }
 
         //
         public virtual ICollection<LGA> LGAs { get; set; }

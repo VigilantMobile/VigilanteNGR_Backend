@@ -9,7 +9,7 @@ namespace Domain.Common.Enums
     public  enum AlertLevelEnum
     {
         Neutral,
-        Moderate,
+        Low,
         High,
         Critical
     }

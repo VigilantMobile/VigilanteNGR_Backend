@@ -16,6 +16,5 @@ namespace Domain.Entities.AppTroopers.SecurityTip
         public string Description { get; set; }
         public BroadcasterTypeEnum Broadcaster { get; set; }
         public virtual ICollection<SecurityTip> SecurityTips { get; set; }
-
     }
 }

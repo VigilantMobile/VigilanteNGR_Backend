@@ -18,9 +18,9 @@ namespace VGWebAPI.Controllers.v1
 {
     [ApiVersion("1.0")]
     [Authorize]
-        public class ProductController : BaseApiController
+    public class ProductController : BaseApiController
     {
-        // GET: api/<controller>
+    // GET: api/<controller>
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] GetAllProductsParameter filter)
         {
