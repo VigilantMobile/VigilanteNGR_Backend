@@ -22,12 +22,15 @@ namespace Application.Mappings
             CreateMap<CreateProductCommand, Product>();
             CreateMap<GetAllProductsQuery, GetAllProductsParameter>();
 
-
-
             //Location
+            //District
             CreateMap<CreateDistrictCommand, Town>();
             CreateMap<Town, GetAllDistrictsViewModel>().ReverseMap();
             CreateMap<GetAllDistrictsQuery, GetAllDistrictsParameter>();
+            //LGA
+            CreateMap<GetDistrictsinLGAQuery, GetDistrictsinLGAParameter>();
+            //State
+            CreateMap<GetLGAsinStateQuery, GetLGAsinStateParameter>();
 
             //AppTroopers --------------------------------------------
             //Security Tip Category

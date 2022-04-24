@@ -3,7 +3,7 @@ using Domain.Common.Enums;
 using Domain.Entities.AppTroopers.Curfew;
 using Domain.Entities.AppTroopers.Missing;
 using Domain.Entities.AppTroopers.Panic;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.CompanyEntities;
 using Domain.Entities.LocationEntities;
 using Microsoft.AspNetCore.Identity;
@@ -28,26 +28,33 @@ namespace Domain.Entities.Identity
         public string LastName { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
+        public int LocationId { get; set; }
+
+        //CustomerLocationTier
+
+        [ForeignKey("LocationLevel")]
+        public int? LocationLevelId { get; set; }
+        public virtual BroadcastLevel LocationLevel { get; set; }
 
         //State
-        [ForeignKey("State")]
-        public int StateId { get; set; }
-        public State CustomerState { get; set; }
+        //[ForeignKey("State")]
+        //public int StateId { get; set; }
+        //public State CustomerState { get; set; }
 
         //LGA
-        [ForeignKey("LGA")]
-        public int LGAId { get; set; }
-        public LGA CustomerLGA { get; set; }
+        //[ForeignKey("LGA")]
+        //public int LGAId { get; set; }
+        //public LGA CustomerLGA { get; set; }
 
-        //Town
-        [ForeignKey("Town")]
-        public int? TownId { get; set; }
-        public Town CustomerTown { get; set; }
+        ////Town
+        //[ForeignKey("Town")]
+        //public int? TownId { get; set; }
+        //public Town CustomerTown { get; set; }
 
-        //Settlement
-        [ForeignKey("Settlement")]
-        public int? SettlementId { get; set; }
-        public Settlement CustomerSettlement { get; set; }
+        ////Settlement
+        //[ForeignKey("Settlement")]
+        //public int? SettlementId { get; set; }
+        //public Settlement CustomerSettlement { get; set; }
 
         public string UniqueReferalCode { get; set; }
         public DateTime DateOfBirth { get; set; }
@@ -85,7 +92,6 @@ namespace Domain.Entities.Identity
         public virtual ICollection<SecurityTip> ExternalStaffIniatedTips { get; set; }
         public virtual ICollection<SecurityTip> ExternalStaffAuthorizedTips { get; set; }
         //
-
         public string CreatedBy { get; set; }
         public DateTime Created { get; set; }
         public string LastModifiedBy { get; set; }

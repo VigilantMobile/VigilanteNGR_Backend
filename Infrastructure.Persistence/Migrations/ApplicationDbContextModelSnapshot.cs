@@ -755,6 +755,79 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("SecurityTipCategories");
                 });
 
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.Source", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LogoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SourceCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SourceName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SourceCategoryId");
+
+                    b.ToTable("Source");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.SourceCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SourceCategories");
+                });
+
             modelBuilder.Entity("Domain.Entities.AppTroopers.Wanted.WantedPerson", b =>
                 {
                     b.Property<int>("Id")
@@ -951,9 +1024,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsExternalSuperAdmin")
                         .HasColumnType("bit");
 
-                    b.Property<int>("LGAId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
 
@@ -962,6 +1032,12 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LocationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LocationLevelId")
+                        .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -1004,17 +1080,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SettlementId")
-                        .HasColumnType("int");
-
                     b.Property<string>("StaffId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StateId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TownId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -1033,7 +1100,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.HasIndex("LGAId");
+                    b.HasIndex("LocationLevelId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -1042,12 +1109,6 @@ namespace Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("SettlementId");
-
-                    b.HasIndex("StateId");
-
-                    b.HasIndex("TownId");
 
                     b.ToTable("Users");
                 });
@@ -1775,6 +1836,17 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("VGNGAAdminAuthorizer");
                 });
 
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.Source", b =>
+                {
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTip.SourceCategory", "SourceCategory")
+                        .WithMany("Sources")
+                        .HasForeignKey("SourceCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("SourceCategory");
+                });
+
             modelBuilder.Entity("Domain.Entities.AppTroopers.Wanted.WantedPerson", b =>
                 {
                     b.HasOne("Domain.Entities.AppTroopers.SecurityTip.BroadcastLevel", "BroadcastLevel")
@@ -1826,37 +1898,14 @@ namespace Infrastructure.Persistence.Migrations
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Entities.LocationEntities.LGA", "CustomerLGA")
-                        .WithMany("Customers")
-                        .HasForeignKey("LGAId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.LocationEntities.Settlement", "CustomerSettlement")
-                        .WithMany("Customers")
-                        .HasForeignKey("SettlementId")
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTip.BroadcastLevel", "LocationLevel")
+                        .WithMany("CustomerLocationLevels")
+                        .HasForeignKey("LocationLevelId")
                         .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Domain.Entities.LocationEntities.State", "CustomerState")
-                        .WithMany("Customers")
-                        .HasForeignKey("StateId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.LocationEntities.Town", "CustomerTown")
-                        .WithMany("Customers")
-                        .HasForeignKey("TownId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("CustomerLGA");
-
-                    b.Navigation("CustomerSettlement");
-
-                    b.Navigation("CustomerState");
-
-                    b.Navigation("CustomerTown");
 
                     b.Navigation("Department");
+
+                    b.Navigation("LocationLevel");
                 });
 
             modelBuilder.Entity("Domain.Entities.LocationEntities.LGA", b =>
@@ -1950,6 +1999,8 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.BroadcastLevel", b =>
                 {
+                    b.Navigation("CustomerLocationLevels");
+
                     b.Navigation("VGNGAAdminApprovedSecurityTips");
                 });
 
@@ -1961,6 +2012,11 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.SecurityTipCategory", b =>
                 {
                     b.Navigation("SecurityTips");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.SourceCategory", b =>
+                {
+                    b.Navigation("Sources");
                 });
 
             modelBuilder.Entity("Domain.Entities.CompanyEntities.Department", b =>
@@ -1993,8 +2049,6 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.LocationEntities.LGA", b =>
                 {
-                    b.Navigation("Customers");
-
                     b.Navigation("SecurityTips");
 
                     b.Navigation("Towns");
@@ -2002,8 +2056,6 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.LocationEntities.Settlement", b =>
                 {
-                    b.Navigation("Customers");
-
                     b.Navigation("DepartureSettlementCommutes");
 
                     b.Navigation("DestinationSettlementCommutes");
@@ -2019,8 +2071,6 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.LocationEntities.State", b =>
                 {
-                    b.Navigation("Customers");
-
                     b.Navigation("LGAs");
 
                     b.Navigation("SecurityTips");
@@ -2028,8 +2078,6 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.LocationEntities.Town", b =>
                 {
-                    b.Navigation("Customers");
-
                     b.Navigation("DepartureTownCommutes");
 
                     b.Navigation("DestinationTownCommutes");

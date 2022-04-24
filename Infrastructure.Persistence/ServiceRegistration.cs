@@ -182,6 +182,7 @@ namespace Infrastructure.Persistence
             //Location
             services.AddTransient<ITownRepositoryAsync, TownRepositoryAsync>();
             services.AddTransient<ILGARepositoryAsync, LGARepositoryAsync>();
+            services.AddTransient<IStateRepositoryAsync, StateRepositoryAsync>();
 
             //Panic
             services.AddTransient<ITrustedPersonRepositoryAsync, TrustedPersonRepositoryAsync>();

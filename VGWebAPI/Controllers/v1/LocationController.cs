@@ -30,7 +30,6 @@ namespace VGWebAPI.Controllers.v1
             return Ok(await Mediator.Send(new GetAllDistrictsQuery() { PageSize = filter.PageSize, PageNumber = filter.PageNumber  }));
         }
 
-        // GET api/<controller>/5
         [HttpGet("district/{id}")]
         public async Task<IActionResult> GetDistrictAsync(int id)
         {
@@ -43,7 +42,18 @@ namespace VGWebAPI.Controllers.v1
         {
             return Ok(await Mediator.Send(command));
         }
-        #endregion
+
+        [HttpPut("{id}")] 
+        [Authorize]
+        public async Task<IActionResult> UpdateDistrict(int id, UpdateDistrictCommand command)
+        {
+            if (id != command.Id)
+            {
+                return BadRequest();
+            }
+            return Ok(await Mediator.Send(command));
+        }
+        #endregion district
 
 
         #region LGA
@@ -56,32 +66,45 @@ namespace VGWebAPI.Controllers.v1
         [HttpGet("lga/{id}/districts")]
         public async Task<IActionResult> GetDistrictsinLGAAsync(int id, [FromQuery] GetDistrictsinLGAParameter filter)
         {
-            return Ok(await Mediator.Send(new GetDistrictinLGAQuery { LGAId = id }));
+            return Ok(await Mediator.Send(new GetDistrictsinLGAQuery { LGAId = id }));
+        }
+        #endregion lga
+
+        #region State
+        [HttpGet("state/{id}")]
+        public async Task<IActionResult> GetStateAsync(int id)
+        {
+            return Ok(await Mediator.Send(new GetStateByIdQuery { Id = id }));
         }
 
-        #endregion
+        [HttpGet("state/{id}/lgas")]
+        public async Task<IActionResult> GetLGAsInStateAsync(int id, [FromQuery] GetLGAsinStateParameter filter)
+        {
+            return Ok(await Mediator.Send(new GetLGAsinStateQuery { StateId = id }));
+        }
+        #endregion State
 
         // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        [Authorize]
-        public async Task<IActionResult> Put(int id, UpdateProductCommand command)
-        {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
-            return Ok(await Mediator.Send(command));
-        }
+        //[HttpPut("{id}")]
+        //[Authorize]
+        //public async Task<IActionResult> Put(int id, UpdateProductCommand command)
+        //{
+        //    if (id != command.Id)
+        //    {
+        //        return BadRequest();
+        //    }
+        //    return Ok(await Mediator.Send(command));
+        //}
 
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        [Authorize]
-        public async Task<IActionResult> Delete(int id)
-        {
-           var result = await Mediator.Send(new DeleteProductByIdCommand { Id = id });
-            
-          
-            return Ok(await Mediator.Send(new DeleteProductByIdCommand { Id = id }));
-        }
+        //// DELETE api/<controller>/5
+        //[HttpDelete("{id}")]
+        //[Authorize]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //   var result = await Mediator.Send(new DeleteProductByIdCommand { Id = id });
+
+
+        //    return Ok(await Mediator.Send(new DeleteProductByIdCommand { Id = id }));
+        //}
     }
 }

@@ -7,10 +7,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Domain.Entities.AppTroopers.SecurityTip;
-using Application.Interfaces.Repositories.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
+using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 
-namespace Infrastructure.Persistence.Repositories.SecurityTip
+namespace Infrastructure.Persistence.Repositories.SecurityTips
 {
     public class SecurityTipCategoryRepositoryAsync : GenericRepositoryAsync<SecurityTipCategory>, ISecurityTipCategoryRepositorysync
     {

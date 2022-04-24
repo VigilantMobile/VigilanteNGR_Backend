@@ -15,44 +15,51 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Location
 {
-    public class UpdateTownCommand : IRequest<Response<Town>>
+    public class UpdateDistrictCommand : IRequest<Response<Town>>
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public int LGAId { get; set; }
 
-        public class UpdateTownCommandHandler : IRequestHandler<UpdateTownCommand, Response<Town>>
+        public class UpdateDistrictCommandHandler : IRequestHandler<UpdateDistrictCommand, Response<Town>>
         {
             private readonly ITownRepositoryAsync _townRepositoryAsync;
             private readonly IUserAccessor _userAccessor;
 
-            public UpdateTownCommandHandler(ITownRepositoryAsync townRepositoryAsync, IUserAccessor userAccessor)
+            public UpdateDistrictCommandHandler(ITownRepositoryAsync townRepositoryAsync, IUserAccessor userAccessor)
             {
                 _townRepositoryAsync = townRepositoryAsync;
                 _userAccessor = userAccessor ?? throw new ArgumentNullException(nameof(userAccessor));
             }
 
-            public async Task<Response<Town>> Handle(UpdateTownCommand command, CancellationToken cancellationToken)
+            public async Task<Response<Town>> Handle(UpdateDistrictCommand command, CancellationToken cancellationToken)
             {
-                string CreatedBy = _userAccessor.GetUserId();
+               try
+               {
+                    string ModifiedBy = _userAccessor.GetUserId();
 
-                //var trustedPerson = await _trustedPersonRepository.GetByIdAsync(command.UserId);
-                var town = await _townRepositoryAsync.GetByIdAsync(command.Id);
+                    //var trustedPerson = await _trustedPersonRepository.GetByIdAsync(command.UserId);
+                    var town = await _townRepositoryAsync.GetByIdAsync(command.Id);
 
-                if (town == null)
-                {
-                    throw new ApiException($"district not found.");
-                }
-                else
-                {
-                    town.Name = command.Name;
-                    town.LGAId = command.LGAId;
-                    town.Created = DateTime.UtcNow.AddHours(1);
-                    town.CreatedBy = CreatedBy;
-                    await _townRepositoryAsync.UpdateAsync(town);
+                    if (town == null)
+                    {
+                        throw new ApiException($"district not found.");
+                    }
+                    else
+                    {
+                        town.Name = command.Name;
+                        town.LGAId = command.LGAId;
+                        town.LastModifiedBy = ModifiedBy;
+                        town.LastModified = DateTime.UtcNow.AddHours(1);
+                        await _townRepositoryAsync.UpdateAsync(town);
 
-                    return new Response<Town>(town, $"District successfully updated", successStatus: true);
-                }
+                        return new Response<Town>(town, $"District successfully updated", successStatus: true);
+                    }
+               }
+                catch (Exception ex)
+               {
+                    throw new ApiException($"An error occurred while updating the district: {ex.Message}");
+               }
             }
         }
     }

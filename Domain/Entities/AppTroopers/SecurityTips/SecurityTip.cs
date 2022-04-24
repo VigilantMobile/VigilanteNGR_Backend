@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Domain.Entities.AppTroopers.SecurityTip
+namespace Domain.Entities.AppTroopers.SecurityTips
 {
     public class SecurityTip : AuditableBaseEntity
     {
@@ -19,24 +19,27 @@ namespace Domain.Entities.AppTroopers.SecurityTip
         public string Description { get; set; }
         [Required]
         public string Source { get; set; }
+        public bool IsBroadcasted { get; set; }
 
+        //Tip Status
+        [ForeignKey("SecurityTipStatus")]
+        public int? SecurityTipStatusId { get; set; }
+        public virtual SecurityTipStatus SecurityTipStatus { get; set; }
 
         //broadcaster
         [Required]
         [ForeignKey("ApplicationUser")]
         public string BroadcasterId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
-
-
+        
         //Admin Authorization
-        public bool isAdminAuthorized { get; set; } // 
+        public bool isAdminAuthorized { get; set; }
 
         [ForeignKey("VGNGAAdminAuthorizer")]
         public string AdminAuthorizerID { get; set; }
         public virtual ApplicationUser VGNGAAdminAuthorizer { get; set; }
 
         //External
-
         [ForeignKey("ExternalIniator")]
         public string ExternalInitiatorId { get; set; }
         public virtual ApplicationUser ExternalInitiator { get; set; }

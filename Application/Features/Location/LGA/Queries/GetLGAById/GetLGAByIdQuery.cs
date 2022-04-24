@@ -35,9 +35,7 @@ namespace Application.Features.Location
 
                     var lga = await _lgaRepositoryAsync.GetLGAWithStateAsync(query.Id);
                     if (lga == null)
-                        //throw new ApiException($"district not found.");
-                        return new Response<GetLGAViewModel>(getlgaViewModel, message: $"lga not found.", successStatus: false);
-
+                        throw new ApiException($"lga not found.");
 
                     getlgaViewModel.LGAName = lga.Name;
                     getlgaViewModel.Created = lga.Created;

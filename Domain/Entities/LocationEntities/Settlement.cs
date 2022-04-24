@@ -27,7 +27,7 @@ namespace Domain.Entities.LocationEntities
         public string AuthorityPhone { get; set; }
 
         //Customers
-        public virtual ICollection<ApplicationUser> Customers { get; set; }
+        //public virtual ICollection<ApplicationUser> Customers { get; set; }
         // VGNGA Users
         public virtual ICollection<ApplicationUser> VGNGASettlementStaff { get; set; }
 

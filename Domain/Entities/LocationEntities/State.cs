@@ -19,7 +19,7 @@ namespace Domain.Entities.LocationEntities
         public string NPFStateAuthorityAddress { get; set; }
 
         // Customer
-        public virtual ICollection<ApplicationUser> Customers { get; set; }
+        //public virtual ICollection<ApplicationUser> Customers { get; set; }
         // VGNGA Users
         public virtual ICollection<ApplicationUser> VGNGAStateStaff { get; set; }
 

@@ -12,6 +12,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Azure.Identity;
 using Domain.Entities.Identity;
+using Infrastructure.Persistence.Helpers;
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
 
 namespace VGWebAPI
 {
@@ -89,6 +92,11 @@ namespace VGWebAPI
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureContainer<ContainerBuilder>(builder =>
+                {
+                    builder.RegisterModule(new AutofacContainerModule());
                 });
     }
 }

@@ -16,18 +16,18 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Location
 {
-    public class GetDistrictinLGAQuery : IRequest<Response<GetAllDistrictsinLGAViewModel>>
+    public class GetDistrictsinLGAQuery : IRequest<Response<GetAllDistrictsinLGAViewModel>>
     {
         public int LGAId { get; set; }
-        public class GetDistrictByIdQueryHandler : IRequestHandler<GetDistrictinLGAQuery, Response<GetAllDistrictsinLGAViewModel>>
+        public class GetDistrictinLGAQueryHandler : IRequestHandler<GetDistrictsinLGAQuery, Response<GetAllDistrictsinLGAViewModel>>
         {
             private readonly ILGARepositoryAsync lgaRepositoryAsync;
-            public GetDistrictByIdQueryHandler(ILGARepositoryAsync lgaRepositoryAsync)
+            public GetDistrictinLGAQueryHandler(ILGARepositoryAsync lgaRepositoryAsync)
             {
                 this.lgaRepositoryAsync = lgaRepositoryAsync;
             }
 
-            public async Task<Response<GetAllDistrictsinLGAViewModel>> Handle(GetDistrictinLGAQuery query, CancellationToken cancellationToken)
+            public async Task<Response<GetAllDistrictsinLGAViewModel>> Handle(GetDistrictsinLGAQuery query, CancellationToken cancellationToken)
             {
                 try
                 {
@@ -59,11 +59,11 @@ namespace Application.Features.Location
                         Count = districts.Count
                     };
 
-                    return new Response<GetAllDistrictsinLGAViewModel>(getAllDistrictsViewModel, message: $"District retrieval successful", successStatus: true);
+                    return new Response<GetAllDistrictsinLGAViewModel>(getAllDistrictsViewModel, message: $"Successfully retrieved districts for the specified LGA.", successStatus: true);
                 }
                 catch (Exception ex)
                 {
-                   throw new ApiException($"district not found.");
+                   throw new ApiException($"An error occurred while fetching districts for the specified LGA: {ex.Message}");
                 }
             }
         }
