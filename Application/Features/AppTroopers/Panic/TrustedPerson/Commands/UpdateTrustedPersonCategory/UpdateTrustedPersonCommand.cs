@@ -2,13 +2,9 @@
 using Application.Interfaces;
 using Application.Interfaces.Repositories.AppTroopers.Panic;
 using Application.Wrappers;
-using Domain.Entities;
 using Domain.Entities.AppTroopers.Panic;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

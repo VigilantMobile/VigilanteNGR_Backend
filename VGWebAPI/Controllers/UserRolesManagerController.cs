@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Application.DTOs.Account;
-using Application.DTOs.Account.RoleManagement;
-using Application.DTOs.Account.UserRoleManagement;
+﻿using Application.DTOs.Account.UserRoleManagement;
 using Application.Exceptions;
-using Application.Interfaces;
 using Infrastructure.Persistence.Models;
 using Infrastructure.Persistence.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 
 
@@ -35,7 +28,7 @@ namespace VGWebAPI.Controllers
 
 
         [HttpPost("modifystaffroles")]
-        public async Task<IActionResult> AddUserToRolesAsync(AddUserToRoleRequest  addUserToRoleRequest )
+        public async Task<IActionResult> AddUserToRolesAsync(AddUserToRoleRequest addUserToRoleRequest)
         {
             try
             {

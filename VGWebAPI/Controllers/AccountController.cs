@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Application.DTOs.Account;
+﻿using Application.DTOs.Account;
 using Application.Exceptions;
-using Application.Interfaces;
 using Infrastructure.Persistence.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 
 namespace VGWebAPI.Controllers
@@ -38,10 +35,10 @@ namespace VGWebAPI.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync(CustomerRegisterRequest request)
         {
-          
+
             var origin = Request.Headers["origin"].ToString();
             return Ok(await _accountService.RegisterCustomerAsync(request, origin));
-          
+
         }
 
         [HttpPost("update-customer-profile")]
@@ -56,14 +53,14 @@ namespace VGWebAPI.Controllers
 
         public async Task<IActionResult> RegisterStaffAsync(StaffRegisterRequest request)
         {
-           
+
             var origin = Request.Headers["origin"];
             return Ok(await _accountService.RegisterStaffAsync(request, origin));
         }
 
         [HttpGet("confirm-email")]
-        public async Task<IActionResult> ConfirmEmailAsync([FromQuery]string userId, [FromQuery]string code)
-        {          
+        public async Task<IActionResult> ConfirmEmailAsync([FromQuery] string userId, [FromQuery] string code)
+        {
             var origin = Request.Headers["origin"];
             return Ok(await _accountService.ConfirmEmailAsync(userId, code));
         }
@@ -71,14 +68,14 @@ namespace VGWebAPI.Controllers
 
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest model)
-        {          
+        {
             await _accountService.ForgotPassword(model, Request.Headers["origin"]);
             return Ok();
         }
 
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword(ResetPasswordRequest model)
-        {          
+        {
             return Ok(await _accountService.ResetPassword(model));
         }
 
@@ -101,36 +98,36 @@ namespace VGWebAPI.Controllers
 
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest model)
-        {        
+        {
             // accept token from request body or cookie
             string refreshToken = model.Token ?? Request.Cookies["refreshToken"];
             var response = await _accountService.RefreshTokenAsync(refreshToken);
             if (!string.IsNullOrEmpty(response.Data.RefreshToken))
-            SetRefreshTokenInCookie(response.Data.RefreshToken);
+                SetRefreshTokenInCookie(response.Data.RefreshToken);
             return Ok(response);
-            
+
         }
 
         [HttpPost("revoke-token")]
         public async Task<IActionResult> RevokeToken([FromBody] RevokeTokenRequest model)
         {
-           
-                string token = model.Token ?? Request.Cookies["refreshToken"];
 
-                if (string.IsNullOrEmpty(token))
-                    return BadRequest(new { message = "Token is required" });
+            string token = model.Token ?? Request.Cookies["refreshToken"];
 
-                var response = _accountService.RevokeToken(token);
+            if (string.IsNullOrEmpty(token))
+                return BadRequest(new { message = "Token is required" });
 
-                if (!response)
-                    return NotFound(new { message = "Token not found" });
+            var response = _accountService.RevokeToken(token);
 
-                return Ok(new { message = "Token revoked" });
+            if (!response)
+                return NotFound(new { message = "Token not found" });
+
+            return Ok(new { message = "Token revoked" });
         }
 
 
         private void SetRefreshTokenInCookie(string refreshToken)
-        {   
+        {
             try
             {
                 var cookieOptions = new CookieOptions

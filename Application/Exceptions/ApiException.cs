@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Net;
-using System.Text;
-using System.Net.Http;
 
 namespace Application.Exceptions
 {
@@ -16,7 +12,7 @@ namespace Application.Exceptions
         public ApiException(string message, params object[] args)
             : base(String.Format(CultureInfo.CurrentCulture, message, args))
         {
-            
+
         }
     }
 }

@@ -1,16 +1,14 @@
-﻿using Domain.Common;
-using Domain.Common.Enums;
+﻿using Domain.Common.Enums;
 using Domain.Entities.AppTroopers.Curfew;
 using Domain.Entities.AppTroopers.Missing;
 using Domain.Entities.AppTroopers.Panic;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.CompanyEntities;
 using Domain.Entities.LocationEntities;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Domain.Entities.Identity
 {

@@ -1,12 +1,6 @@
 ﻿using Application.Interfaces.Repositories.AppTroopers.SecurityTip;
-using Domain.Entities;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Infrastructure.Persistence.Models
+﻿namespace Infrastructure.Persistence.Models
 {
     public class StateNamesandIdsVM
     {

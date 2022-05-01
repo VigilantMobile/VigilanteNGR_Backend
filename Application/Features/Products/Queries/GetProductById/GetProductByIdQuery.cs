@@ -3,9 +3,6 @@ using Application.Interfaces.Repositories;
 using Application.Wrappers;
 using Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,7 +22,7 @@ namespace Application.Features.Products.Queries.GetProductById
             {
                 var product = await _productRepository.GetByIdAsync(query.Id);
                 if (product == null) throw new ApiException($"Product Not Found.");
-               
+
                 // return new Response<Product>(product);
 
                 return new Response<Product>(product, $"Product retrieval successful");

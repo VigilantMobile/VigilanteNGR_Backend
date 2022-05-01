@@ -1,13 +1,8 @@
 ﻿using Application.Exceptions;
-using Application.Interfaces.Repositories;
 using Application.Interfaces.Repositories.AppTroopers.SecurityTip;
 using Application.Wrappers;
-using Domain.Entities;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,7 +22,7 @@ namespace Application.Features.AppTroopers.SecurityTip.GetSecurityTipCategoryByI
             {
                 var securityTipCategory = await _securityTipCategoryRepository.GetByIdAsync(query.Id);
                 if (securityTipCategory == null) throw new ApiException($"Security tip category not found.");
-               
+
                 // return new Response<Product>(product);
 
                 return new Response<SecurityTipCategory>(securityTipCategory, $"Security tip category retrieval successful");

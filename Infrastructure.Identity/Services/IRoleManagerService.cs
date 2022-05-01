@@ -3,10 +3,7 @@ using Application.DTOs.Account.RoleManagement;
 using Application.Wrappers;
 using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.Interfaces
@@ -15,9 +12,9 @@ namespace Application.Interfaces
     {
         Task<Response<string>> CreateRole(CreateRoleRequest roleRequest);
         Task<Response<string>> EditRole(string roleId, string name);
-        
-         Task<Response<List<IdentityRole>>> GetAllRoles();
-        Task<Response<IdentityRole>> GetRoleById(string roleId); 
+
+        Task<Response<List<IdentityRole>>> GetAllRoles();
+        Task<Response<IdentityRole>> GetRoleById(string roleId);
         Task<Response<CustomClaims>> CreateCustomClaim(CreateCustomClaimsModel model);
         Task<Response<List<CustomClaims>>> GetAllClaims();
         Task<Response<RolesAndClaimsResponse>> GetRoleClaims(string roleId);

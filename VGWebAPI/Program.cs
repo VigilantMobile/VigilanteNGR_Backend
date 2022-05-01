@@ -1,3 +1,4 @@
+using Domain.Entities.Identity;
 using Infrastructure.Persistence.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -7,11 +8,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Azure.Identity;
-using Domain.Entities.Identity;
 
 namespace VGWebAPI
 {
@@ -80,11 +78,11 @@ namespace VGWebAPI
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                //.ConfigureAppConfiguration((context, config) =>
-                //{
-                //var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VGWebAPIVaultUri"));
-                //config.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
-                //})
+              //.ConfigureAppConfiguration((context, config) =>
+              //{
+              //var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VGWebAPIVaultUri"));
+              //config.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
+              //})
               .UseSerilog() //Uses Serilog instead of default .NET Logger
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

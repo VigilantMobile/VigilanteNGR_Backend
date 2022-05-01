@@ -1,17 +1,12 @@
 ﻿using Application.DTOs.Email;
 using Application.Exceptions;
-using Application.Interfaces;
 using Domain.Settings;
-using Infrastructure.Shared.Services.Notification.EmailHelperClasses;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MimeKit;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using RestSharp;
 using RestSharp.Authenticators;
+using System;
+using System.IO;
 
 namespace Infrastructure.Shared.Services
 {
@@ -19,10 +14,10 @@ namespace Infrastructure.Shared.Services
     {
         public MailSettings _mailSettings { get; }
 
-       
+
         public ILogger<MailgunEmailService> _logger { get; }
 
-        public MailgunEmailService(IOptions<MailSettings> mailSettings,ILogger<MailgunEmailService> logger)
+        public MailgunEmailService(IOptions<MailSettings> mailSettings, ILogger<MailgunEmailService> logger)
         {
             _mailSettings = mailSettings.Value;
             _logger = logger;
@@ -31,7 +26,7 @@ namespace Infrastructure.Shared.Services
         public IRestResponse SendAsync(EmailRequest emailRequest)
         {
             try
-            {             
+            {
                 string FilePath = Directory.GetCurrentDirectory() + "\\EmailTemplates\\UserRegWelcomeTemplate.html";
                 StreamReader str = new StreamReader(FilePath);
                 string MailText = str.ReadToEnd();
@@ -75,7 +70,7 @@ namespace Infrastructure.Shared.Services
                 request.AddParameter("subject", emailRequest.Subject);
                 request.AddParameter("html", MailText);
                 request.Method = Method.POST;
-                return client.Execute(request);             
+                return client.Execute(request);
             }
             catch (System.Exception ex)
             {

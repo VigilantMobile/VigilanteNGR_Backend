@@ -1,32 +1,20 @@
 ﻿using Application.DTOs.Account;
-using Application.Exceptions;
+using Application.DTOs.Account.RoleManagement;
+using Application.Enums;
 using Application.Interfaces;
 using Application.Wrappers;
 using Domain.Settings;
-using Infrastructure.Identity.Helpers;
+using Infrastructure.Identity.Contexts;
 using Infrastructure.Identity.Models;
+using Infrastructure.Shared.Services;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Org.BouncyCastle.Ocsp;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Net.Cache;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using Application.Enums;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Primitives;
-using Application.DTOs.Email;
-using Infrastructure.Identity.Contexts;
-using Infrastructure.Shared.Services;
-using Application.DTOs.Account.RoleManagement;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Identity.Services
 {
@@ -70,7 +58,7 @@ namespace Infrastructure.Identity.Services
             {
                 await _roleManager.CreateAsync(new IdentityRole(roleRequest.role.Trim()));
             }
-          
+
             return new Response<string>($"{roleRequest.role} role was created successfully");
         }
 
@@ -90,7 +78,7 @@ namespace Infrastructure.Identity.Services
 
         public async Task<Response<List<IdentityRole>>> GetAllRoles()
         {
-           
+
             var roles = await _roleManager.Roles.ToListAsync();
             return new Response<List<IdentityRole>>(roles, message: $"{ roles.Count().ToString() } roles retrieved.");
         }
@@ -112,7 +100,7 @@ namespace Infrastructure.Identity.Services
             {
                 return $"No Accounts Registered with {model.Email}.";
             }
-     
+
             var roleExists = Enum.GetNames(typeof(Roles)).Any(x => x.ToLower() == model.Role.ToLower());
             if (roleExists)
             {
@@ -127,7 +115,7 @@ namespace Infrastructure.Identity.Services
         //done
         public async Task<Response<CustomClaims>> CreateCustomClaim(CreateCustomClaimsModel model)
         {
-            var claim = await _identityContext.CustomClaims.Where(x=>x.type == model.ClaimType).FirstOrDefaultAsync();
+            var claim = await _identityContext.CustomClaims.Where(x => x.type == model.ClaimType).FirstOrDefaultAsync();
             if ((claim.type == model.ClaimType) && (claim.value == model.ClaimValue))
             {
                 return new Response<CustomClaims>(claim, $"Claim Already Exists");
@@ -152,7 +140,7 @@ namespace Infrastructure.Identity.Services
         public async Task<Response<UserAndRolesResponse>> GetUserRoles(UserAndRolesRequest usersAndRolesRequest)
         {
             var user = await _userManager.FindByIdAsync(usersAndRolesRequest.UserId);
-            
+
             var roles = await _userManager.GetRolesAsync(user);
 
             UserAndRolesResponse response = new UserAndRolesResponse();
@@ -181,7 +169,7 @@ namespace Infrastructure.Identity.Services
             //ensure passed role claims exist in claims
 
             roleClaims = _roleManager.GetClaimsAsync(role).Result.ToList();
-            
+
             //var allUserClaims = userClaims.Union(roleClaims);
 
             //role claims to VM
@@ -305,7 +293,7 @@ namespace Infrastructure.Identity.Services
             foreach (var roleClaimData in manageAllRoleClaimsRequest.RoleClaimsList)
             {
 
-              
+
                 // no foreign claims are introduced.
                 var claimsinClaimstoBeEditedDontThatExistInAllClaimsList = customClaims.Where(c => !manageAllRoleClaimsRequest.RoleClaimsList.Any(ucl => ucl.Type == c.type && ucl.Value == c.value)).ToList();
 
@@ -320,16 +308,16 @@ namespace Infrastructure.Identity.Services
             //finally add or remove
             foreach (var claimToBeAddedOrRemoved in manageAllRoleClaimsRequest.RoleClaimsList)
             {
-                    Claim claim = new Claim(claimToBeAddedOrRemoved.Type, claimToBeAddedOrRemoved.Value);
+                Claim claim = new Claim(claimToBeAddedOrRemoved.Type, claimToBeAddedOrRemoved.Value);
 
-                    if (claimToBeAddedOrRemoved.Selected == true)
-                    {
-                        await _roleManager.AddClaimAsync(roletobeModified, claim);
-                    }
-                    else
-                    {
-                        await _roleManager.RemoveClaimAsync(roletobeModified, claim);
-                    }         
+                if (claimToBeAddedOrRemoved.Selected == true)
+                {
+                    await _roleManager.AddClaimAsync(roletobeModified, claim);
+                }
+                else
+                {
+                    await _roleManager.RemoveClaimAsync(roletobeModified, claim);
+                }
             }
 
 

@@ -1,10 +1,4 @@
-﻿using Domain.Entities;
-using Domain.Entities.AppTroopers.Panic;
-using Domain.Entities.AppTroopers.SecurityTip;
-using Domain.Entities.LocationEntities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Domain.Entities.LocationEntities;
 using System.Threading.Tasks;
 
 namespace Application.Interfaces.Repositories.Location

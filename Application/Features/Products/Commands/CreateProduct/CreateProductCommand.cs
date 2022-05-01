@@ -33,8 +33,8 @@ namespace Application.Features.Products.Commands.CreateProduct
         {
             var product = _mapper.Map<Product>(request);
             await _productRepository.AddAsync(product, _userAccessor.GetUserId());
-           
-           // return new Response<int>(product.Id);
+
+            // return new Response<int>(product.Id);
             return new Response<Product>(product, $"Product successfully created");
 
         }

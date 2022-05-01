@@ -1,14 +1,8 @@
 ﻿using Application.Enums;
 using Domain.Entities.Identity;
-using Infrastructure.Persistence.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Crypto.Prng.Drbg;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 
@@ -45,7 +39,7 @@ namespace Infrastructure.Persistence.Seeds
             {
                 var user = await userManager.FindByEmailAsync(superAdminUser.Email);
                 if (user == null)
-                {                   
+                {
                     await userManager.CreateAsync(superAdminUser, "123Pa$$word!");
 
                     //add to roles

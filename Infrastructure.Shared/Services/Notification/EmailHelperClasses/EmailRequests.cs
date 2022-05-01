@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Infrastructure.Shared.Services.Notification.EmailHelperClasses
+﻿namespace Infrastructure.Shared.Services.Notification.EmailHelperClasses
 {
     public class WelcomeMailRequest
     {

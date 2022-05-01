@@ -1,11 +1,8 @@
 ﻿using Domain.Common;
 using Domain.Common.Enums;
 using Domain.Entities.LocationEntities;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Domain.Entities.AppTroopers.Panic
 {

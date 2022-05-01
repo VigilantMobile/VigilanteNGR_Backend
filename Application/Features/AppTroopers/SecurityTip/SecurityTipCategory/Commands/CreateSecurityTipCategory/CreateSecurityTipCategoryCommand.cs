@@ -1,10 +1,8 @@
 ﻿using Application.Interfaces;
-using Application.Interfaces.Repositories;
 using Application.Interfaces.Repositories.AppTroopers.SecurityTip;
 using Application.Wrappers;
 using AutoMapper;
-using Domain.Entities;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using MediatR;
 using System;
 using System.Threading;
@@ -35,8 +33,8 @@ namespace Application.Features.AppTroopers.SecurityTip.Commands.CreateSecurityTi
             securityTipCategory.CreatedBy = _userAccessor.GetUserId();
             securityTipCategory.Created = DateTime.UtcNow.AddHours(1);
             await _securityTipCategoryRepository.AddAsync(securityTipCategory, _userAccessor.GetUserId());
-           
-           // return new Response<int>(product.Id);
+
+            // return new Response<int>(product.Id);
             return new Response<SecurityTipCategory>(securityTipCategory, $"Security tip category successfully Created");
 
         }
