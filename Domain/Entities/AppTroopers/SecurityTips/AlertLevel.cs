@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Entities.AppTroopers.SecurityTip
+namespace Domain.Entities.AppTroopers.SecurityTips
 {
     public class AlertLevel : AuditableBaseEntity
     {

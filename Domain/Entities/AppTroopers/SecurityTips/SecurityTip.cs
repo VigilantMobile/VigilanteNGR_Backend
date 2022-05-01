@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Domain.Entities.AppTroopers.SecurityTip
+namespace Domain.Entities.AppTroopers.SecurityTips
 {
     public class SecurityTip : AuditableBaseEntity
     {
