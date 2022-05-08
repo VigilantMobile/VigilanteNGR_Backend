@@ -1,18 +1,10 @@
-﻿using Application.Interfaces.Repositories;
-using Domain.Entities;
+﻿using Application.Interfaces.Repositories.Location;
+using Domain.Entities.LocationEntities;
 using Infrastructure.Persistence.Contexts;
 using Infrastructure.Persistence.Repository;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Domain.Entities.AppTroopers.SecurityTips;
-using Domain.Entities.AppTroopers.Panic;
 using System.Linq;
-using Domain.Entities.LocationEntities;
-using Application.Interfaces.Repositories.AppTroopers.Panic;
-using Application.Interfaces.Repositories.Location;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories.Location
 {
@@ -34,7 +26,7 @@ namespace Infrastructure.Persistence.Repositories.Location
             //return await _town
             //    .AllAsync(p => p.LGAId != LGAId && p.Name != townName);
         }
-       
+
         public async Task<Town> GetTownWithLGAAsync(int id)
         {
             return await

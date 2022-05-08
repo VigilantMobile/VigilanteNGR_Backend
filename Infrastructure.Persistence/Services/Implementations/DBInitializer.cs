@@ -11,12 +11,9 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Services
 {
@@ -100,8 +97,8 @@ namespace Infrastructure.Persistence.Services
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
             //var geometryFactory = new OgcCompliantGeometryFactory();
 
-           try
-           {
+            try
+            {
                 List<StateNamesandIdsVM> stateNamesandIdsList = new List<StateNamesandIdsVM>();
                 using (var serviceScope = _scopeFactory.CreateScope())
                 {
@@ -269,11 +266,11 @@ namespace Infrastructure.Persistence.Services
                         #endregion seed LGAs
                     }
                 }
-           }
+            }
             catch (Exception ex)
-           {
+            {
                 Console.WriteLine(ex.Message + $" {ex.InnerException.Message}");
-           }
+            }
         }
 
         public void SeedAppTrooperHelpers()

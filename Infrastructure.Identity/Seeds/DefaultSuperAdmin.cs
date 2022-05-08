@@ -1,13 +1,8 @@
 ﻿using Application.Enums;
 using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
-using Org.BouncyCastle.Crypto.Prng.Drbg;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 
@@ -35,14 +30,14 @@ namespace Infrastructure.Identity.Seeds
                 FirstName = "Anthony",
                 LastName = "Odu",
                 EmailConfirmed = true,
-                PhoneNumberConfirmed = true,                 
+                PhoneNumberConfirmed = true,
             };
 
             if (userManager.Users.All(u => u.Id != superAdminUser.Id))
             {
                 var user = await userManager.FindByEmailAsync(superAdminUser.Email);
                 if (user == null)
-                {                   
+                {
                     await userManager.CreateAsync(superAdminUser, "123Pa$$word!");
 
                     //add to roles

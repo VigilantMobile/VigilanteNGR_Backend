@@ -1,31 +1,11 @@
-﻿using Application.Interfaces;
-using Application.Interfaces.Repositories;
-using Infrastructure.Persistence.Contexts;
-using Infrastructure.Persistence.Repositories;
-using Infrastructure.Persistence.Repository;
-using Infrastructure.Persistence.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using NetTopologySuite.Geometries;
-using Microsoft.AspNetCore.Identity;
-using Domain.Settings;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Text;
-using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using Application.Wrappers;
-
-namespace Infrastructure.Persistence
+﻿namespace Infrastructure.Persistence
 {
     public static class IdentityServiceRegistration
     {
         //public static void AddIdentityInfrastructure(this IServiceCollection services, IConfiguration configuration)
         //{
 
-           
+
 
 
         //    //Authorization

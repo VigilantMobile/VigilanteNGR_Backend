@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Domain.Common.Enums
+﻿namespace Domain.Common.Enums
 {
-    public  enum AlertLevelEnum
+    public enum AlertLevelEnum
     {
         Neutral,
         Low,

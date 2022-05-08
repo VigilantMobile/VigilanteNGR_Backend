@@ -1,17 +1,11 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces;
-using Application.Interfaces.Repositories;
 using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
 using AutoMapper;
-using Domain.Entities;
-using Domain.Entities.AppTroopers.Panic;
-using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.LocationEntities;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -40,7 +34,7 @@ namespace Application.Features.Location
 
             var isUniqueTownInLGA = await _townRepositoryAsync.IsUniqueTowninLGA(request.LGAId, request.Name);
 
-            if(!isUniqueTownInLGA)
+            if (!isUniqueTownInLGA)
             {
                 throw new ApiException($"District already exists.");
             }
@@ -49,7 +43,7 @@ namespace Application.Features.Location
             town.CreatedBy = CreatedBy;
             town.Created = DateTime.UtcNow.AddHours(1);
             await _townRepositoryAsync.AddAsync(town, _userAccessor.GetUserId());
-           
+
             return new Response<Town>(town, message: $"District successfully created.", successStatus: true);
         }
     }

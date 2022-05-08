@@ -1,36 +1,29 @@
 ﻿using Application.DTOs.Account;
+using Application.DTOs.Email;
+using Application.Enums;
 using Application.Exceptions;
 using Application.Interfaces;
 using Application.Wrappers;
+using Domain.Entities.Identity;
 using Domain.Settings;
+using Infrastructure.Persistence.Contexts;
+using Infrastructure.Persistence.Helpers;
+using Infrastructure.Shared.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Org.BouncyCastle.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Net.Cache;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Application.Enums;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Primitives;
-using Application.DTOs.Email;
-using Infrastructure.Persistence.Contexts;
-using Infrastructure.Shared.Services;
-using Microsoft.AspNetCore.Http;
-using Infrastructure.Persistence.Helpers;
-using Infrastructure.Persistence.Models;
-using RestSharp;
-using RestSharp.Authenticators;
-using Domain.Entities.Identity;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Services
 {
@@ -83,8 +76,8 @@ namespace Infrastructure.Persistence.Services
         //login
         public async Task<Response<AuthenticationResponse>> AuthenticateAsync(AuthenticationRequest request, string ipAddress = null)
         {
-           try
-           {
+            try
+            {
                 //verify user
 
                 //var user = await _userManager.FindByEmailAsync(request.Username);
@@ -131,12 +124,12 @@ namespace Infrastructure.Persistence.Services
                 response.RefreshTokenExpiration = refreshToken.Expires;
 
                 return new Response<AuthenticationResponse>(response, $"Authenticated {user.UserName}");
-           }
-           catch (Exception ex)
-           {
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError(ex.Message, ex);
                 throw new ApiException(ex.Message);
-           }
+            }
         }
 
         //For customer:
@@ -231,7 +224,7 @@ namespace Infrastructure.Persistence.Services
         {
             UpdateProfileResponse response = new UpdateProfileResponse();
 
-            try 
+            try
             {
                 var existingUser = await _userManager.FindByNameAsync(request.PhoneNumber);
 
@@ -269,8 +262,8 @@ namespace Infrastructure.Persistence.Services
         //For staff.
         public async Task<Response<StaffRegistrationResponse>> RegisterStaffAsync(StaffRegisterRequest request, string origin)
         {
-           try
-           {
+            try
+            {
                 var userWithSameUserName = await _userManager.FindByEmailAsync(request.Email);
                 if (userWithSameUserName != null)
                 {
@@ -345,12 +338,12 @@ namespace Infrastructure.Persistence.Services
 
                     return new Response<StaffRegistrationResponse>(response, message: $"User is already registered, Kindly login with the associated details. Thanks.", successStatus: false);
                 }
-           }
-           catch (Exception ex)
-           {
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError(ex.Message, ex);
                 throw new ApiException(ex.Message);
-           }
+            }
         }
 
         private async Task<JwtSecurityToken> GenerateJWToken(ApplicationUser user)
@@ -421,8 +414,8 @@ namespace Infrastructure.Persistence.Services
 
         public async Task<Response<string>> ConfirmEmailAsync(string userId, string code)
         {
-           try
-           {
+            try
+            {
 
                 var user = await _userManager.FindByIdAsync(userId);
                 code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
@@ -435,13 +428,13 @@ namespace Infrastructure.Persistence.Services
                 {
                     throw new ApiException($"An error occured while confirming {user.Email}.");
                 }
-           }
-           catch (Exception ex)
-           {
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError(ex.Message, ex);
                 throw new ApiException(ex.Message);
-           }
-             
+            }
+
         }
 
         private RefreshToken GenerateRefreshToken(string ipAddress = null)
@@ -457,8 +450,8 @@ namespace Infrastructure.Persistence.Services
 
         public async Task ForgotPassword(ForgotPasswordRequest model, string origin)
         {
-           try
-           {
+            try
+            {
                 var account = await _userManager.FindByEmailAsync(model.Email);
 
                 // always return ok response to prevent email enumeration
@@ -474,12 +467,12 @@ namespace Infrastructure.Persistence.Services
                     Subject = "Reset Password",
                 };
                 await _emailService.SendAsync(emailRequest);
-           }
-           catch(Exception ex)
-           {
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError(ex.Message, ex);
                 throw new ApiException(ex.Message);
-           }
+            }
         }
 
         public async Task<Response<string>> ResetPassword(ResetPasswordRequest model)
@@ -563,8 +556,8 @@ namespace Infrastructure.Persistence.Services
         //revoke token
         public bool RevokeToken(string token)
         {
-           try
-           {
+            try
+            {
                 var user = _context.Users.SingleOrDefault(u => u.RefreshToken == token);
 
                 // return false if no user found with token
@@ -582,11 +575,11 @@ namespace Infrastructure.Persistence.Services
                 _context.SaveChanges();
 
                 return true;
-           }
-           catch(Exception ex)
-           {
+            }
+            catch (Exception ex)
+            {
                 return false;
-           }
+            }
         }
 
         // add-role
@@ -599,7 +592,7 @@ namespace Infrastructure.Persistence.Services
         //    {
         //        return $"No Accounts Registered with {model.Email}.";
         //    }
-     
+
         //    var roleExists = Enum.GetNames(typeof(Roles)).Any(x => x.ToLower() == model.Role.ToLower());
         //    if (roleExists)
         //    {

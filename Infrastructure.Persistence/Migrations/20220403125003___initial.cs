@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 using NetTopologySuite.Geometries;
+using System;
 
 namespace Infrastructure.Persistence.Migrations
 {

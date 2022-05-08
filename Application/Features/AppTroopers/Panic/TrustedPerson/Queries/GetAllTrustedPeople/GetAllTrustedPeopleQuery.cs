@@ -5,9 +5,7 @@ using Application.Interfaces.Repositories.AppTroopers.Panic;
 using Application.Wrappers;
 using AutoMapper;
 using MediatR;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,9 +29,9 @@ namespace Application.Features.AppTroopers.Panic.GetAllTrustedPeople
         public async Task<PagedResponse<IEnumerable<GetAllTrustedPeopleViewModel>>> Handle(GetAllTrustedPeopleQuery request, CancellationToken cancellationToken)
         {
             var validFilter = _mapper.Map<GetAllTrustedPeopleParameter>(request);
-            var TrustedPeople = await _trustedPersonRepositoryAsync.GetPagedReponseAsync(validFilter.PageNumber,validFilter.PageSize);
+            var TrustedPeople = await _trustedPersonRepositoryAsync.GetPagedReponseAsync(validFilter.PageNumber, validFilter.PageSize);
             var trustedPeopleViewModel = _mapper.Map<IEnumerable<GetAllTrustedPeopleViewModel>>(TrustedPeople);
-            return new PagedResponse<IEnumerable<GetAllTrustedPeopleViewModel>>(trustedPeopleViewModel, validFilter.PageNumber, validFilter.PageSize);           
+            return new PagedResponse<IEnumerable<GetAllTrustedPeopleViewModel>>(trustedPeopleViewModel, validFilter.PageNumber, validFilter.PageSize);
         }
     }
 }

@@ -35,8 +35,8 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
             securityTipCategory.CreatedBy = _userAccessor.GetUserId();
             securityTipCategory.Created = DateTime.UtcNow.AddHours(1);
             await _securityTipCategoryRepository.AddAsync(securityTipCategory, _userAccessor.GetUserId());
-           
-           // return new Response<int>(product.Id);
+
+            // return new Response<int>(product.Id);
             return new Response<SecurityTipCategory>(securityTipCategory, $"Security tip category successfully Created");
 
         }

@@ -1,12 +1,8 @@
 ﻿using Application.Interfaces;
-using Application.Interfaces.Repositories;
 using Application.Interfaces.Repositories.AppTroopers.Panic;
-using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
 using AutoMapper;
-using Domain.Entities;
 using Domain.Entities.AppTroopers.Panic;
-using Domain.Entities.AppTroopers.SecurityTips;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -42,7 +38,7 @@ namespace Application.Features.AppTroopers.Panic.Commands.CreateTrustedPerson
                 contact.Created = DateTime.UtcNow.AddHours(1);
                 await _trustedPersonRepository.AddAsync(contact, _userAccessor.GetUserId());
             }
-           
+
             return new Response<string>(null, $"Trusted contact(s) successfully created.", successStatus: true);
         }
     }

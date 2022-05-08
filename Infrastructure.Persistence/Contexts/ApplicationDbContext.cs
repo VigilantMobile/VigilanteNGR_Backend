@@ -10,19 +10,14 @@ using Domain.Entities.CompanyEntities;
 using Domain.Entities.Identity;
 //using Domain.Entities.Identity.Location;
 using Domain.Entities.LocationEntities;
-using Infrastructure.Persistence;
 using Infrastructure.Persistence.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Domain.Common.Enums;
 //using Domain.Entities.Identity.Identity;
 
 namespace Infrastructure.Persistence.Contexts
@@ -38,8 +33,8 @@ namespace Infrastructure.Persistence.Contexts
             _dateTime = dateTime;
             _authenticatedUser = authenticatedUser;
         }
-        
-        public DbSet<DemographicEntitiesCoordinatesJSON>  demographicEntitiesCoordinatesJSONs { get; set; }
+
+        public DbSet<DemographicEntitiesCoordinatesJSON> demographicEntitiesCoordinatesJSONs { get; set; }
 
         //Identity
         public DbSet<CustomClaims> CustomClaims { get; set; }
@@ -126,7 +121,7 @@ namespace Infrastructure.Persistence.Contexts
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-           
+
             base.OnModelCreating(builder);
 
             builder.Entity<ApplicationUser>(entity =>
@@ -181,7 +176,7 @@ namespace Infrastructure.Persistence.Contexts
 
             //LGA
             builder.Entity<LGA>()
-                
+
                 .Property(p => p.Boundary).HasColumnType("geography");
 
             //Town
@@ -284,7 +279,7 @@ namespace Infrastructure.Persistence.Contexts
            .WithMany(g => g.SettlementMissingItems).HasForeignKey(s => s.SettlementId).OnDelete(DeleteBehavior.Restrict);
 
             //users
-         
+
             builder.Entity<MissingItem>().HasOne(s => s.ApplicationUser)
             .WithMany(g => g.CustomerMissingItems).HasForeignKey(s => s.LoserId).OnDelete(DeleteBehavior.Restrict);
 

@@ -2,9 +2,7 @@
 using Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Seeds
@@ -13,9 +11,9 @@ namespace Infrastructure.Persistence.Seeds
     {
         public static async Task SeedAsync(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-          try
-          {
-            //Seed Default User
+            try
+            {
+                //Seed Default User
                 var defaultUser = new ApplicationUser
                 {
                     UserName = "basicuser",
@@ -37,11 +35,11 @@ namespace Infrastructure.Persistence.Seeds
                     }
 
                 }
-          }
-          catch (Exception ex)
-          {
+            }
+            catch (Exception ex)
+            {
 
-          }
+            }
         }
     }
 }

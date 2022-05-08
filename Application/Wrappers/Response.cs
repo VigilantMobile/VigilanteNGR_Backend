@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Application.Wrappers
 {
@@ -26,7 +22,7 @@ namespace Application.Wrappers
             Message = message;
         }
 
- 
+
         public Response(T data, string message = null, bool successStatus = false)
         {
             Succeeded = successStatus;
@@ -47,7 +43,8 @@ namespace Application.Wrappers
         public T Data { get; set; }
     }
 
-    public class Errors {
+    public class Errors
+    {
         public string ErrorCode { get; set; }
         public string ErrorMessage { get; set; }
     }

@@ -1,13 +1,8 @@
-﻿using Application.Features.AppTroopers.SecurityTips.Queries.GetAllSecurityTipCategories;
-using Application.Filters;
-using Application.Interfaces.Repositories;
-using Application.Interfaces.Repositories.Location;
+﻿using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
 using AutoMapper;
 using MediatR;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,9 +26,9 @@ namespace Application.Features.Location
         public async Task<PagedResponse<IEnumerable<GetAllDistrictsViewModel>>> Handle(GetAllDistrictsQuery request, CancellationToken cancellationToken)
         {
             var validFilter = _mapper.Map<GetAllDistrictsParameter>(request);
-            var districts = await _townRepositoryAsync.GetPagedReponseAsync(validFilter.PageNumber,validFilter.PageSize);
+            var districts = await _townRepositoryAsync.GetPagedReponseAsync(validFilter.PageNumber, validFilter.PageSize);
             var districtsViewModel = _mapper.Map<IEnumerable<GetAllDistrictsViewModel>>(districts);
-            return new PagedResponse<IEnumerable<GetAllDistrictsViewModel>>(districtsViewModel, validFilter.PageNumber, validFilter.PageSize);           
+            return new PagedResponse<IEnumerable<GetAllDistrictsViewModel>>(districtsViewModel, validFilter.PageNumber, validFilter.PageSize);
         }
     }
 }

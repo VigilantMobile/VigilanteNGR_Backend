@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.DTOs.Account.UserRoleManagement
 {
@@ -13,7 +9,7 @@ namespace Application.DTOs.Account.UserRoleManagement
         public string UserId { get; set; }
 
         [Required]
-        public IEnumerable<RolestoConfigure> Roles  { get; set; }
+        public IEnumerable<RolestoConfigure> Roles { get; set; }
     }
 
     public class RolestoConfigure
@@ -22,7 +18,7 @@ namespace Application.DTOs.Account.UserRoleManagement
         public string RoleId { get; set; }
 
         [Required]
-        public string RoleName { get; set; }       
+        public string RoleName { get; set; }
 
         [Required]
         public bool Selected { get; set; }

@@ -2,9 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Identity.Contexts
 {
@@ -41,7 +38,7 @@ namespace Infrastructure.Identity.Contexts
 
             builder.Entity<IdentityUserLogin<string>>(entity =>
             {
-                entity.ToTable("UserLogins");     
+                entity.ToTable("UserLogins");
             });
 
             builder.Entity<IdentityRoleClaim<string>>(entity =>

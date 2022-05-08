@@ -1,33 +1,18 @@
-﻿using Application.DTOs.Account;
-using Application.Exceptions;
+﻿using Application.DTOs.Account.UserRoleManagement;
 using Application.Interfaces;
 using Application.Wrappers;
-using Domain.Settings;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Org.BouncyCastle.Ocsp;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net.Cache;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using Application.Enums;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Primitives;
-using Application.DTOs.Email;
-using Infrastructure.Persistence.Contexts;
-using Infrastructure.Shared.Services;
-using Application.DTOs.Account.RoleManagement;
-using Microsoft.EntityFrameworkCore;
-using Application.DTOs.Account.UserRoleManagement;
-using Infrastructure.Persistence.Models;
 using Domain.Entities.Identity;
+using Domain.Settings;
+using Infrastructure.Persistence.Contexts;
+using Infrastructure.Persistence.Models;
+using Infrastructure.Shared.Services;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Services
 {
@@ -66,13 +51,13 @@ namespace Infrastructure.Persistence.Services
 
         }
 
-      
+
 
 
 
         public async Task<Response<UserRolesViewModel>> AddUserToRoles(AddUserToRoleRequest addUserToRoleRequest)
         {
-            UserRolesViewModel userRoles = new UserRolesViewModel(); 
+            UserRolesViewModel userRoles = new UserRolesViewModel();
 
             var user = await _userManager.FindByIdAsync(addUserToRoleRequest.UserId);
 

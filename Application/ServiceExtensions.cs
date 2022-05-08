@@ -1,16 +1,9 @@
 ﻿using Application.Behaviours;
-using Application.Features.Products.Commands.CreateProduct;
 using Application.Interfaces;
-using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application
 {

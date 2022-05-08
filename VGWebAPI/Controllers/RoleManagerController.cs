@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Application.DTOs.Account;
+﻿using Application.DTOs.Account;
 using Application.DTOs.Account.RoleManagement;
 using Application.Exceptions;
-using Application.Interfaces;
 using Infrastructure.Persistence.Models;
 using Infrastructure.Persistence.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 
 namespace VGWebAPI.Controllers
@@ -31,7 +28,7 @@ namespace VGWebAPI.Controllers
             _roleManagerService = roleManagerService;
             _logger = logger;
         }
-                    
+
 
         [HttpPost("createrole")]
         public async Task<IActionResult> CreateRoleAsync(CreateRoleRequest roleRequest)
@@ -187,7 +184,7 @@ namespace VGWebAPI.Controllers
             }
         }
 
-      
+
 
     }
 }
