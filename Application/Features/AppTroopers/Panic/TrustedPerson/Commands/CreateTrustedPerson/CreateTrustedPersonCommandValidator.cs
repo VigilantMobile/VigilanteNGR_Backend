@@ -2,7 +2,7 @@
 using Application.Interfaces.Repositories.AppTroopers.Panic;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.Panic;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore.Internal;
 using System;

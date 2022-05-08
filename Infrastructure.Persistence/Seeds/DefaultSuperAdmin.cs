@@ -37,8 +37,8 @@ namespace Infrastructure.Persistence.Seeds
                 LastName = "Odu",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
-                StateId = 25,
-                LGAId = 514
+                LocationLevelId = 2,
+                LocationId = 2
             };
 
             if (userManager.Users.All(u => u.Id != superAdminUser.Id))

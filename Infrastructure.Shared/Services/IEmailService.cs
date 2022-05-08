@@ -19,9 +19,8 @@ namespace Infrastructure.Shared.Services
 
     public interface IMandrillEmailService
     {
-        IRestResponse SendAsync(EmailRequest request);
+        Task<RestResponse> SendAsync(EmailRequest request);
     }
-
 
     //public interface IEmailService
     //{
@@ -29,5 +28,4 @@ namespace Infrastructure.Shared.Services
     //    Task SendWelcomeEmailAsync(EmailRequest request);
     //    Task SendStaffVerificationEmailAsync(EmailRequest request);
     //}
-
 }

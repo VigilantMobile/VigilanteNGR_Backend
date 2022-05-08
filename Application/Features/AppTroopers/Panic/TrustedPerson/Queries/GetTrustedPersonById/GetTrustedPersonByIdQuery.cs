@@ -4,7 +4,7 @@ using Application.Interfaces.Repositories.AppTroopers.Panic;
 using Application.Wrappers;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.Panic;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using MediatR;
 using System;
 using System.Collections.Generic;

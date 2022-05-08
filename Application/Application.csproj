@@ -9,6 +9,8 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
     <PackageReference Include="FluentValidation" Version="10.3.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.3.0" />
+    <PackageReference Include="Geocoding.Core" Version="4.0.1" />
+    <PackageReference Include="Geocoding.Google" Version="4.0.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.9" />
@@ -26,8 +28,11 @@
   <ItemGroup>
     <Folder Include="DTOs\Account\AppTroopers\" />
     <Folder Include="Features\AppTroopers\Panic\TrustedPerson\Queries\GetAllTrustedPeopleForUser\" />
+    <Folder Include="Features\AppTroopers\SecurityTips\SecurityTips\Commands\DeleteSecurityTip\" />
+    <Folder Include="Features\AppTroopers\SecurityTips\SecurityTips\Commands\UpdateSecurityTip\" />
+    <Folder Include="Features\AppTroopers\SecurityTips\SecurityTips\Queries\GetAllSecurityTipCategories\" />
+    <Folder Include="Features\Location\State\Commands\" />
     <Folder Include="Features\Location\LGA\Commands\" />
-    <Folder Include="Interfaces\Account\" />
   </ItemGroup>
 
 </Project>

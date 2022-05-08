@@ -7,36 +7,49 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Domain.Entities.AppTroopers.SecurityTip
+namespace Domain.Entities.AppTroopers.SecurityTips
 {
     public class SecurityTip : AuditableBaseEntity
     {
         [Required]
+        [MaxLength(50)]
         public string Subject { get; set; }
 
         [Required]
+        [MaxLength(100)]
         public string Body { get; set; }
-        public string Description { get; set; }
         [Required]
-        public string Source { get; set; }
 
+
+        [ForeignKey("Source")]
+        public int SourceId { get; set; }
+        public virtual Source Source { get; set; }
+
+        public bool IsBroadcasted { get; set; }
+        public int Casualties { get; set; }
+
+        //Tip Status
+        [ForeignKey("SecurityTipStatus")]
+        public int SecurityTipStatusId { get; set; }
+        public virtual SecurityTipStatus SecurityTipStatus { get; set; }
+
+        [MaxLength(100)]
+        public string TipStatusString { get; set; }
 
         //broadcaster
         [Required]
         [ForeignKey("ApplicationUser")]
         public string BroadcasterId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
-
-
+        
         //Admin Authorization
-        public bool isAdminAuthorized { get; set; } // 
+        public bool isAdminAuthorized { get; set; }
 
         [ForeignKey("VGNGAAdminAuthorizer")]
         public string AdminAuthorizerID { get; set; }
         public virtual ApplicationUser VGNGAAdminAuthorizer { get; set; }
 
-        //External
-
+        //External - not presently in use
         [ForeignKey("ExternalIniator")]
         public string ExternalInitiatorId { get; set; }
         public virtual ApplicationUser ExternalInitiator { get; set; }
@@ -53,11 +66,26 @@ namespace Domain.Entities.AppTroopers.SecurityTip
         [ForeignKey("BroadcastLevel")]
         public int BroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
         public virtual BroadcastLevel BroadcastLevel { get; set; }
+        
+        //escalation
+        public bool EscalationRequested { get; set; }
 
+        //[Required]
+        //public int EscalationLocationId { get; set; } //No FK
+
+        //[Required]
+        //[ForeignKey("EscalationBroadcastLevel")]
+        //public int EscalationBroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
+        //public virtual BroadcastLevel EscalationBroadcastLevel { get; set; }
+        
+        //broadcaster type
         [Required]
         [ForeignKey("BroadcasterType")]
         public int BroadcasterTypeId { get; set; }
         public virtual BroadcasterType BroadcasterType { get; set; }
+
+        [MaxLength(100)]
+        public string BroadcasterTypeString { get; set; }
 
         [Required]
         [ForeignKey("SecurityTipCategory")]
@@ -69,5 +97,9 @@ namespace Domain.Entities.AppTroopers.SecurityTip
         [ForeignKey("AlertLevel")]
         public int AlertLevelId { get; set; }
         public virtual AlertLevel AlertLevel { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<EscalatedTip> EscalatedTips { get; set; }
+
     }
 }

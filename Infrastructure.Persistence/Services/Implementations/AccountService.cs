@@ -243,7 +243,7 @@ namespace Infrastructure.Persistence.Services
                 existingUser.FirstName = request.FirstName;
                 existingUser.LastName = request.LastName;
                 existingUser.PhoneNumber = request.PhoneNumber;
-                existingUser.TownId = request.TownId;
+                existingUser.LocationLevelId = request.LocationLevelId;
                 existingUser.UserName = request.PhoneNumber;
 
                 var result = await _userManager.UpdateAsync(existingUser);

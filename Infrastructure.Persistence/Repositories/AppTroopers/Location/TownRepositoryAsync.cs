@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.AppTroopers.Panic;
 using System.Linq;
 using Domain.Entities.LocationEntities;
@@ -39,6 +39,28 @@ namespace Infrastructure.Persistence.Repositories.Location
         {
             return await
             _context.Towns.Where(x => x.Id == id).Include(l => l.LGA).FirstOrDefaultAsync();
+        }
+
+        public async Task<State> GetTownStateAsync(int id)
+        {
+            try
+            {
+                var townState = (from town in _context.Towns
+                                 join lga in _context.LGAs on town.LGAId equals lga.Id
+                                 join state in _context.States on lga.StateId equals state.Id
+                                 select new State
+                                 {
+                                     Id = state.Id,
+                                     Name = state.Name,
+                                 }).FirstOrDefault();
+
+                return townState;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
         }
     }
 }

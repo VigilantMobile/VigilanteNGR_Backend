@@ -1,5 +1,5 @@
 ﻿using Domain.Common;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.Identity;
 using NetTopologySuite.Geometries;
 using System;
@@ -26,7 +26,7 @@ namespace Domain.Entities.LocationEntities
         public bool isCapital { get; set; }
 
         //Customers
-        public virtual ICollection<ApplicationUser> Customers { get; set; }
+        //public virtual ICollection<ApplicationUser> Customers { get; set; }
         // VGNGA Users
         public virtual ICollection<ApplicationUser> VGNGALGAStaff { get; set; }
 

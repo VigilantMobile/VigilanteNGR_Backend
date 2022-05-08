@@ -1,7 +1,7 @@
 ﻿using Domain.Common;
 using Domain.Entities.AppTroopers.Missing;
 using Domain.Entities.AppTroopers.Panic;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.AppTroopers.Wanted;
 using Domain.Entities.Identity;
 using NetTopologySuite.Geometries;
@@ -25,7 +25,7 @@ namespace Domain.Entities.LocationEntities
         public string NPFPhone { get; set; }
 
         //Customers
-        public virtual ICollection<ApplicationUser> Customers { get; set; }
+        //public virtual ICollection<ApplicationUser> Customers { get; set; }
 
         // VGNGA Users
         public virtual ICollection<ApplicationUser> VGNGATownStaff { get; set; }

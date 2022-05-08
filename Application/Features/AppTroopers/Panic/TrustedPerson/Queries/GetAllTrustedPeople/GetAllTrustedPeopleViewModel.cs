@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Features.AppTroopers.SecurityTip.Queries.GetAllSecurityTipCategories
+namespace Application.Features.AppTroopers.SecurityTips.Queries.GetAllSecurityTipCategories
 {
     public class GetAllTrustedPeopleViewModel
     {

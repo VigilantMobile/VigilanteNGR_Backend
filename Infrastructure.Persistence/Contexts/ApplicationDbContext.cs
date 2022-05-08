@@ -4,7 +4,7 @@ using Domain.Entities;
 using Domain.Entities.AppTroopers.Curfew;
 using Domain.Entities.AppTroopers.Missing;
 using Domain.Entities.AppTroopers.Panic;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.AppTroopers.Wanted;
 using Domain.Entities.CompanyEntities;
 using Domain.Entities.Identity;
@@ -70,7 +70,11 @@ namespace Infrastructure.Persistence.Contexts
         public DbSet<BroadcasterType> BroadcasterTypes { get; set; }
         public DbSet<BroadcastLevel> BroadcastLevels { get; set; }
         public DbSet<AlertLevel> AlertLevels { get; set; }
-
+        public DbSet<SourceCategory> SourceCategories { get; set; }
+        public DbSet<Source> Source { get; set; }
+        public DbSet<SecurityTipStatus> SecurityTipStatuses { get; set; }
+        public DbSet<EscalatedTip> EscalatedTips { get; set; }
+        
         //Panic
         public DbSet<Panic> PanicRecords { get; set; }
         public DbSet<Commute> CommuteRecords { get; set; }
@@ -91,6 +95,10 @@ namespace Infrastructure.Persistence.Contexts
 
         //Department
         public DbSet<Department> Departments { get; set; }
+
+        //Comments
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<CommentFlags> CommentFlags { get; set; }
 
         //Test
         public DbSet<Product> Products { get; set; }
@@ -148,7 +156,6 @@ namespace Infrastructure.Persistence.Contexts
             builder.Entity<IdentityRoleClaim<string>>(entity =>
             {
                 entity.ToTable("RoleClaims");
-
             });
 
             builder.Entity<IdentityUserToken<string>>(entity =>
@@ -156,25 +163,17 @@ namespace Infrastructure.Persistence.Contexts
                 entity.ToTable("UserTokens");
             });
 
-
             builder.Entity<IdentityUserToken<string>>(entity =>
             {
                 entity.ToTable("UserTokens");
             });
-
 
             builder.Entity<CustomClaims>(entity =>
             {
                 entity.ToTable("CustomClaims");
             });
 
-
-
-
-
-
             // Geometry Types 
-
 
             //State 
 
@@ -197,54 +196,36 @@ namespace Infrastructure.Persistence.Contexts
 
             //State
 
-            builder.Entity<ApplicationUser>().HasOne(s => s.CustomerState)
-            .WithMany(g => g.Customers).HasForeignKey(s => s.StateId).OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<ApplicationUser>().HasOne(s => s.CustomerState)
+            //.WithMany(g => g.Customers).HasForeignKey(s => s.StateId).OnDelete(DeleteBehavior.Restrict);
 
             //LGA
-            builder.Entity<ApplicationUser>().HasOne(s => s.CustomerLGA)
-            .WithMany(g => g.Customers).HasForeignKey(s => s.LGAId).OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<ApplicationUser>().HasOne(s => s.CustomerLGA)
+            //.WithMany(g => g.Customers).HasForeignKey(s => s.LGAId).OnDelete(DeleteBehavior.Restrict);
 
-            //builder.Entity<LGA>()
-            //  .HasMany(c => c.OfficialVigilanteLGAAdmins)
-            //  .WithOne(e => e.LGA);
-
-            //Town
-            builder.Entity<ApplicationUser>().HasOne(s => s.CustomerTown)
-             .WithMany(g => g.Customers).HasForeignKey(s => s.TownId).OnDelete(DeleteBehavior.Restrict);
 
             //Settlement
-            builder.Entity<ApplicationUser>().HasOne(s => s.CustomerSettlement)
-             .WithMany(g => g.Customers).HasForeignKey(s => s.SettlementId).OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<ApplicationUser>().HasOne(s => s.CustomerSettlement)
+            // .WithMany(g => g.Customers).HasForeignKey(s => s.SettlementId).OnDelete(DeleteBehavior.Restrict);
 
             //Location Identity Internal (VGNGA)-----------------------------------------------------------------------
-
-            builder.Entity<ApplicationUser>().HasOne(s => s.CustomerState)
-             .WithMany(g => g.Customers).HasForeignKey(s => s.StateId).OnDelete(DeleteBehavior.Restrict);
 
             //State
             builder.Entity<ApplicationUser>()
              .HasMany(x => x.InternalStaffStates)
             .WithMany(x => x.VGNGAStateStaff);
 
-            //LGA
-            builder.Entity<ApplicationUser>().HasOne(s => s.CustomerLGA)
-            .WithMany(g => g.Customers).HasForeignKey(s => s.LGAId).OnDelete(DeleteBehavior.Restrict);
-
             builder.Entity<ApplicationUser>()
            .HasMany(x => x.InternalStaffLGAs)
            .WithMany(x => x.VGNGALGAStaff);
 
             //Town
-            builder.Entity<ApplicationUser>().HasOne(s => s.CustomerTown)
-            .WithMany(g => g.Customers).HasForeignKey(s => s.TownId).OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<ApplicationUser>().HasOne(s => s.CustomerTown)
+            //.WithMany(g => g.Customers).HasForeignKey(s => s.TownId).OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<ApplicationUser>()
             .HasMany(x => x.InternalStaffTowns)
             .WithMany(x => x.VGNGATownStaff);
-
-            //Settlement
-            builder.Entity<ApplicationUser>().HasOne(s => s.CustomerSettlement)
-            .WithMany(g => g.Customers).HasForeignKey(s => s.SettlementId).OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<ApplicationUser>()
            .HasMany(x => x.InternalStaffSettlements)
@@ -322,11 +303,19 @@ namespace Infrastructure.Persistence.Contexts
 
             //SecurityTips
 
-             builder.Entity<SecurityTip>().HasOne(s => s.ApplicationUser)
+            builder.Entity<Source>().HasOne(s => s.SourceCategory)
+              .WithMany(g => g.Sources).HasForeignKey(s => s.SourceCategoryId).OnDelete(DeleteBehavior.Restrict);
+
+
+            builder.Entity<SecurityTip>().HasOne(s => s.ApplicationUser)
               .WithMany(g => g.CustomerSecurityTips).HasForeignKey(s => s.BroadcasterId).OnDelete(DeleteBehavior.Restrict);
 
-           // builder.Entity<SecurityTip>().HasOne(s => s.ApplicationUser)
-           //.WithMany(g => g.CustomerSecurityTips).HasForeignKey(s => s.BroadcasterId).OnDelete(DeleteBehavior.Restrict);
+            //Tip Status
+            builder.Entity<SecurityTipStatus>().HasMany(s => s.SecurityTips)
+           .WithOne(g => g.SecurityTipStatus).HasForeignKey(s => s.SecurityTipStatusId).OnDelete(DeleteBehavior.Restrict);
+
+            // builder.Entity<SecurityTip>().HasOne(s => s.ApplicationUser)
+            //.WithMany(g => g.CustomerSecurityTips).HasForeignKey(s => s.BroadcasterId).OnDelete(DeleteBehavior.Restrict);
             //users
             builder.Entity<SecurityTip>().HasOne(s => s.ExternalInitiator)
             .WithMany(g => g.ExternalStaffIniatedTips).HasForeignKey(s => s.ExternalInitiatorId).OnDelete(DeleteBehavior.Restrict);
@@ -334,12 +323,48 @@ namespace Infrastructure.Persistence.Contexts
             builder.Entity<SecurityTip>().HasOne(s => s.ExternalAuthorizer)
              .WithMany(g => g.ExternalStaffAuthorizedTips).HasForeignKey(s => s.ExternalAuthorizerId).OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<SecurityTip>().HasMany(s => s.Comments)
+            .WithOne(g => g.SecurityTip).HasForeignKey(s => s.SecurityTipId).OnDelete(DeleteBehavior.Restrict);
+
             //Curfew
             builder.Entity<Curfew>().HasOne(s => s.AdminAuthorizer)
            .WithMany(g => g.AdminAuthorizedCurfews).HasForeignKey(s => s.AdminAuthorizerId).OnDelete(DeleteBehavior.Restrict).OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Curfew>().HasOne(s => s.OperatorIniator)
             .WithMany(g => g.OperatorIniatedCurfews).HasForeignKey(s => s.OperatorIniatorId).OnDelete(DeleteBehavior.Restrict).OnDelete(DeleteBehavior.Restrict);
+
+            //BroadcastLevel
+
+            builder.Entity<BroadcastLevel>().HasMany(s => s.Customers)
+             .WithOne(g => g.LocationLevel).HasForeignKey(s => s.LocationLevelId).OnDelete(DeleteBehavior.Restrict);
+
+            //Comments
+            builder.Entity<Comment>().HasMany(s => s.CommentFlags)
+             .WithOne(g => g.Comment).HasForeignKey(s => s.CommentId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Comment>().HasMany(s => s.CommentFlags)
+            .WithOne(g => g.Comment).HasForeignKey(s => s.CommentId).OnDelete(DeleteBehavior.Restrict);
+
+
+            builder.Entity<ApplicationUser>().HasMany(s => s.Comments)
+           .WithOne(g => g.ApplicationUser).HasForeignKey(s => s.CommenterId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ApplicationUser>().HasMany(s => s.CommentFlags)
+           .WithOne(g => g.ApplicationUser).HasForeignKey(s => s.VoterId).OnDelete(DeleteBehavior.Restrict);
+
+            //Sources
+            builder.Entity<Source>().HasMany(s => s.SecurityTips)
+          .WithOne(g => g.Source).HasForeignKey(s => s.SourceId).OnDelete(DeleteBehavior.Restrict);
+
+            //Escalated Tips
+            builder.Entity<SecurityTip>().HasMany(s => s.EscalatedTips)
+          .WithOne(g => g.SecurityTip).HasForeignKey(s => s.SecurityTipId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<BroadcastLevel>().HasMany(s => s.EscalatedTips)
+          .WithOne(g => g.EscalationBroadcastLevel).HasForeignKey(s => s.EscalationBroadcastLevelId).OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<ApplicationUser>().HasMany(s => s.ApprovedEscalatedTips)
+          .WithOne(g => g.EscalationAuthorizer).HasForeignKey(s => s.EscalationAuthorizerID).OnDelete(DeleteBehavior.Restrict);
 
             //All Decimals will have 18,6 Range
             foreach (var property in builder.Model.GetEntityTypes()
