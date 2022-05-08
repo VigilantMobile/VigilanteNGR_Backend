@@ -1,4 +1,4 @@
-﻿using Application.Interfaces.Repositories.AppTroopers.SecurityTip;
+﻿using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Domain.Entities.AppTroopers.SecurityTips;
 using Infrastructure.Persistence.Contexts;
 using Infrastructure.Persistence.Repository;

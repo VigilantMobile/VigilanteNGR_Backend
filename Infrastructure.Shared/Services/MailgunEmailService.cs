@@ -7,6 +7,7 @@ using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Shared.Services
 {
