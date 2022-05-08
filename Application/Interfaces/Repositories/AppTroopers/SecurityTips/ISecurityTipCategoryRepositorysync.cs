@@ -10,6 +10,5 @@ namespace Application.Interfaces.Repositories.AppTroopers.SecurityTips
     public interface ISecurityTipCategoryRepositorysync : IGenericRepositoryAsync<SecurityTipCategory>
     {
         Task<bool> IsUniqueCategoryName(string CategoryName);
-
     }
 }

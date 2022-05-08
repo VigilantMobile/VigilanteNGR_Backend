@@ -1,4 +1,4 @@
-﻿using Application.Features.AppTroopers.SecurityTip.Queries.GetAllSecurityTipCategories;
+﻿using Application.Features.AppTroopers.SecurityTips.Queries.GetAllSecurityTipCategories;
 using Application.Filters;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Repositories.AppTroopers.Panic;

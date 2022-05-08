@@ -13,11 +13,15 @@ namespace Domain.Entities.AppTroopers.SecurityTips
     public class BroadcastLevel : AuditableBaseEntity
     {
         [Required]
+        [MaxLength(50)]
         public string Name { get; set; }
+
+        [MaxLength(50)]
         public string Description { get; set; }
         public BroadcastLevelEnum broadcastLevel { get; set; }
 
         public virtual ICollection<SecurityTip> VGNGAAdminApprovedSecurityTips { get; set; }
-        public virtual ICollection<ApplicationUser> CustomerLocationLevels { get; set; }
+        public virtual ICollection<ApplicationUser> Customers { get; set; }
+        public virtual ICollection<EscalatedTip> EscalatedTips { get; set; }
     }
 }

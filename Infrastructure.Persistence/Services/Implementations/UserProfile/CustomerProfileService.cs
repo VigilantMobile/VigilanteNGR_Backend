@@ -63,7 +63,7 @@ namespace Infrastructure.Persistence.Services
                                            join loclevel in _context.BroadcastLevels on customer.LocationLevelId equals loclevel.Id
                                            select new
                                            {
-                                             LocationLevel = loclevel.,
+                                             LocationLevel = loclevel.broadcastLevel.ToString()
                                            }).FirstOrDefault();
 
                 //Get Location(s)

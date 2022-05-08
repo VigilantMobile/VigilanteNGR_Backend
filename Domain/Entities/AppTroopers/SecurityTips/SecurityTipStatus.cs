@@ -11,6 +11,7 @@ namespace Domain.Entities.AppTroopers.SecurityTips
 {
     public class SecurityTipStatus : AuditableBaseEntity
     {
+        [MaxLength(50)]
         public string Status { get; set; }
         public SecurityTipStatusEnum TipStatus { get; set; }
         public virtual ICollection<SecurityTip> SecurityTips { get; set; }

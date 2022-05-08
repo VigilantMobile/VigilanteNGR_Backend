@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Application.Features.AppTroopers.SecurityTip.GetAllSecurityTipCategories
+namespace Application.Features.AppTroopers.SecurityTips.GetAllSecurityTipCategories
 {
     public class GetAllSecurityTipCategoriesParameter : RequestParameter
     {

@@ -18,17 +18,19 @@ namespace Infrastructure.Shared.Services
     public class MailgunEmailService : IMandrillEmailService
     {
         public MailSettings _mailSettings { get; }
+        private readonly IUtilities _utilities;
 
        
         public ILogger<MailgunEmailService> _logger { get; }
 
-        public MailgunEmailService(IOptions<MailSettings> mailSettings,ILogger<MailgunEmailService> logger)
+        public MailgunEmailService(IOptions<MailSettings> mailSettings,ILogger<MailgunEmailService> logger, IUtilities utilities)
         {
             _mailSettings = mailSettings.Value;
             _logger = logger;
+            _utilities = utilities;
         }
 
-        public IRestResponse SendAsync(EmailRequest emailRequest)
+        public async Task<RestResponse> SendAsync(EmailRequest emailRequest)
         {
             try
             {             
@@ -64,18 +66,24 @@ namespace Infrastructure.Shared.Services
                 }
 
                 //
-                RestClient client = new RestClient();
-                client.BaseUrl = new Uri(_mailSettings.MailgunBaseUri);
-                client.Authenticator = new HttpBasicAuthenticator("api", _mailSettings.MailgunAPIKey);
-                RestRequest request = new RestRequest();
-                request.AddParameter("domain", _mailSettings.MailgunEmailDomain, ParameterType.UrlSegment);
-                request.Resource = $"{_mailSettings.MailgunEmailDomain}/messages";
-                request.AddParameter("from", $"VGNGA Support <mailgun@{_mailSettings.MailgunEmailDomain}>");
-                request.AddParameter("to", emailRequest.To);
-                request.AddParameter("subject", emailRequest.Subject);
-                request.AddParameter("html", MailText);
-                request.Method = Method.POST;
-                return client.Execute(request);             
+
+                RestClientOptions opts = new RestClientOptions();
+                opts.RemoteCertificateValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+                opts.BaseUrl = new Uri($"{_mailSettings.MailgunBaseUri}");
+
+                using (RestClient client = new RestClient(opts))
+                {
+                    var request = new RestRequest();
+                    client.Authenticator = new HttpBasicAuthenticator("api", _mailSettings.MailgunAPIKey);
+                    request.AddParameter("domain", _mailSettings.MailgunEmailDomain, ParameterType.UrlSegment);
+                    request.Resource = $"{_mailSettings.MailgunEmailDomain}/messages";
+                    request.AddParameter("from", $"VGNGA Support <mailgun@{_mailSettings.MailgunEmailDomain}>");
+                    request.AddParameter("to", emailRequest.To);
+                    request.AddParameter("subject", emailRequest.Subject);
+                    request.AddParameter("html", MailText);
+                    request.Method = Method.Post;
+                    return await client.ExecuteAsync(request);
+                }
             }
             catch (System.Exception ex)
             {

@@ -1,6 +1,6 @@
-﻿using Application.Interfaces.Repositories.AppTroopers.SecurityTip;
+﻿using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Domain.Entities;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore.Internal;
 using System;
@@ -10,9 +10,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.AppTroopers.SecurityTip.Commands.CreateSecurityTipCategory
+namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityTipCategory
 {
-    public class CreateSecurityTipCategoryCommandValidator : AbstractValidator<SecurityTipCategory>
+    public class CreateSecurityTipCategoryCommandValidator : AbstractValidator<CreateSecurityTipCategoryCommand>
     {
         private readonly ISecurityTipCategoryRepositorysync securityTipCategoryRepository;
 

@@ -11,7 +11,7 @@ namespace Domain.Common.Enums
         PendingApproval,
         Approved,
         Rejected,
-        Broadcasted,
-        PendingLocationLevelEscalation
+        BroadcastedPendingVerification,
+        BroadcastedandApproved,
     }
 }

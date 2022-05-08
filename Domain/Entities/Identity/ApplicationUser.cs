@@ -91,7 +91,13 @@ namespace Domain.Entities.Identity
         public bool IsExternalOperator { get; set; }
         public virtual ICollection<SecurityTip> ExternalStaffIniatedTips { get; set; }
         public virtual ICollection<SecurityTip> ExternalStaffAuthorizedTips { get; set; }
+        public virtual ICollection<EscalatedTip> ApprovedEscalatedTips { get; set; }
         //
+
+        //Comments
+        public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<CommentFlags> CommentFlags { get; set; }
+
         public string CreatedBy { get; set; }
         public DateTime Created { get; set; }
         public string LastModifiedBy { get; set; }

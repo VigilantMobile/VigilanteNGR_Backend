@@ -6,7 +6,7 @@ using Application.Wrappers;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.Panic;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.LocationEntities;
 using MediatR;
 using System;

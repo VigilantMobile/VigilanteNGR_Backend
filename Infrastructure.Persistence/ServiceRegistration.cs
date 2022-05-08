@@ -1,7 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Repositories.AppTroopers.Panic;
-using Application.Interfaces.Repositories.AppTroopers.SecurityTip;
+using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
 using Domain.Entities.Identity;
@@ -10,7 +10,7 @@ using Infrastructure.Persistence.Contexts;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Persistence.Repositories.Location;
 using Infrastructure.Persistence.Repositories.Panic;
-using Infrastructure.Persistence.Repositories.SecurityTip;
+using Infrastructure.Persistence.Repositories.SecurityTips;
 using Infrastructure.Persistence.Repository;
 using Infrastructure.Persistence.Services;
 using Infrastructure.Shared.Services;
@@ -60,8 +60,12 @@ namespace Infrastructure.Persistence
             #region Services
             services.AddTransient<IAccountService, AccountService>();
             #endregion
+
+
             services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
             services.Configure<VGNGAEmailSenders>(configuration.GetSection("VGNGAEmailSenders"));
+            services.Configure<APIURLs>(configuration.GetSection("APIURLs"));
+            services.Configure<AppConfig>(configuration.GetSection("AppConfig"));
 
             //authentication
             services.AddAuthentication(options =>

@@ -1,16 +1,16 @@
 ﻿using Application.Interfaces;
 using Application.Interfaces.Repositories;
-using Application.Interfaces.Repositories.AppTroopers.SecurityTip;
+using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Application.Wrappers;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using MediatR;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.AppTroopers.SecurityTip.Commands.CreateSecurityTipCategory
+namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityTipCategory
 {
     public partial class CreateSecurityTipCategoryCommand : IRequest<Response<SecurityTipCategory>>
     {

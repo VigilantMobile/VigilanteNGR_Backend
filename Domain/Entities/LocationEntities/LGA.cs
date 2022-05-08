@@ -1,5 +1,5 @@
 ﻿using Domain.Common;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.Identity;
 using NetTopologySuite.Geometries;
 using System;

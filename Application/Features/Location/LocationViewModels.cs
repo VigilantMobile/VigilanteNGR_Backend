@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Services.Interfaces.AppTroopers.SecurityTip
+namespace Application.Features.Location
 {
-    public interface ISecurityTipService : IAutoDependencyService
+    public class LiveLocationCoordinates
     {
-
+        public string Coordinates { get; set; }
     }
 }

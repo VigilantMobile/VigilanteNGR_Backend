@@ -1,7 +1,7 @@
 ﻿using Domain.Common;
 using Domain.Entities.AppTroopers.Missing;
 using Domain.Entities.AppTroopers.Panic;
-using Domain.Entities.AppTroopers.SecurityTip;
+using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.AppTroopers.Wanted;
 using Domain.Entities.Identity;
 using NetTopologySuite.Geometries;

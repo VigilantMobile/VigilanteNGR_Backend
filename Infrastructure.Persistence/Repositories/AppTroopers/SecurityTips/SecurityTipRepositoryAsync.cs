@@ -12,19 +12,13 @@ using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 
 namespace Infrastructure.Persistence.Repositories.SecurityTips
 {
-    public class SecurityTipRepositoryAsync : GenericRepositoryAsync<SecurityTip>, ISecurityTipRepositorysync
+    public class SecurityTipRepositoryAsync : GenericRepositoryAsync<SecurityTip>, ISecurityTipRepositoryAsync
     {
         private readonly DbSet<SecurityTip> _securityTip;
 
         public SecurityTipRepositoryAsync(ApplicationDbContext dbContext) : base(dbContext)
         {
             _securityTip = dbContext.Set<SecurityTip>();
-        }
-
-        public Task<bool> IsUniqueCategoryName(string CategoryName)
-        {
-            return _securityTipCategory
-                .AllAsync(p => p.CategoryName != CategoryName);
         }
     }
 }

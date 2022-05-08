@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces.Repositories.AppTroopers.SecurityTips
 {
-    public interface ISecurityTipRepositorysync : IGenericRepositoryAsync<SecurityTip>
+    public interface ISecurityTipRepositoryAsync : IGenericRepositoryAsync<SecurityTip>
     {
-        Task<bool> CustomerCanPostInSpecifiedLocation(string CustomerId, string LocationId);
-
     }
 }

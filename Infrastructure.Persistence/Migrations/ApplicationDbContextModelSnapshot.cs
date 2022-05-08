@@ -516,7 +516,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("TrustedPeople");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.AlertLevel", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.AlertLevel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -530,7 +530,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -540,7 +541,8 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("alertLevel")
                         .HasColumnType("int");
@@ -550,7 +552,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("AlertLevels");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.BroadcastLevel", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -564,7 +566,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -574,7 +577,8 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("broadcastLevel")
                         .HasColumnType("int");
@@ -584,7 +588,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("BroadcastLevels");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.BroadcasterType", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcasterType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -601,7 +605,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -611,14 +616,138 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
                     b.ToTable("BroadcasterTypes");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.SecurityTip", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CommenterId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SecurityTipId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserComment")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommenterId");
+
+                    b.HasIndex("SecurityTipId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.CommentFlags", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CommentVote")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VoterId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("VoterId");
+
+                    b.ToTable("CommentFlags");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.EscalatedTip", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EscalationAuthorizerID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("EscalationBroadcastLevelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EscalationLocationId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SecurityTipId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isEscalationApproved")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EscalationAuthorizerID");
+
+                    b.HasIndex("EscalationBroadcastLevelId");
+
+                    b.HasIndex("SecurityTipId");
+
+                    b.ToTable("EscalatedTips");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTip", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -633,7 +762,8 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Body")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("BroadcastLevelId")
                         .HasColumnType("int");
@@ -645,20 +775,30 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("BroadcasterTypeId")
                         .HasColumnType("int");
 
+                    b.Property<string>("BroadcasterTypeString")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Casualties")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("EscalationRequested")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ExternalAuthorizerId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ExternalInitiatorId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsBroadcasted")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("LGAId")
                         .HasColumnType("int");
@@ -675,19 +815,26 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("SecurityTipCategoryId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SecurityTipStatusId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("SettlementId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Source")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("SourceId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("StateId")
                         .HasColumnType("int");
 
                     b.Property<string>("Subject")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("TipStatusString")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("TownId")
                         .HasColumnType("int");
@@ -715,7 +862,11 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("SecurityTipCategoryId");
 
+                    b.HasIndex("SecurityTipStatusId");
+
                     b.HasIndex("SettlementId");
+
+                    b.HasIndex("SourceId");
 
                     b.HasIndex("StateId");
 
@@ -724,7 +875,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("SecurityTips");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.SecurityTipCategory", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -733,7 +884,8 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -742,7 +894,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -755,7 +908,38 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("SecurityTipCategories");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.Source", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("TipStatus")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SecurityTipStatuses");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Source", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -769,7 +953,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsVerified")
                         .HasColumnType("bit");
@@ -788,7 +973,8 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("SourceName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -797,7 +983,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Source");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.SourceCategory", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SourceCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -806,7 +992,8 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -815,7 +1002,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -1618,7 +1806,7 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.Missing.MissingItem", b =>
                 {
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTip.BroadcastLevel", "BroadcastLevel")
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", "BroadcastLevel")
                         .WithMany()
                         .HasForeignKey("BroadcastLevelId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1660,7 +1848,7 @@ namespace Infrastructure.Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("AdminAuthorizerID");
 
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTip.BroadcastLevel", "BroadcastLevel")
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", "BroadcastLevel")
                         .WithMany()
                         .HasForeignKey("BroadcastLevelId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1757,19 +1945,83 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.SecurityTip", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Comment", b =>
+                {
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "ApplicationUser")
+                        .WithMany("Comments")
+                        .HasForeignKey("CommenterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.SecurityTip", "SecurityTip")
+                        .WithMany("Comments")
+                        .HasForeignKey("SecurityTipId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("SecurityTip");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.CommentFlags", b =>
+                {
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.Comment", "Comment")
+                        .WithMany("CommentFlags")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "ApplicationUser")
+                        .WithMany("CommentFlags")
+                        .HasForeignKey("VoterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Comment");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.EscalatedTip", b =>
+                {
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "EscalationAuthorizer")
+                        .WithMany("ApprovedEscalatedTips")
+                        .HasForeignKey("EscalationAuthorizerID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", "EscalationBroadcastLevel")
+                        .WithMany("EscalatedTips")
+                        .HasForeignKey("EscalationBroadcastLevelId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.SecurityTip", "SecurityTip")
+                        .WithMany("EscalatedTips")
+                        .HasForeignKey("SecurityTipId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("EscalationAuthorizer");
+
+                    b.Navigation("EscalationBroadcastLevel");
+
+                    b.Navigation("SecurityTip");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTip", b =>
                 {
                     b.HasOne("Domain.Entities.Identity.ApplicationUser", "VGNGAAdminAuthorizer")
                         .WithMany()
                         .HasForeignKey("AdminAuthorizerID");
 
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTip.AlertLevel", "AlertLevel")
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.AlertLevel", "AlertLevel")
                         .WithMany("SecurityTips")
                         .HasForeignKey("AlertLevelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTip.BroadcastLevel", "BroadcastLevel")
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", "BroadcastLevel")
                         .WithMany("VGNGAAdminApprovedSecurityTips")
                         .HasForeignKey("BroadcastLevelId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1781,7 +2033,7 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTip.BroadcasterType", "BroadcasterType")
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcasterType", "BroadcasterType")
                         .WithMany("SecurityTips")
                         .HasForeignKey("BroadcasterTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1801,15 +2053,27 @@ namespace Infrastructure.Persistence.Migrations
                         .WithMany("SecurityTips")
                         .HasForeignKey("LGAId");
 
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTip.SecurityTipCategory", "SecurityTipCategory")
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.SecurityTipCategory", "SecurityTipCategory")
                         .WithMany("SecurityTips")
                         .HasForeignKey("SecurityTipCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.SecurityTipStatus", "SecurityTipStatus")
+                        .WithMany("SecurityTips")
+                        .HasForeignKey("SecurityTipStatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Domain.Entities.LocationEntities.Settlement", null)
                         .WithMany("SecurityTips")
                         .HasForeignKey("SettlementId");
+
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.Source", "Source")
+                        .WithMany("SecurityTips")
+                        .HasForeignKey("SourceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.LocationEntities.State", null)
                         .WithMany("SecurityTips")
@@ -1833,12 +2097,16 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Navigation("SecurityTipCategory");
 
+                    b.Navigation("SecurityTipStatus");
+
+                    b.Navigation("Source");
+
                     b.Navigation("VGNGAAdminAuthorizer");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.Source", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Source", b =>
                 {
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTip.SourceCategory", "SourceCategory")
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.SourceCategory", "SourceCategory")
                         .WithMany("Sources")
                         .HasForeignKey("SourceCategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1849,7 +2117,7 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.Wanted.WantedPerson", b =>
                 {
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTip.BroadcastLevel", "BroadcastLevel")
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", "BroadcastLevel")
                         .WithMany()
                         .HasForeignKey("BroadcastLevelId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1898,8 +2166,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTip.BroadcastLevel", "LocationLevel")
-                        .WithMany("CustomerLocationLevels")
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", "LocationLevel")
+                        .WithMany("Customers")
                         .HasForeignKey("LocationLevelId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -1992,29 +2260,53 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.AlertLevel", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.AlertLevel", b =>
                 {
                     b.Navigation("SecurityTips");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.BroadcastLevel", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", b =>
                 {
-                    b.Navigation("CustomerLocationLevels");
+                    b.Navigation("Customers");
+
+                    b.Navigation("EscalatedTips");
 
                     b.Navigation("VGNGAAdminApprovedSecurityTips");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.BroadcasterType", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcasterType", b =>
                 {
                     b.Navigation("SecurityTips");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.SecurityTipCategory", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Comment", b =>
+                {
+                    b.Navigation("CommentFlags");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTip", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("EscalatedTips");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipCategory", b =>
                 {
                     b.Navigation("SecurityTips");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.SourceCategory", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipStatus", b =>
+                {
+                    b.Navigation("SecurityTips");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Source", b =>
+                {
+                    b.Navigation("SecurityTips");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SourceCategory", b =>
                 {
                     b.Navigation("Sources");
                 });
@@ -2027,6 +2319,12 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.Identity.ApplicationUser", b =>
                 {
                     b.Navigation("AdminAuthorizedCurfews");
+
+                    b.Navigation("ApprovedEscalatedTips");
+
+                    b.Navigation("CommentFlags");
+
+                    b.Navigation("Comments");
 
                     b.Navigation("CustomerMissingItems");
 
