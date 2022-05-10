@@ -1,5 +1,6 @@
-﻿using Application.Features.AppTroopers.SecurityTip.Queries.GetAllSecurityTipCategories;
-using Application.Interfaces.Repositories.AppTroopers.SecurityTip;
+﻿using Application.Features.AppTroopers.SecurityTips.GetAllSecurityTipCategories;
+using Application.Features.AppTroopers.SecurityTips.Queries.GetAllSecurityTipCategories;
+using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Application.Wrappers;
 using AutoMapper;
 using MediatR;

@@ -1,5 +1,6 @@
 ﻿using Domain.Common;
 using Domain.Common.Enums;
+using Domain.Entities.Identity;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 

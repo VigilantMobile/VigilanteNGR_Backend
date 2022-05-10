@@ -1,4 +1,6 @@
-﻿namespace Infrastructure.Shared.Services
+﻿using Application.Services.Interfaces;
+
+namespace Infrastructure.Shared.Services
 {
     public interface IRandomNumberGeneratorInterface : IAutoDependencyService
     {
