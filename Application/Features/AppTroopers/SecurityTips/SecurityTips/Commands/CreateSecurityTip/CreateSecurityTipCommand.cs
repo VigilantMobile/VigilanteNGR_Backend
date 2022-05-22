@@ -1,11 +1,7 @@
 ﻿using Application.Interfaces;
-using Application.Interfaces.Repositories;
-using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Application.Services.Interfaces.AppTroopers.SecurityTips;
 using Application.Wrappers;
 using AutoMapper;
-using Domain.Entities;
-using Domain.Entities.AppTroopers.SecurityTips;
 using MediatR;
 using System;
 using System.Threading;
@@ -41,7 +37,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
 
         public async Task<Response<CreateSecurityTipResponse>> Handle(CreateSecurityTipCommand request, CancellationToken cancellationToken)
         {
-           
+
             var createdTip = await _securityTipService.CreateSecurityTipAsync(request);
 
             if (!createdTip.IsCreated)

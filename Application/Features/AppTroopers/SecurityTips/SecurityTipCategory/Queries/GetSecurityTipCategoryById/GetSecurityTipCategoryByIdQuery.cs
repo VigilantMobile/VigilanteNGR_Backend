@@ -1,8 +1,6 @@
 ﻿using Application.Exceptions;
-using Application.Interfaces.Repositories;
 using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Application.Wrappers;
-using Domain.Entities;
 using Domain.Entities.AppTroopers.SecurityTips;
 using MediatR;
 using System.Threading;

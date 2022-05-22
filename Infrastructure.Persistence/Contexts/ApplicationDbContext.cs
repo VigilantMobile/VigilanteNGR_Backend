@@ -69,7 +69,7 @@ namespace Infrastructure.Persistence.Contexts
         public DbSet<Source> Source { get; set; }
         public DbSet<SecurityTipStatus> SecurityTipStatuses { get; set; }
         public DbSet<EscalatedTip> EscalatedTips { get; set; }
-        
+
         //Panic
         public DbSet<Panic> PanicRecords { get; set; }
         public DbSet<Commute> CommuteRecords { get; set; }

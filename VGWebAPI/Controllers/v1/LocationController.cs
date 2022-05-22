@@ -1,6 +1,4 @@
 ﻿using Application.Features.Location;
-using Application.Features.Products.Commands.DeleteProductById;
-using Application.Features.Products.Commands.UpdateProduct;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -35,7 +33,7 @@ namespace VGWebAPI.Controllers.v1
             return Ok(await Mediator.Send(command));
         }
 
-        [HttpPut("{id}")] 
+        [HttpPut("{id}")]
         [Authorize]
         public async Task<IActionResult> UpdateDistrict(int id, UpdateDistrictCommand command)
         {

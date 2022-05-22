@@ -1,39 +1,14 @@
-﻿using Application.DTOs.Account;
-using Application.Exceptions;
-using Application.Interfaces;
-using Application.Wrappers;
-using Domain.Settings;
+﻿using Application.Features.UserProfile.Customer.Queries.GetCustomerProfile;
+using Application.Services.Interfaces.UserProfile;
+using Domain.Common.Enums;
+using Domain.Entities.Identity;
+using Infrastructure.Persistence.Contexts;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using Org.BouncyCastle.Ocsp;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Net.Cache;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using Application.Enums;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Primitives;
-using Application.DTOs.Email;
-using Infrastructure.Persistence.Contexts;
-using Infrastructure.Shared.Services;
-using Microsoft.AspNetCore.Http;
-using Infrastructure.Persistence.Helpers;
-using Infrastructure.Persistence.Models;
-using RestSharp;
-using RestSharp.Authenticators;
-using Domain.Entities.Identity;
-using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using Application.Services.Interfaces.UserProfile;
-using Application.Features.UserProfile.Customer.Queries.GetCustomerProfile;
-using Domain.Common.Enums;
 
 namespace Infrastructure.Persistence.Services
 {
@@ -44,7 +19,7 @@ namespace Infrastructure.Persistence.Services
         private readonly ILogger _logger;
 
 
-        public CustomerProfileService( ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger logger)
+        public CustomerProfileService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger logger)
         {
             _context = context;
             _logger = logger;
@@ -63,42 +38,42 @@ namespace Infrastructure.Persistence.Services
                                            join loclevel in _context.BroadcastLevels on customer.LocationLevelId equals loclevel.Id
                                            select new
                                            {
-                                             LocationLevel = loclevel.broadcastLevel.ToString()
+                                               LocationLevel = loclevel.broadcastLevel.ToString()
                                            }).FirstOrDefault();
 
                 //Get Location(s)
                 if (customerandLocation.LocationLevel == BroadcastLevelEnum.Town.ToString())
                 {
                     customerProfile = (from customer in _context.Users
-                                           join town in _context.Towns on customer.LocationId equals town.Id
-                                           join lga in _context.LGAs on town.LGAId equals lga.Id
-                                           join state in _context.States on lga.StateId equals state.Id
-                                           where customer.Id == CustomerId
-                                           select new CustomerProfileVM()
+                                       join town in _context.Towns on customer.LocationId equals town.Id
+                                       join lga in _context.LGAs on town.LGAId equals lga.Id
+                                       join state in _context.States on lga.StateId equals state.Id
+                                       where customer.Id == CustomerId
+                                       select new CustomerProfileVM()
+                                       {
+                                           CustomerId = customer.Id,
+                                           CustomerName = customer.FirstName,
+                                           CustomerPhone = customer.PhoneNumber,
+                                           CustomerLocation = new CustomerLocationVM
                                            {
-                                               CustomerId = customer.Id,
-                                               CustomerName = customer.FirstName,
-                                               CustomerPhone = customer.PhoneNumber,
-                                               CustomerLocation = new CustomerLocationVM
+                                               CustomerState = new CustomerStateVM
                                                {
-                                                   CustomerState = new CustomerStateVM
-                                                   {
-                                                       StateId = state.Id.ToString(),
-                                                       StateName = state.Name
-                                                   },
-                                                   CustomerLGA = new CustomerLGAVM
-                                                   {
+                                                   StateId = state.Id.ToString(),
+                                                   StateName = state.Name
+                                               },
+                                               CustomerLGA = new CustomerLGAVM
+                                               {
 
-                                                       LGAId = lga.Id.ToString(),
-                                                       LGAName = lga.Name,
-                                                   },
-                                                   CustomerDistrict = new CustomerDistrictVM
-                                                   {
-                                                       DistrictId = lga.Id.ToString(),
-                                                       DistrictName = lga.Name
-                                                   }
+                                                   LGAId = lga.Id.ToString(),
+                                                   LGAName = lga.Name,
+                                               },
+                                               CustomerDistrict = new CustomerDistrictVM
+                                               {
+                                                   DistrictId = lga.Id.ToString(),
+                                                   DistrictName = lga.Name
                                                }
-                                           }).FirstOrDefault();
+                                           }
+                                       }).FirstOrDefault();
 
                 }
                 else if (customerandLocation.LocationLevel == BroadcastLevelEnum.LGA.ToString())

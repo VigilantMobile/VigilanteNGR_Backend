@@ -1,12 +1,8 @@
 ﻿using Application.DTOs.Location;
 using Application.Features.AppTroopers.SecurityTips.Commands;
-using Application.Features.Location;
 using Application.Services.Interfaces.Location;
-using Application.Services.Interfaces.UserProfile;
 using Application.Wrappers;
 using Domain.Settings;
-using Geocoding;
-using Geocoding.Google;
 using Infrastructure.Shared.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -14,10 +10,8 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RestSharp;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Services.Implementations.Location
@@ -31,7 +25,7 @@ namespace Infrastructure.Persistence.Services.Implementations.Location
         private readonly APIURLs _aPIURLs;
         private readonly AppConfig _appConfig;
 
-        public GeocodingService (ILogger logger, IConfiguration configuration,
+        public GeocodingService(ILogger logger, IConfiguration configuration,
             IUtilities utilities, IOptions<APIURLs> apiURLs, IOptions<AppConfig> appConfig)
         {
             _logger = logger;
@@ -74,7 +68,7 @@ namespace Infrastructure.Persistence.Services.Implementations.Location
                 else
                 {
                     var errorResponse = JsonConvert.DeserializeObject<ReverseGeocodingErrorResponse>(requestResponse.Content.ToString());
-                    return new Response<CustomerPreciseLocation>(null, $"{errorResponse.error_message}", successStatus:false);
+                    return new Response<CustomerPreciseLocation>(null, $"{errorResponse.error_message}", successStatus: false);
                 }
 
             }

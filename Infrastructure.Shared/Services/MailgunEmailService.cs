@@ -19,7 +19,7 @@ namespace Infrastructure.Shared.Services
 
         public ILogger<MailgunEmailService> _logger { get; }
 
-        public MailgunEmailService(IOptions<MailSettings> mailSettings,ILogger<MailgunEmailService> logger, IUtilities utilities)
+        public MailgunEmailService(IOptions<MailSettings> mailSettings, ILogger<MailgunEmailService> logger, IUtilities utilities)
         {
             _mailSettings = mailSettings.Value;
             _logger = logger;

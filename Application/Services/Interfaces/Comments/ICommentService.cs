@@ -1,11 +1,6 @@
-﻿using Domain.DTOs.Comments;
-using Domain.Entities.AppTroopers.SecurityTips;
-using System;
+﻿using Domain.Entities.AppTroopers.SecurityTips;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using static Application.Features.Comments.CommentViewModel;
 
 namespace Application.Services.Interfaces.Comments
 {

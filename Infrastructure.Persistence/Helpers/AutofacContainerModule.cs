@@ -1,12 +1,5 @@
 ﻿using Application.Services.Interfaces;
-using Application.Services.Interfaces.UserProfile;
 using Autofac;
-using Infrastructure.Persistence.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Helpers
 {

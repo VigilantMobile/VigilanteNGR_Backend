@@ -1,18 +1,9 @@
 ﻿using Application.Exceptions;
 using Application.Features.UserProfile.Customer.Queries.GetCustomerProfile;
-using Application.Interfaces.Repositories;
-using Application.Interfaces.Repositories.Location;
 using Application.Services.Interfaces.UserProfile;
 using Application.Wrappers;
-using Domain.Entities;
-using Domain.Entities.AppTroopers.Panic;
-using Domain.Entities.AppTroopers.SecurityTips;
-using Domain.Entities.LocationEntities;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,12 +29,12 @@ namespace Application.Features.Location
 
                     if (customerProfile == null)
                         throw new ApiException($"Unable to retrieve customer profile.");
-               
+
                     return new Response<CustomerProfileVM>(customerProfile, message: $"Customer profile successfully retrieved.", successStatus: true);
                 }
                 catch (Exception ex)
                 {
-                   throw new ApiException($"Unable to retrieve customer profile: {ex.Message}");
+                    throw new ApiException($"Unable to retrieve customer profile: {ex.Message}");
                 }
             }
         }

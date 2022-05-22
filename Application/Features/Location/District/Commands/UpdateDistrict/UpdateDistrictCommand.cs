@@ -29,8 +29,8 @@ namespace Application.Features.Location
 
             public async Task<Response<Town>> Handle(UpdateDistrictCommand command, CancellationToken cancellationToken)
             {
-               try
-               {
+                try
+                {
                     string ModifiedBy = _userAccessor.GetUserId();
 
                     //var trustedPerson = await _trustedPersonRepository.GetByIdAsync(command.UserId);
@@ -50,11 +50,11 @@ namespace Application.Features.Location
 
                         return new Response<Town>(town, $"District successfully updated", successStatus: true);
                     }
-               }
+                }
                 catch (Exception ex)
-               {
+                {
                     throw new ApiException($"An error occurred while updating the district: {ex.Message}");
-               }
+                }
             }
         }
     }

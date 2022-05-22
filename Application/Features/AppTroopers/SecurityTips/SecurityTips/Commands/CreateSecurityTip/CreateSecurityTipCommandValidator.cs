@@ -1,15 +1,6 @@
 ﻿using Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityTip;
 using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
-using Domain.Entities;
-using Domain.Entities.AppTroopers.SecurityTips;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore.Internal;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityTipCategory
 {

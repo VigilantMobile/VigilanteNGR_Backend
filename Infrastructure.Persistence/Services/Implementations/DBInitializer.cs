@@ -1,5 +1,4 @@
 ﻿using Domain.Common.Enums;
-using Domain.Entities;
 using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.LocationEntities;
 using Infrastructure.Persistence.Contexts;

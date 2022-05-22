@@ -1,4 +1,7 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Domain.Entities.Identity;
+using Infrastructure.Persistence.Helpers;
 using Infrastructure.Persistence.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -10,11 +13,6 @@ using Serilog;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Azure.Identity;
-using Domain.Entities.Identity;
-using Infrastructure.Persistence.Helpers;
-using Autofac.Extensions.DependencyInjection;
-using Autofac;
 
 namespace VGWebAPI
 {

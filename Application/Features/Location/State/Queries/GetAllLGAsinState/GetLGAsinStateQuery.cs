@@ -1,16 +1,9 @@
 ﻿using Application.Exceptions;
-using Application.Interfaces.Repositories;
 using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
-using Domain.Entities;
-using Domain.Entities.AppTroopers.Panic;
-using Domain.Entities.AppTroopers.SecurityTips;
-using Domain.Entities.LocationEntities;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -63,7 +56,7 @@ namespace Application.Features.Location
                 }
                 catch (Exception ex)
                 {
-                   throw new ApiException($"AN error occurred while fetching LGAs: {ex.Message}");
+                    throw new ApiException($"AN error occurred while fetching LGAs: {ex.Message}");
                 }
             }
         }

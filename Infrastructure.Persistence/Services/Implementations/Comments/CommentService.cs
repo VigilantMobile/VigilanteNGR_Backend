@@ -2,12 +2,8 @@
 using Application.Interfaces.Repositories.AppTroopers.Comments;
 using Application.Services.Interfaces.Comments;
 using AutoMapper;
-using Domain.DTOs.Comments;
 using Domain.Entities.AppTroopers.SecurityTips;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Services.Implementations.Comments
@@ -31,7 +27,7 @@ namespace Infrastructure.Persistence.Services.Implementations.Comments
             return await this.commentRepository.AddAsync(comment, userId);
         }
 
-        public async Task<ICollection<Comment>> 
+        public async Task<ICollection<Comment>>
             GetAllCommentAsync(int securityTipId, int pageNumber, int pageSize)
         {
             var comments = await this.commentRepository
@@ -42,7 +38,7 @@ namespace Infrastructure.Persistence.Services.Implementations.Comments
         public async Task<Comment> GetCommentAsync(int commentId)
         {
             var comment = await this.commentRepository.GetByIdAsync(commentId);
-            if(comment == null) throw new ApiException($"Comment not found.");
+            if (comment == null) throw new ApiException($"Comment not found.");
             return comment;
         }
 

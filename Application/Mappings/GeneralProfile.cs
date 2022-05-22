@@ -1,5 +1,4 @@
 ﻿using Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityTipCategory;
-using Application.Features.AppTroopers.SecurityTips.GetAllSecurityTipCategories;
 using Application.Features.AppTroopers.SecurityTips.Queries.GetAllSecurityTipCategories;
 using Application.Features.Location;
 using Application.Features.Products.Commands.CreateProduct;
@@ -36,7 +35,7 @@ namespace Application.Mappings
             CreateMap<SecurityTipCategory, GetAllSecurityTipCategoriesViewModel>().ReverseMap();
 
             CreateMap<CommentForCreate, Comment>();
-            CreateMap < CommentForUpdate, Comment>();
+            CreateMap<CommentForUpdate, Comment>();
         }
     }
 }

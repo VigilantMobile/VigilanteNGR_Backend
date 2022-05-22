@@ -1,22 +1,17 @@
 ﻿using Application.Features.AppTroopers.SecurityTips.Commands;
 using Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityTip;
-using Application.Features.Location;
 using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Application.Interfaces.Repositories.Location;
 using Application.Services.Interfaces.AppTroopers.SecurityTips;
 using Domain.Common.Enums;
 using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.Identity;
-using Domain.Entities.LocationEntities;
 using Infrastructure.Persistence.Contexts;
-using Infrastructure.Persistence.Repositories.Location;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.SecurityTips
@@ -34,9 +29,9 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
         private readonly ILogger _logger;
 
 
-        public SecurityTipService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, 
-            ILGARepositoryAsync lGARepositoryAsync, ITownRepositoryAsync townRepositoryAsync, 
-            ISecurityTipEligibilityService securityTipEligibilityService,  ILogger logger,
+        public SecurityTipService(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
+            ILGARepositoryAsync lGARepositoryAsync, ITownRepositoryAsync townRepositoryAsync,
+            ISecurityTipEligibilityService securityTipEligibilityService, ILogger logger,
             ISecurityTipRepositoryAsync securityTipRepositoryAsync,
             IEscalatedTipsRepositoryAsync escalatedTipsRepositoryAsync
             )
@@ -46,15 +41,15 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
             _logger = logger;
             _userManager = userManager;
             _lGARepositoryAsync = lGARepositoryAsync;
-            _townRepositoryAsync = townRepositoryAsync; 
-            _securityTipEligibilityService = securityTipEligibilityService; 
+            _townRepositoryAsync = townRepositoryAsync;
+            _securityTipEligibilityService = securityTipEligibilityService;
             _securityTipRepositoryAsync = securityTipRepositoryAsync;
             _escalatedTipsRepositoryAsync = escalatedTipsRepositoryAsync;
         }
 
         public async Task<CreateSecurityTipResponse> CreateSecurityTipAsync(CreateSecurityTipCommand securityTipRequest)
         {
-            CreateSecurityTipResponse createSecurityTipResponse   = new CreateSecurityTipResponse();
+            CreateSecurityTipResponse createSecurityTipResponse = new CreateSecurityTipResponse();
             bool isCreated = false;
             SecurityTip saveTipResult = new SecurityTip();
             try
@@ -70,8 +65,8 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
 
                     SecurityTip securityTip = new SecurityTip
                     {
-                        Subject = securityTipRequest.Subject, 
-                        Body = securityTipRequest.Body, 
+                        Subject = securityTipRequest.Subject,
+                        Body = securityTipRequest.Body,
                         AlertLevelId = securityTipRequest.AlertLevelId,
                         BroadcastLevelId = securityTipRequest.BroadcastLevelId,
                         LocationId = securityTipRequest.LocationId,
@@ -93,10 +88,10 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                         saveTipResult = await _securityTipRepositoryAsync.AddAsync(securityTip);
                         SavedTipId = saveTipResult.Id;
                     }
-                    else 
+                    else
                     {
                         //Can't broadcast Tip immediately
-                       
+
                         if (!postEligibility.EscalationRequested) //tip is district level escalation unnecessary:
                         {
                             securityTip.IsBroadcasted = false;

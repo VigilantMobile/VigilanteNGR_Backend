@@ -1,9 +1,4 @@
-﻿using Domain.Entities;
-using Domain.Entities.AppTroopers.SecurityTips;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Entities.AppTroopers.SecurityTips;
 
 namespace Application.Interfaces.Repositories.AppTroopers.SecurityTips
 {

@@ -1,21 +1,16 @@
 ﻿using Application.Features.AppTroopers.SecurityTips.Commands;
-using Application.Features.Location;
 using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Application.Interfaces.Repositories.Location;
 using Application.Services.Interfaces.AppTroopers.SecurityTips;
 using Application.Services.Interfaces.Location;
 using Domain.Common.Enums;
 using Domain.Entities.Identity;
-using Domain.Entities.LocationEntities;
 using Infrastructure.Persistence.Contexts;
-using Infrastructure.Persistence.Repositories.Location;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.SecurityTips
@@ -39,14 +34,14 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
         ILGARepositoryAsync lGARepositoryAsync,
         IAlertLevelRespositoryAsync alertLevelRespositoryAsync,
         ITownRepositoryAsync townRepositoryAsync,
-        IGeoCodingService geocodingService,ILogger logger)
+        IGeoCodingService geocodingService, ILogger logger)
         {
             _context = context;
             _logger = logger;
             _userManager = userManager;
             _lGARepositoryAsync = lGARepositoryAsync;
             _stateRepositoryAsync = stateRepositoryAsync;
-            _townRepositoryAsync = townRepositoryAsync; 
+            _townRepositoryAsync = townRepositoryAsync;
             _alertLevelRespositoryAsync = alertLevelRespositoryAsync;
             _geocodingService = geocodingService;
         }
@@ -56,8 +51,8 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
 
             CreateSecurityTipEligibilityResponse createSecurityTipEligibilityResponse = new CreateSecurityTipEligibilityResponse();
 
-           try
-           {
+            try
+            {
                 // Customer Live location 
                 var customerLiveLocation = await _geocodingService.GetCustomerLiveAddresses(currentLocationCoordinates);
 
@@ -72,13 +67,13 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
 
                 //If customer is not in specified location live: 
                 var customerLocationandLevel = (from customer in _context.Users
-                                             join loclevel in _context.BroadcastLevels on customer.LocationLevelId equals loclevel.Id
-                                             select new
-                                             {
-                                                 LocationId = customer.LocationId,
-                                                 LocationLevelId = customer.LocationLevelId,
-                                                 LocationLevel = loclevel.broadcastLevel.ToString()
-                                             }).FirstOrDefault();
+                                                join loclevel in _context.BroadcastLevels on customer.LocationLevelId equals loclevel.Id
+                                                select new
+                                                {
+                                                    LocationId = customer.LocationId,
+                                                    LocationLevelId = customer.LocationLevelId,
+                                                    LocationLevel = loclevel.broadcastLevel.ToString()
+                                                }).FirstOrDefault();
 
 
 
@@ -268,12 +263,12 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                 createSecurityTipEligibilityResponse.EscalationRequested = EscalationRequested;
 
                 return createSecurityTipEligibilityResponse;
-           }
-           catch (Exception ex)
-           {
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError($"An error occurred while getting security tip eligibility: {ex.Message}");
                 return createSecurityTipEligibilityResponse;
-           }
+            }
         }
     }
 }

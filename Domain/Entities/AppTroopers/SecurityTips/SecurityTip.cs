@@ -38,7 +38,7 @@ namespace Domain.Entities.AppTroopers.SecurityTips
         [ForeignKey("ApplicationUser")]
         public string BroadcasterId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
-        
+
         //Admin Authorization
         public bool isAdminAuthorized { get; set; }
 
@@ -63,7 +63,7 @@ namespace Domain.Entities.AppTroopers.SecurityTips
         [ForeignKey("BroadcastLevel")]
         public int BroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
         public virtual BroadcastLevel BroadcastLevel { get; set; }
-        
+
         //escalation
         public bool EscalationRequested { get; set; }
 
@@ -74,7 +74,7 @@ namespace Domain.Entities.AppTroopers.SecurityTips
         //[ForeignKey("EscalationBroadcastLevel")]
         //public int EscalationBroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
         //public virtual BroadcastLevel EscalationBroadcastLevel { get; set; }
-        
+
         //broadcaster type
         [Required]
         [ForeignKey("BroadcasterType")]

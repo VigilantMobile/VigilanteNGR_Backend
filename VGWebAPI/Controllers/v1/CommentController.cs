@@ -17,8 +17,8 @@ namespace VGWebAPI.Controllers.v1
         public async Task<IActionResult> Get(int securityTipId, [FromQuery] GetCommentParameter parameter)
         {
 
-            return Ok(await Mediator.Send(new GetCommentsQuery() 
-                { SecurityTipId = 2, PageNumber = parameter.PageNumber, PageSize = parameter.PageSize}
+            return Ok(await Mediator.Send(new GetCommentsQuery()
+            { SecurityTipId = 2, PageNumber = parameter.PageNumber, PageSize = parameter.PageSize }
             ));
         }
 

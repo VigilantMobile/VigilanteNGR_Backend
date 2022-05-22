@@ -1,16 +1,11 @@
-﻿using Application.Wrappers;
-using MediatR;
-using System;
-using Domain.Entities.AppTroopers.SecurityTips;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
-using Application.Interfaces.Repositories.AppTroopers.Comments;
+﻿using Application.Interfaces;
 using Application.Services.Interfaces.Comments;
+using Application.Wrappers;
 using AutoMapper;
-using Application.Interfaces;
+using Domain.Entities.AppTroopers.SecurityTips;
+using MediatR;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Application.Features.Comments.Commands.CreateComment
 {

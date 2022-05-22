@@ -1,6 +1,4 @@
 ﻿using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
-using Domain.Entities;
-using Domain.Entities.AppTroopers.SecurityTips;
 using FluentValidation;
 using System.Threading;
 using System.Threading.Tasks;

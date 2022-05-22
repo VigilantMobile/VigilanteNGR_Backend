@@ -17,7 +17,7 @@ namespace Infrastructure.Persistence.Repositories.AppTroopers.Comments
             _comments = dbContext.Set<Comment>();
         }
 
-        public async Task<ICollection<Comment>> 
+        public async Task<ICollection<Comment>>
             GetAllCooments(int securityTipId, int pageNumber, int pageSize)
         {
             return await _comments

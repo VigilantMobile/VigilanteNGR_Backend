@@ -1,12 +1,7 @@
-﻿using Application.DTOs;
-using Application.Services.Interfaces;
-using Infrastructure.Shared.Services;
+﻿using Application.Services.Interfaces;
 using RestSharp;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 

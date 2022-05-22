@@ -1,12 +1,4 @@
-﻿using Application.Features.Location;
-using Domain.Entities.AppTroopers.SecurityTips;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.Features.AppTroopers.SecurityTips.Commands
+﻿namespace Application.Features.AppTroopers.SecurityTips.Commands
 {
     public class CreateSecurityTipResponse
     {
@@ -36,7 +28,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
         public int SourceId { get; set; }
         public string Body { get; set; }
         public string TipStatus { get; set; }
-        public string coordinates { get; set; } 
+        public string coordinates { get; set; }
     }
 
     public class CustomerPreciseLocation
