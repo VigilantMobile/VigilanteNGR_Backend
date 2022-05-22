@@ -33,6 +33,7 @@
     <Folder Include="Features\AppTroopers\SecurityTips\SecurityTips\Queries\GetAllSecurityTipCategories\" />
     <Folder Include="Features\Location\State\Commands\" />
     <Folder Include="Features\Location\LGA\Commands\" />
+    <Folder Include="Interfaces\Services\" />
   </ItemGroup>
 
 </Project>

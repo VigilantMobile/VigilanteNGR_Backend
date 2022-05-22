@@ -5,6 +5,7 @@ using Application.Features.Location;
 using Application.Features.Products.Commands.CreateProduct;
 using Application.Features.Products.Queries.GetAllProducts;
 using AutoMapper;
+using Domain.DTOs.Comments;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.LocationEntities;
@@ -33,6 +34,9 @@ namespace Application.Mappings
             //Security Tip Category
             CreateMap<CreateSecurityTipCategoryCommand, SecurityTipCategory>();
             CreateMap<SecurityTipCategory, GetAllSecurityTipCategoriesViewModel>().ReverseMap();
+
+            CreateMap<CommentForCreate, Comment>();
+            CreateMap < CommentForUpdate, Comment>();
         }
     }
 }

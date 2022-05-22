@@ -1,6 +1,8 @@
 using Application;
 using Application.Interfaces;
+using Application.Services.Interfaces.Comments;
 using Infrastructure.Persistence;
+using Infrastructure.Persistence.Services.Implementations.Comments;
 using Infrastructure.Shared;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +36,7 @@ namespace VGWebAPI
             services.AddControllers();
             services.AddHealthChecks();
             services.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
+            services.AddScoped<ICommentService, CommentService>();
 
             services.AddCors(o => o.AddPolicy("AllOriginsPolicy", builder =>
             {
