@@ -31,14 +31,12 @@ namespace Infrastructure.Persistence.Services.Implementations.Comments
             return await this.commentRepository.AddAsync(comment, userId);
         }
 
-        public async Task<List<Comment>> GetAllCommentAsync(int securityTipId)
+        public async Task<ICollection<Comment>> 
+            GetAllCommentAsync(int securityTipId, int pageNumber, int pageSize)
         {
-            var comments = await this.commentRepository.GetAllAsync();
-            var tipComments = 
-                comments.Where(comment => comment.SecurityTipId == securityTipId)
-                    .ToList();
-
-            return tipComments;
+            var comments = await this.commentRepository
+                .GetAllCooments(securityTipId, pageNumber, pageSize);
+            return comments;
         }
 
         public async Task<Comment> GetCommentAsync(int commentId)
