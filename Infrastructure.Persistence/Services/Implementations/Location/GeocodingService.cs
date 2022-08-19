@@ -1,5 +1,5 @@
 ﻿using Application.DTOs.Location;
-using Application.Features.AppTroopers.SecurityTips.Commands;
+using Application.Features.AppTroopers.SecurityTips;
 using Application.Features.Location;
 using Application.Services.Interfaces.Location;
 using Application.Services.Interfaces.UserProfile;

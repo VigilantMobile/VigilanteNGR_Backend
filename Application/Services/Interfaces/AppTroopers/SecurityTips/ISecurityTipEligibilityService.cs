@@ -1,4 +1,4 @@
-﻿using Application.Features.AppTroopers.SecurityTips.Commands;
+﻿using Application.Features.AppTroopers.SecurityTips;
 using Application.Features.Location;
 using Domain.Common.Enums;
 using System;

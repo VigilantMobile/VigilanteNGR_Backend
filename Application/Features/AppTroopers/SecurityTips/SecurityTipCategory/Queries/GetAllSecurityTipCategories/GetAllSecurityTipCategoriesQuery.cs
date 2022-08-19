@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.AppTroopers.SecurityTip.GetAllSecurityTipCategories
+namespace Application.Features.AppTroopers.SecurityTips.GetAllSecurityTipCategories
 {
     public class GetAllSecurityTipCategoriesQuery : IRequest<PagedResponse<IEnumerable<GetAllSecurityTipCategoriesViewModel>>>
     {
@@ -17,9 +17,9 @@ namespace Application.Features.AppTroopers.SecurityTip.GetAllSecurityTipCategori
     }
     public class GetAllSecurityTipCategoriesQueryHandler : IRequestHandler<GetAllSecurityTipCategoriesQuery, PagedResponse<IEnumerable<GetAllSecurityTipCategoriesViewModel>>>
     {
-        private readonly ISecurityTipCategoryRepositorysync _securityTipCategoryRepository;
+        private readonly ISecurityTipCategoryRepositoryAsync _securityTipCategoryRepository;
         private readonly IMapper _mapper;
-        public GetAllSecurityTipCategoriesQueryHandler(ISecurityTipCategoryRepositorysync securityTipCategoryRepository, IMapper mapper)
+        public GetAllSecurityTipCategoriesQueryHandler(ISecurityTipCategoryRepositoryAsync securityTipCategoryRepository, IMapper mapper)
         {
             _securityTipCategoryRepository = securityTipCategoryRepository;
             _mapper = mapper;

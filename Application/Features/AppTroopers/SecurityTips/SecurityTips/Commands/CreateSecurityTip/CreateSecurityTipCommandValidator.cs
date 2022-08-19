@@ -37,7 +37,6 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
              .NotEmpty().WithMessage("{PropertyName} is required.")
              .NotNull();
 
-
             RuleFor(p => p.CategoryId)
              .NotEmpty().WithMessage("{PropertyName} is required.")
             .NotNull();
@@ -60,6 +59,5 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
              .NotNull()
              .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
         }
-
     }
 }

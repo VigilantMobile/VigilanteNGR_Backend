@@ -9,9 +9,9 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
 {
     public class CreateSecurityTipCategoryCommandValidator : AbstractValidator<CreateSecurityTipCategoryCommand>
     {
-        private readonly ISecurityTipCategoryRepositorysync securityTipCategoryRepository;
+        private readonly ISecurityTipCategoryRepositoryAsync securityTipCategoryRepository;
 
-        public CreateSecurityTipCategoryCommandValidator(ISecurityTipCategoryRepositorysync securityTipCategoryRepository)
+        public CreateSecurityTipCategoryCommandValidator(ISecurityTipCategoryRepositoryAsync securityTipCategoryRepository)
         {
             this.securityTipCategoryRepository = securityTipCategoryRepository;
 

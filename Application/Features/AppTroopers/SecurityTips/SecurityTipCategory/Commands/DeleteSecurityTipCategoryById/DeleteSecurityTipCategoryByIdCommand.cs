@@ -13,8 +13,8 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.DeleteProductBy
         public int Id { get; set; }
         public class DeleteSecurityTipCategoryByIdCommandHandler : IRequestHandler<DeleteSecurityTipCategoryByIdCommand, Response<SecurityTipCategory>>
         {
-            private readonly ISecurityTipCategoryRepositorysync _securityTipCategoryRepository;
-            public DeleteSecurityTipCategoryByIdCommandHandler(ISecurityTipCategoryRepositorysync securityTipCategoryRepository)
+            private readonly ISecurityTipCategoryRepositoryAsync _securityTipCategoryRepository;
+            public DeleteSecurityTipCategoryByIdCommandHandler(ISecurityTipCategoryRepositoryAsync securityTipCategoryRepository)
             {
                 _securityTipCategoryRepository = securityTipCategoryRepository;
             }

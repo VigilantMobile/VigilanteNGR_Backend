@@ -1,4 +1,5 @@
-﻿using Application.Features.AppTroopers.SecurityTips.Commands;
+﻿using Application.Features.AppTroopers.SecurityTips;
+using Application.Features.AppTroopers.SecurityTips.Commands;
 using Application.Features.Location;
 using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Application.Interfaces.Repositories.Location;
@@ -30,9 +31,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
         private readonly IAlertLevelRespositoryAsync _alertLevelRespositoryAsync;
         private readonly IGeoCodingService _geocodingService;
 
-
         private readonly ILogger _logger;
-
 
         public SecurityTipEligibilityService(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
         IStateRepositoryAsync stateRepositoryAsync,
@@ -51,7 +50,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
             _geocodingService = geocodingService;
         }
 
-        public async Task<CreateSecurityTipEligibilityResponse> GetSecurityTipPostEligibility(string CustomerId, int PostLocationId, int PostLocationLevel, int alertLevelId, string currentLocationCoordinates = null)
+        public async Task<CreateSecurityTipEligibilityResponse> GetSecurityTipPostEligibility(string CustomerId, int PostLocationId, int PostLocationLevel, int alertLevelId, string currentLocationCoordinates)
         {
 
             CreateSecurityTipEligibilityResponse createSecurityTipEligibilityResponse = new CreateSecurityTipEligibilityResponse();
@@ -59,6 +58,8 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
            try
            {
                 // Customer Live location 
+
+                
                 var customerLiveLocation = await _geocodingService.GetCustomerLiveAddresses(currentLocationCoordinates);
 
 
@@ -147,7 +148,6 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                             canPostTip = false;
                             canPostTip = false;
                             createSecurityTipEligibilityResponse.FailureReason = $"Oops, tip could not be created: To post this tip, the district must be in your registered state or your live location.";
-
                         }
 
                         if (canPostTip)
@@ -172,7 +172,6 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                         {
                             canPostTip = false;
                             createSecurityTipEligibilityResponse.FailureReason = $"Oops, tip could not be created: To post a tip for this district it must be your live location.";
-
                         }
                     }
                     else if (customerLocationandLevel.LocationLevel == BroadcastLevelEnum.LGA.ToString())
@@ -275,5 +274,9 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                 return createSecurityTipEligibilityResponse;
            }
         }
+
+
+
+
     }
 }

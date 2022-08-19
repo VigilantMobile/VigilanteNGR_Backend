@@ -43,11 +43,12 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
         {
            
             var createdTip = await _securityTipService.CreateSecurityTipAsync(request);
-
+      
             if (!createdTip.IsCreated)
             {
                 return new Response<CreateSecurityTipResponse>(null, createdTip.Message, successStatus: false);
             }
+
             else
             {
                 return new Response<CreateSecurityTipResponse>(createdTip, createdTip.Message, successStatus: true);
