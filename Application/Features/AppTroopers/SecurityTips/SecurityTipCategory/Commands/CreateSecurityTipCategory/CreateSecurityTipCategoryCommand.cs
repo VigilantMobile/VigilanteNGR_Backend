@@ -19,10 +19,10 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
     }
     public class CreateSecurityTipCategoryCommandHandler : IRequestHandler<CreateSecurityTipCategoryCommand, Response<SecurityTipCategory>>
     {
-        private readonly ISecurityTipCategoryRepositorysync _securityTipCategoryRepository;
+        private readonly ISecurityTipCategoryRepositoryAsync _securityTipCategoryRepository;
         private readonly IMapper _mapper;
         private readonly IUserAccessor _userAccessor;
-        public CreateSecurityTipCategoryCommandHandler(ISecurityTipCategoryRepositorysync securityTipCategoryRepository, IMapper mapper, IUserAccessor userAccessor)
+        public CreateSecurityTipCategoryCommandHandler(ISecurityTipCategoryRepositoryAsync securityTipCategoryRepository, IMapper mapper, IUserAccessor userAccessor)
         {
             _securityTipCategoryRepository = securityTipCategoryRepository;
             _mapper = mapper;

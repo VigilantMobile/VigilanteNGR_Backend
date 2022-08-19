@@ -1,6 +1,6 @@
 ﻿//using Domain.Common;
 //using Domain.Entities.AppTroopers.Curfew;
-//using Domain.Entities.AppTroopers.SecurityTip;
+//using Domain.Entities.AppTroopers.SecurityTips;
 //using Domain.Entities.CompanyEntities;
 //using Domain.Entities.Identity;
 //using Domain.Entities.LocationEntities;

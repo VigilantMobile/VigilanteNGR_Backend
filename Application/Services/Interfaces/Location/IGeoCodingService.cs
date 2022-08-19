@@ -1,5 +1,5 @@
 ﻿using Application.DTOs.Location;
-using Application.Features.AppTroopers.SecurityTips.Commands;
+using Application.Features.AppTroopers.SecurityTips;
 using Application.Features.UserProfile.Customer.Queries.GetCustomerProfile;
 using Application.Wrappers;
 using Domain.Entities;

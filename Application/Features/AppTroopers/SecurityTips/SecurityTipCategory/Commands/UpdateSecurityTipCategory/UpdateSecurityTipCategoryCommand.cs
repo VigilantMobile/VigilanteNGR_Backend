@@ -17,8 +17,8 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.UpdateSecurityT
 
         public class UpdateSecurityTipCategoryCommandHandler : IRequestHandler<UpdateSecurityTipCategoryCommand, Response<SecurityTipCategory>>
         {
-            private readonly ISecurityTipCategoryRepositorysync _securityTipCategoryRepository;
-            public UpdateSecurityTipCategoryCommandHandler(ISecurityTipCategoryRepositorysync securityTipCategoryRepository)
+            private readonly ISecurityTipCategoryRepositoryAsync _securityTipCategoryRepository;
+            public UpdateSecurityTipCategoryCommandHandler(ISecurityTipCategoryRepositoryAsync securityTipCategoryRepository)
             {
                 _securityTipCategoryRepository = securityTipCategoryRepository;
             }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.AppTroopers.SecurityTips.Commands
+namespace Application.Features.AppTroopers.SecurityTips
 {
     public class CreateSecurityTipResponse
     {
@@ -45,5 +45,40 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
         public string LGAName { get; set; }
         public string DistrictName { get; set; }
         public string FormattedAddress { get; set; }
+    }
+
+    public class GetSecurityTipResponse
+    {
+        public int Id { get; set; }
+        public string Subject { get; set; }
+        public string Body { get; set; }
+        public string TipStatus { get; set; }
+        public string BroadcasterName { get; set; }
+        public string SecurityTipCategory { get; set; }
+        public string AlertLevel { get; set; }
+        public string BroadcastLevel { get; set; }
+        public bool IsBroadcasted { get; set; }
+        public int BroadcastLevelId { get; set; }
+        public int BroadcastLocationId { get; set; }
+        public string BroadcastLocation { get; set; }
+        //Broadcaster
+        public int BroadcasterLocationLevelId { get; set; }
+        public int BroadcasterLocationId { get; set; }
+        public string BroadcasterLocationLevel { get; set; }
+        public string BroadcasterLocation { get; set; }
+
+    }
+
+    public class BroadcasterandTipLocations
+    {
+        public string BroadcastLocationLevel { get; set; }
+        public string BroadcastLocation { get; set; }
+        public string BroadcasterLocationLevel { get; set; }
+        public string BroadcasterLocation { get; set; }
+    }
+
+    public class GetSecurityTipsListResponse
+    {
+       public List<GetSecurityTipResponse> SecurityTipsList { get; set; }
     }
 }

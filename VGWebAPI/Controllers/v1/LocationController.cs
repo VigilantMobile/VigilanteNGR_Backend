@@ -76,27 +76,5 @@ namespace VGWebAPI.Controllers.v1
         }
         #endregion State
 
-        // PUT api/<controller>/5
-        //[HttpPut("{id}")]
-        //[Authorize]
-        //public async Task<IActionResult> Put(int id, UpdateProductCommand command)
-        //{
-        //    if (id != command.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-        //    return Ok(await Mediator.Send(command));
-        //}
-
-        //// DELETE api/<controller>/5
-        //[HttpDelete("{id}")]
-        //[Authorize]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //   var result = await Mediator.Send(new DeleteProductByIdCommand { Id = id });
-
-
-        //    return Ok(await Mediator.Send(new DeleteProductByIdCommand { Id = id }));
-        //}
     }
 }

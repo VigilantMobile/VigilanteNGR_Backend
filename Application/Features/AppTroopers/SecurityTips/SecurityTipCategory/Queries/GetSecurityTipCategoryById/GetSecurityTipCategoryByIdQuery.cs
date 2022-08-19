@@ -15,8 +15,8 @@ namespace Application.Features.AppTroopers.SecurityTips.GetSecurityTipCategoryBy
         public int Id { get; set; }
         public class GetSecurityTipCategoryByIdQueryHandler : IRequestHandler<GetSecurityTipCategoryByIdQuery, Response<SecurityTipCategory>>
         {
-            private readonly ISecurityTipCategoryRepositorysync _securityTipCategoryRepository;
-            public GetSecurityTipCategoryByIdQueryHandler(ISecurityTipCategoryRepositorysync securityTipCategoryRepository)
+            private readonly ISecurityTipCategoryRepositoryAsync _securityTipCategoryRepository;
+            public GetSecurityTipCategoryByIdQueryHandler(ISecurityTipCategoryRepositoryAsync securityTipCategoryRepository)
             {
                 _securityTipCategoryRepository = securityTipCategoryRepository;
             }
@@ -28,7 +28,6 @@ namespace Application.Features.AppTroopers.SecurityTips.GetSecurityTipCategoryBy
                 // return new Response<Product>(product);
 
                 return new Response<SecurityTipCategory>(securityTipCategory, $"Security tip category retrieval successful");
-
             }
         }
     }

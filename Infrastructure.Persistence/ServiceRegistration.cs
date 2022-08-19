@@ -180,7 +180,7 @@ namespace Infrastructure.Persistence
             //User Profile
 
             //App Troopers
-            services.AddTransient<ISecurityTipCategoryRepositorysync, SecurityTipCategoryRepositoryAsync>();
+            services.AddTransient<ISecurityTipCategoryRepositoryAsync, SecurityTipCategoryRepositoryAsync>();
 
             //Location
             services.AddTransient<ITownRepositoryAsync, TownRepositoryAsync>();
