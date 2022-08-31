@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <!--<DocumentationFile>VGWebAPI.xml</DocumentationFile>-->
-	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DocumentationFile>VGWebAPI.xml</DocumentationFile>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	  <!--<DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>-->
-	  <DocumentationFile>bin\$(Configuration)\VGWebAPI.xml</DocumentationFile>
-	  <NoWarn>1701;1702;1591</NoWarn>
+	  <!--<DocumentationFile>bin\$(Configuration)\VGWebAPI.xml</DocumentationFile>-->
+	<NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 
 
