@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Globalization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
-namespace Infrastructure.Persistence.Models
+﻿namespace Infrastructure.Persistence.Models
 {
-    public class StatesMPs
+    public class StatesMultiPolygons
     {
         public string admin1Name { get; set; }
         public string admin1Pcod { get; set; }

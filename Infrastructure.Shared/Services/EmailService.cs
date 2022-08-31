@@ -1,14 +1,11 @@
 ﻿using Application.DTOs.Email;
 using Application.Exceptions;
-using Application.Interfaces;
 using Domain.Settings;
-using Infrastructure.Shared.Services.Notification.EmailHelperClasses;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MimeKit;
-using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -19,7 +16,7 @@ namespace Infrastructure.Shared.Services
         public MailSettings _mailSettings { get; }
         public ILogger<EmailService> _logger { get; }
 
-        public EmailService(IOptions<MailSettings> mailSettings,ILogger<EmailService> logger)
+        public EmailService(IOptions<MailSettings> mailSettings, ILogger<EmailService> logger)
         {
             _mailSettings = mailSettings.Value;
             _logger = logger;
@@ -29,14 +26,14 @@ namespace Infrastructure.Shared.Services
         {
             try
             {
-              
+
                 string FilePath = Directory.GetCurrentDirectory() + "\\EmailTemplates\\GenericTemplate.html";
                 StreamReader str = new StreamReader(FilePath);
                 string MailText = str.ReadToEnd();
                 str.Close();
 
                 MailText = MailText.Replace("[user]", request.Username).Replace("[heading]", request.Subject).Replace("[paragraph1]", request.BodyParagraph1);
-                
+
                 if (string.IsNullOrEmpty(request.BodyParagraph2))
                 {
                     MailText.Replace("[paragraph2]", request.BodyParagraph2);
@@ -162,10 +159,10 @@ namespace Infrastructure.Shared.Services
                 _logger.LogError(ex.Message, ex);
                 throw new ApiException(ex.Message);
             }
-           
+
         }
 
-  
+
         //public async Task MandrillSendAsync(EmailRequest request)
         //{
         //    try
@@ -221,6 +218,6 @@ namespace Infrastructure.Shared.Services
         //        throw new ApiException(ex.Message);
         //    }
         //}
-        
+
     }
 }

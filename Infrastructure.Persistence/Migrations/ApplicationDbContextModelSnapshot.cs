@@ -20,6 +20,66 @@ namespace Infrastructure.Persistence.Migrations
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("ApplicationUserLGA", b =>
+                {
+                    b.Property<int>("InternalStaffLGAsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VGNGALGAStaffId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("InternalStaffLGAsId", "VGNGALGAStaffId");
+
+                    b.HasIndex("VGNGALGAStaffId");
+
+                    b.ToTable("ApplicationUserLGA");
+                });
+
+            modelBuilder.Entity("ApplicationUserSettlement", b =>
+                {
+                    b.Property<int>("InternalStaffSettlementsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VGNGASettlementStaffId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("InternalStaffSettlementsId", "VGNGASettlementStaffId");
+
+                    b.HasIndex("VGNGASettlementStaffId");
+
+                    b.ToTable("ApplicationUserSettlement");
+                });
+
+            modelBuilder.Entity("ApplicationUserState", b =>
+                {
+                    b.Property<int>("InternalStaffStatesId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VGNGAStateStaffId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("InternalStaffStatesId", "VGNGAStateStaffId");
+
+                    b.HasIndex("VGNGAStateStaffId");
+
+                    b.ToTable("ApplicationUserState");
+                });
+
+            modelBuilder.Entity("ApplicationUserTown", b =>
+                {
+                    b.Property<int>("InternalStaffTownsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VGNGATownStaffId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("InternalStaffTownsId", "VGNGATownStaffId");
+
+                    b.HasIndex("VGNGATownStaffId");
+
+                    b.ToTable("ApplicationUserTown");
+                });
+
             modelBuilder.Entity("Domain.Common.Audit", b =>
                 {
                     b.Property<int>("Id")
@@ -56,7 +116,407 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("AuditLogs");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.AlertLevel", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Curfew.Curfew", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AdminAuthorizerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DailyEndHour")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DailyStartHour")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAuthorized")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("LGAId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OperatorIniatorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("SettlementId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("StateId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TownId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdminAuthorizerId");
+
+                    b.HasIndex("LGAId");
+
+                    b.HasIndex("OperatorIniatorId");
+
+                    b.HasIndex("SettlementId");
+
+                    b.HasIndex("StateId");
+
+                    b.HasIndex("TownId");
+
+                    b.ToTable("StateCurfew");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Missing.MissingItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AdminAuthorizerID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("BroadcastLevelId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateLastSeen")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("IdNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ItemName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("ItemType")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LoserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("SettlementId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TownId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VGNGAStaffId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("isAdminAuthorized")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BroadcastLevelId");
+
+                    b.HasIndex("LoserId");
+
+                    b.HasIndex("SettlementId");
+
+                    b.HasIndex("TownId");
+
+                    b.HasIndex("VGNGAStaffId");
+
+                    b.ToTable("MissingItem");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Missing.MissingPerson", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AdminAuthorizerID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("BroadcastLevelId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateLastSeen")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Height")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("LoserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("MiddleName")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("SettlementId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TownId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("complexion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<bool>("isAdminAuthorized")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("photoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdminAuthorizerID");
+
+                    b.HasIndex("BroadcastLevelId");
+
+                    b.HasIndex("LoserId");
+
+                    b.HasIndex("SettlementId");
+
+                    b.HasIndex("TownId");
+
+                    b.ToTable("MissingPerson");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.Commute", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AdditionalTripInformation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CommuteStatus")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DepartureCoordinates")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DepartureSettlementAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DepartureSettlementId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DepartureTownAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DepartureTownId")
+                        .HasMaxLength(150)
+                        .HasColumnType("int");
+
+                    b.Property<string>("DestinationCoordinates")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DestinationSettlementAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DestinationSettlementId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DestinationTownAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DestinationTownId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PanicInitiated")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PanicIntervalInMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PanicStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PurposeOfVisit")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VisiteeName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VisiteePhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartureSettlementId");
+
+                    b.HasIndex("DepartureTownId");
+
+                    b.HasIndex("DestinationSettlementId");
+
+                    b.HasIndex("DestinationTownId");
+
+                    b.ToTable("CommuteRecords");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.Panic", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CommuteId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PanicInitiator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("PanicStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PanicType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommuteId");
+
+                    b.HasIndex("PanicInitiator");
+
+                    b.ToTable("PanicRecords");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.TrustedPerson", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmailAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("TrustedPeople");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.AlertLevel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -70,7 +530,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -79,7 +540,9 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("alertLevel")
                         .HasColumnType("int");
@@ -89,7 +552,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("AlertLevels");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.BroadcastLevel", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -103,7 +566,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -112,7 +576,9 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("broadcastLevel")
                         .HasColumnType("int");
@@ -122,7 +588,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("BroadcastLevels");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.BroadcasterType", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcasterType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -139,7 +605,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -148,14 +615,139 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
                     b.ToTable("BroadcasterTypes");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.SecurityTip", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CommenterId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SecurityTipId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserComment")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommenterId");
+
+                    b.HasIndex("SecurityTipId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.CommentFlags", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CommentVote")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("VoterId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("VoterId");
+
+                    b.ToTable("CommentFlags");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.EscalatedTip", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EscalationAuthorizerID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("EscalationBroadcastLevelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EscalationLocationId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SecurityTipId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isEscalationApproved")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EscalationAuthorizerID");
+
+                    b.HasIndex("EscalationBroadcastLevelId");
+
+                    b.HasIndex("SecurityTipId");
+
+                    b.ToTable("EscalatedTips");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTip", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -169,16 +761,26 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Body")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("BroadcastLevelId")
                         .HasColumnType("int");
 
+                    b.Property<string>("BroadcasterId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("BroadcasterTypeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("BroadcasterUserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("BroadcasterTypeString")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Casualties")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -186,8 +788,17 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<bool>("EscalationRequested")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ExternalAuthorizerId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ExternalInitiatorId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsBroadcasted")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("LGAId")
                         .HasColumnType("int");
@@ -198,45 +809,73 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("LocationId")
+                        .HasColumnType("int");
+
                     b.Property<int>("SecurityTipCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SecurityTipStatusId")
                         .HasColumnType("int");
 
                     b.Property<int?>("SettlementId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Source")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("SourceId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("StateId")
                         .HasColumnType("int");
 
                     b.Property<string>("Subject")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("TipStatusString")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("TownId")
                         .HasColumnType("int");
 
-                    b.Property<string>("VGNGAAuthorizerID")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<bool>("isAdminAuthorized")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("isVGNGAAuthorized")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AdminAuthorizerID");
 
-                    b.HasIndex("BroadcasterUserId");
+                    b.HasIndex("AlertLevelId");
 
-                    b.HasIndex("VGNGAAuthorizerID");
+                    b.HasIndex("BroadcastLevelId");
+
+                    b.HasIndex("BroadcasterId");
+
+                    b.HasIndex("BroadcasterTypeId");
+
+                    b.HasIndex("ExternalAuthorizerId");
+
+                    b.HasIndex("ExternalInitiatorId");
+
+                    b.HasIndex("LGAId");
+
+                    b.HasIndex("SecurityTipCategoryId");
+
+                    b.HasIndex("SecurityTipStatusId");
+
+                    b.HasIndex("SettlementId");
+
+                    b.HasIndex("SourceId");
+
+                    b.HasIndex("StateId");
+
+                    b.HasIndex("TownId");
 
                     b.ToTable("SecurityTips");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.SecurityTipCategory", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -244,7 +883,9 @@ namespace Infrastructure.Persistence.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CategoryName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -253,7 +894,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -264,6 +906,604 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SecurityTipCategories");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipStatus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("TipStatus")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SecurityTipStatuses");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Source", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LogoUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SourceCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SourceName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SourceCategoryId");
+
+                    b.ToTable("Source");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SourceCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SourceCategories");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Wanted.WantedPerson", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("BroadcastLevelId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateLastSeen")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Height")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("MiddleName")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("NPFAuthorityType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NPFAuthorizerID")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SettlementId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TownId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("complexion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<bool>("isAuthorized")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("photoUrl")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BroadcastLevelId");
+
+                    b.HasIndex("SettlementId");
+
+                    b.HasIndex("TownId");
+
+                    b.ToTable("WantedPerson");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CompanyEntities.Department", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HodId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecretaryId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HodId");
+
+                    b.HasIndex("SecretaryId");
+
+                    b.ToTable("Departments");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identity.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("AddressLine1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AddressLine2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("CurrentPromoUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ExternalStaffType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("FirstTimePromoUsed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAppAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAppOperator")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAppSuperAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsExternalAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsExternalOperator")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsExternalSuperAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LocationId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LocationLevelId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("MiddleName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RefreshTokenExpiry")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Salary")
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<string>("SalaryCurrency")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StaffId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UniqueReferalCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("isActive")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasIndex("LocationLevelId");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identity.CustomClaims", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FriendlyName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CustomClaims");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LocationEntities.LGA", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<Geometry>("Boundary")
+                        .HasColumnType("geography");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NPFLGAAuthorityAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NPFPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StateId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isCapital")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StateId");
+
+                    b.ToTable("LGAs");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LocationEntities.Settlement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AuthorityPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Geometry>("Boundary")
+                        .HasColumnType("geography");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NPFSettlementAuthorityAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TownId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TownId");
+
+                    b.ToTable("Settlements");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LocationEntities.State", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<Geometry>("Boundary")
+                        .HasColumnType("geography");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NPFStateAuthorityAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NPFStateAuthorityPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("shapeArea")
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<decimal>("shapeLength")
+                        .HasColumnType("decimal(18,6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("States");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LocationEntities.Town", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<Geometry>("Boundary")
+                        .HasColumnType("geography");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("LGAId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NPFPhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NPFTownAuthorityAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LGAId");
+
+                    b.ToTable("Towns");
                 });
 
             modelBuilder.Entity("Domain.Entities.Product", b =>
@@ -302,39 +1542,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.CustomClaims", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FriendlyName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CustomClaims");
-                });
-
             modelBuilder.Entity("Infrastructure.Persistence.Models.DemographicEntitiesCoordinatesJSON", b =>
                 {
                     b.Property<int>("Id")
@@ -363,396 +1570,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("demographicEntitiesCoordinatesJSONs");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.ApplicationUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("ActiveStatus")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("AddressLine1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AddressLine2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("CurrentPromoUsed")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("FirstTimePromoUsed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("LastCurrentLocationID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LocationID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("MiddleName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("NPFAdminLGAId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NPFAdminSettlementId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NPFAdminStateId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NPFAdminTownId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NPFOperatorLGAId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NPFOperatorSettlementId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NPFOperatorStateId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NPFOperatorTownId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TempLocationID")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UniqueReferalCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<int?>("VigilanteAdminLGAId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VigilanteAdminSettlementId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VigilanteAdminStateId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VigilanteAdminTownId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VigilanteOperatorLGAId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VigilanteOperatorSettlementId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VigilanteOperatorStateId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("VigilanteOperatorTownId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isVGNGAStaff")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NPFAdminLGAId");
-
-                    b.HasIndex("NPFAdminSettlementId");
-
-                    b.HasIndex("NPFAdminStateId");
-
-                    b.HasIndex("NPFAdminTownId");
-
-                    b.HasIndex("NPFOperatorLGAId");
-
-                    b.HasIndex("NPFOperatorSettlementId");
-
-                    b.HasIndex("NPFOperatorStateId");
-
-                    b.HasIndex("NPFOperatorTownId");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("VigilanteAdminLGAId");
-
-                    b.HasIndex("VigilanteAdminSettlementId");
-
-                    b.HasIndex("VigilanteAdminStateId");
-
-                    b.HasIndex("VigilanteAdminTownId");
-
-                    b.HasIndex("VigilanteOperatorLGAId");
-
-                    b.HasIndex("VigilanteOperatorSettlementId");
-
-                    b.HasIndex("VigilanteOperatorStateId");
-
-                    b.HasIndex("VigilanteOperatorTownId");
-
-                    b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.LGA", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<Geometry>("Boundary")
-                        .HasColumnType("geography");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LGASuperAdminId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NPFLGAAuthorityAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NPFPhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SecurityTipId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("StateId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("isCapital")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SecurityTipId");
-
-                    b.ToTable("LGAs");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.Settlement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NPFAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NPFAdminId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NPFPhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SecurityTipId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TownId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TownSuperAdminId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SecurityTipId");
-
-                    b.ToTable("Settlements");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.State", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<Geometry>("Boundary")
-                        .HasColumnType("geography");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NPFStateAuthorityAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NPFStatePhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SecurityTipId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StateSuperAdminId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("shapeArea")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.Property<decimal>("shapeLength")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SecurityTipId");
-
-                    b.ToTable("States");
-                });
-
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.Town", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LGAId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NPFAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NPFPhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SecurityTipId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TownSuperAdminId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SecurityTipId");
-
-                    b.ToTable("Towns");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -886,220 +1703,510 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("UserTokens");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.SecurityTip", b =>
+            modelBuilder.Entity("ApplicationUserLGA", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.ApplicationUser", "AdminAuthorizer")
-                        .WithMany("AdminAuthorizedTips")
-                        .HasForeignKey("AdminAuthorizerID")
+                    b.HasOne("Domain.Entities.LocationEntities.LGA", null)
+                        .WithMany()
+                        .HasForeignKey("InternalStaffLGAsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("VGNGALGAStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ApplicationUserSettlement", b =>
+                {
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", null)
+                        .WithMany()
+                        .HasForeignKey("InternalStaffSettlementsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("VGNGASettlementStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ApplicationUserState", b =>
+                {
+                    b.HasOne("Domain.Entities.LocationEntities.State", null)
+                        .WithMany()
+                        .HasForeignKey("InternalStaffStatesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("VGNGAStateStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ApplicationUserTown", b =>
+                {
+                    b.HasOne("Domain.Entities.LocationEntities.Town", null)
+                        .WithMany()
+                        .HasForeignKey("InternalStaffTownsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("VGNGATownStaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Curfew.Curfew", b =>
+                {
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "AdminAuthorizer")
+                        .WithMany("AdminAuthorizedCurfews")
+                        .HasForeignKey("AdminAuthorizerId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.ApplicationUser", "Broadcaster")
-                        .WithMany("BroadcasterTips")
-                        .HasForeignKey("BroadcasterUserId")
+                    b.HasOne("Domain.Entities.LocationEntities.LGA", "LGA")
+                        .WithMany()
+                        .HasForeignKey("LGAId");
+
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "OperatorIniator")
+                        .WithMany("OperatorIniatedCurfews")
+                        .HasForeignKey("OperatorIniatorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.ApplicationUser", "VGNGAAuthorizer")
-                        .WithMany("VGNGAAuthorizedTips")
-                        .HasForeignKey("VGNGAAuthorizerID")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", "Settlement")
+                        .WithMany()
+                        .HasForeignKey("SettlementId");
+
+                    b.HasOne("Domain.Entities.LocationEntities.State", "State")
+                        .WithMany()
+                        .HasForeignKey("StateId");
+
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "Town")
+                        .WithMany()
+                        .HasForeignKey("TownId");
 
                     b.Navigation("AdminAuthorizer");
 
-                    b.Navigation("Broadcaster");
+                    b.Navigation("LGA");
 
-                    b.Navigation("VGNGAAuthorizer");
+                    b.Navigation("OperatorIniator");
+
+                    b.Navigation("Settlement");
+
+                    b.Navigation("State");
+
+                    b.Navigation("Town");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.ApplicationUser", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Missing.MissingItem", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.LGA", "NPFAdminLGA")
-                        .WithMany("NPFAdmins")
-                        .HasForeignKey("NPFAdminLGAId")
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", "BroadcastLevel")
+                        .WithMany()
+                        .HasForeignKey("BroadcastLevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "ApplicationUser")
+                        .WithMany("CustomerMissingItems")
+                        .HasForeignKey("LoserId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", "NPFAdminSettlement")
-                        .WithMany("NPFAdmins")
-                        .HasForeignKey("NPFAdminSettlementId")
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", "Settlement")
+                        .WithMany("SettlementMissingItems")
+                        .HasForeignKey("SettlementId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.State", "NPFAdminState")
-                        .WithMany("NPFAdmins")
-                        .HasForeignKey("NPFAdminStateId")
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "Town")
+                        .WithMany("TownMissingItems")
+                        .HasForeignKey("TownId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", "NPFAdminTown")
-                        .WithMany("NPFAdmins")
-                        .HasForeignKey("NPFAdminTownId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "VGNGAStaff")
+                        .WithMany()
+                        .HasForeignKey("VGNGAStaffId");
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.LGA", "NPFOperatorLGA")
-                        .WithMany("NPFOperators")
-                        .HasForeignKey("NPFOperatorLGAId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.Navigation("ApplicationUser");
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", "NPFOperatorSettlement")
-                        .WithMany("NPFOperators")
-                        .HasForeignKey("NPFOperatorSettlementId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.Navigation("BroadcastLevel");
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.State", "NPFOperatorState")
-                        .WithMany("NPFOperators")
-                        .HasForeignKey("NPFOperatorStateId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.Navigation("Settlement");
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", "NPFOperatorTown")
-                        .WithMany("NPFOperators")
-                        .HasForeignKey("NPFOperatorTownId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.Navigation("Town");
 
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.LGA", "VigilanteAdminLGA")
-                        .WithMany("VigilanteAdmins")
-                        .HasForeignKey("VigilanteAdminLGAId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", "VigilanteAdminSettlement")
-                        .WithMany("VigilanteAdmins")
-                        .HasForeignKey("VigilanteAdminSettlementId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.State", "VigilanteAdminState")
-                        .WithMany("VigilanteAdmins")
-                        .HasForeignKey("VigilanteAdminStateId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", "VigilanteAdminTown")
-                        .WithMany("VigilanteAdmins")
-                        .HasForeignKey("VigilanteAdminTownId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.LGA", "VigilanteOperatorLGA")
-                        .WithMany("VigilanteOperators")
-                        .HasForeignKey("VigilanteOperatorLGAId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Settlement", "VigilanteOperatorSettlement")
-                        .WithMany("VigilanteOperators")
-                        .HasForeignKey("VigilanteOperatorSettlementId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.State", "VigilanteOperatorState")
-                        .WithMany("VigilanteOperators")
-                        .HasForeignKey("VigilanteOperatorStateId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Infrastructure.Persistence.Models.LocationEntities.Town", "VigilanteOperatorTown")
-                        .WithMany("VigilanteOperators")
-                        .HasForeignKey("VigilanteOperatorTownId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.OwnsMany("Application.DTOs.Account.RefreshToken", "RefreshTokens", b1 =>
-                        {
-                            b1.Property<string>("ApplicationUserId")
-                                .HasColumnType("nvarchar(450)");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<DateTime>("Created")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<string>("CreatedByIp")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<DateTime>("Expires")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<string>("ReplacedByToken")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<DateTime?>("Revoked")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<string>("RevokedByIp")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Token")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.HasKey("ApplicationUserId", "Id");
-
-                            b1.ToTable("RefreshToken");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ApplicationUserId");
-                        });
-
-                    b.Navigation("NPFAdminLGA");
-
-                    b.Navigation("NPFAdminSettlement");
-
-                    b.Navigation("NPFAdminState");
-
-                    b.Navigation("NPFAdminTown");
-
-                    b.Navigation("NPFOperatorLGA");
-
-                    b.Navigation("NPFOperatorSettlement");
-
-                    b.Navigation("NPFOperatorState");
-
-                    b.Navigation("NPFOperatorTown");
-
-                    b.Navigation("RefreshTokens");
-
-                    b.Navigation("VigilanteAdminLGA");
-
-                    b.Navigation("VigilanteAdminSettlement");
-
-                    b.Navigation("VigilanteAdminState");
-
-                    b.Navigation("VigilanteAdminTown");
-
-                    b.Navigation("VigilanteOperatorLGA");
-
-                    b.Navigation("VigilanteOperatorSettlement");
-
-                    b.Navigation("VigilanteOperatorState");
-
-                    b.Navigation("VigilanteOperatorTown");
+                    b.Navigation("VGNGAStaff");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.LGA", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Missing.MissingPerson", b =>
                 {
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTip.SecurityTip", "SecurityTip")
-                        .WithMany("LGAsBroadcastedTo")
-                        .HasForeignKey("SecurityTipId");
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "VGNGAStaff")
+                        .WithMany()
+                        .HasForeignKey("AdminAuthorizerID");
+
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", "BroadcastLevel")
+                        .WithMany()
+                        .HasForeignKey("BroadcastLevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "ApplicationUser")
+                        .WithMany("CustomerMissingPeople")
+                        .HasForeignKey("LoserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", "Settlement")
+                        .WithMany("SettlementMissingPeople")
+                        .HasForeignKey("SettlementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "Town")
+                        .WithMany("TownMissingPeople")
+                        .HasForeignKey("TownId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("BroadcastLevel");
+
+                    b.Navigation("Settlement");
+
+                    b.Navigation("Town");
+
+                    b.Navigation("VGNGAStaff");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.Commute", b =>
+                {
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", "DepartureSettlement")
+                        .WithMany("DepartureSettlementCommutes")
+                        .HasForeignKey("DepartureSettlementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "DepartureTown")
+                        .WithMany("DepartureTownCommutes")
+                        .HasForeignKey("DepartureTownId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", "DestinationSettlement")
+                        .WithMany("DestinationSettlementCommutes")
+                        .HasForeignKey("DestinationSettlementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "DestinationTown")
+                        .WithMany("DestinationTownCommutes")
+                        .HasForeignKey("DestinationTownId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DepartureSettlement");
+
+                    b.Navigation("DepartureTown");
+
+                    b.Navigation("DestinationSettlement");
+
+                    b.Navigation("DestinationTown");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.Panic", b =>
+                {
+                    b.HasOne("Domain.Entities.AppTroopers.Panic.Commute", "Commute")
+                        .WithMany()
+                        .HasForeignKey("CommuteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("PanicInitiator")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Commute");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.TrustedPerson", b =>
+                {
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "Owner")
+                        .WithMany("TrustedPeople")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Comment", b =>
+                {
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "ApplicationUser")
+                        .WithMany("Comments")
+                        .HasForeignKey("CommenterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.SecurityTip", "SecurityTip")
+                        .WithMany("Comments")
+                        .HasForeignKey("SecurityTipId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("SecurityTip");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.Settlement", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.CommentFlags", b =>
                 {
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTip.SecurityTip", "SecurityTip")
-                        .WithMany("SettlementsBroadcastedTo")
-                        .HasForeignKey("SecurityTipId");
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.Comment", "Comment")
+                        .WithMany("CommentFlags")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "ApplicationUser")
+                        .WithMany("CommentFlags")
+                        .HasForeignKey("VoterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Comment");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.EscalatedTip", b =>
+                {
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "EscalationAuthorizer")
+                        .WithMany("ApprovedEscalatedTips")
+                        .HasForeignKey("EscalationAuthorizerID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", "EscalationBroadcastLevel")
+                        .WithMany("EscalatedTips")
+                        .HasForeignKey("EscalationBroadcastLevelId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.SecurityTip", "SecurityTip")
+                        .WithMany("EscalatedTips")
+                        .HasForeignKey("SecurityTipId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("EscalationAuthorizer");
+
+                    b.Navigation("EscalationBroadcastLevel");
 
                     b.Navigation("SecurityTip");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.State", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTip", b =>
                 {
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTip.SecurityTip", "SecurityTip")
-                        .WithMany("StatesBroadcastedTo")
-                        .HasForeignKey("SecurityTipId");
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "VGNGAAdminAuthorizer")
+                        .WithMany()
+                        .HasForeignKey("AdminAuthorizerID");
 
-                    b.Navigation("SecurityTip");
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.AlertLevel", "AlertLevel")
+                        .WithMany("SecurityTips")
+                        .HasForeignKey("AlertLevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", "BroadcastLevel")
+                        .WithMany("VGNGAAdminApprovedSecurityTips")
+                        .HasForeignKey("BroadcastLevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "ApplicationUser")
+                        .WithMany("CustomerSecurityTips")
+                        .HasForeignKey("BroadcasterId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcasterType", "BroadcasterType")
+                        .WithMany("SecurityTips")
+                        .HasForeignKey("BroadcasterTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "ExternalAuthorizer")
+                        .WithMany("ExternalStaffAuthorizedTips")
+                        .HasForeignKey("ExternalAuthorizerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "ExternalInitiator")
+                        .WithMany("ExternalStaffIniatedTips")
+                        .HasForeignKey("ExternalInitiatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.LocationEntities.LGA", null)
+                        .WithMany("SecurityTips")
+                        .HasForeignKey("LGAId");
+
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.SecurityTipCategory", "SecurityTipCategory")
+                        .WithMany("SecurityTips")
+                        .HasForeignKey("SecurityTipCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.SecurityTipStatus", "SecurityTipStatus")
+                        .WithMany("SecurityTips")
+                        .HasForeignKey("SecurityTipStatusId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", null)
+                        .WithMany("SecurityTips")
+                        .HasForeignKey("SettlementId");
+
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.Source", "Source")
+                        .WithMany("SecurityTips")
+                        .HasForeignKey("SourceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.LocationEntities.State", null)
+                        .WithMany("SecurityTips")
+                        .HasForeignKey("StateId");
+
+                    b.HasOne("Domain.Entities.LocationEntities.Town", null)
+                        .WithMany("SecurityTips")
+                        .HasForeignKey("TownId");
+
+                    b.Navigation("AlertLevel");
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("BroadcasterType");
+
+                    b.Navigation("BroadcastLevel");
+
+                    b.Navigation("ExternalAuthorizer");
+
+                    b.Navigation("ExternalInitiator");
+
+                    b.Navigation("SecurityTipCategory");
+
+                    b.Navigation("SecurityTipStatus");
+
+                    b.Navigation("Source");
+
+                    b.Navigation("VGNGAAdminAuthorizer");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.Town", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Source", b =>
                 {
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTip.SecurityTip", "SecurityTip")
-                        .WithMany("TownsBroadcastedTo")
-                        .HasForeignKey("SecurityTipId");
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.SourceCategory", "SourceCategory")
+                        .WithMany("Sources")
+                        .HasForeignKey("SourceCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.Navigation("SecurityTip");
+                    b.Navigation("SourceCategory");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Wanted.WantedPerson", b =>
+                {
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", "BroadcastLevel")
+                        .WithMany()
+                        .HasForeignKey("BroadcastLevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.LocationEntities.Settlement", "Settlement")
+                        .WithMany("SettlementWantedPeople")
+                        .HasForeignKey("SettlementId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "Town")
+                        .WithMany("TownWantedPeople")
+                        .HasForeignKey("TownId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("BroadcastLevel");
+
+                    b.Navigation("Settlement");
+
+                    b.Navigation("Town");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CompanyEntities.Department", b =>
+                {
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "HOD")
+                        .WithMany("HODDepartments")
+                        .HasForeignKey("HodId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "Secretary")
+                        .WithMany("SecretaryDepartments")
+                        .HasForeignKey("SecretaryId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("HOD");
+
+                    b.Navigation("Secretary");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identity.ApplicationUser", b =>
+                {
+                    b.HasOne("Domain.Entities.CompanyEntities.Department", "Department")
+                        .WithMany("VGNGAStaff")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", "LocationLevel")
+                        .WithMany("Customers")
+                        .HasForeignKey("LocationLevelId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Department");
+
+                    b.Navigation("LocationLevel");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LocationEntities.LGA", b =>
+                {
+                    b.HasOne("Domain.Entities.LocationEntities.State", "State")
+                        .WithMany("LGAs")
+                        .HasForeignKey("StateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("State");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LocationEntities.Settlement", b =>
+                {
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "Town")
+                        .WithMany("Settlements")
+                        .HasForeignKey("TownId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Town");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LocationEntities.Town", b =>
+                {
+                    b.HasOne("Domain.Entities.LocationEntities.LGA", "LGA")
+                        .WithMany("Towns")
+                        .HasForeignKey("LGAId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LGA");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1113,7 +2220,7 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.ApplicationUser", null)
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1122,7 +2229,7 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.ApplicationUser", null)
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1137,7 +2244,7 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.ApplicationUser", null)
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1146,75 +2253,142 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Infrastructure.Persistence.Models.Identity.ApplicationUser", null)
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTip.SecurityTip", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.AlertLevel", b =>
                 {
-                    b.Navigation("LGAsBroadcastedTo");
-
-                    b.Navigation("SettlementsBroadcastedTo");
-
-                    b.Navigation("StatesBroadcastedTo");
-
-                    b.Navigation("TownsBroadcastedTo");
+                    b.Navigation("SecurityTips");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.Identity.ApplicationUser", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", b =>
                 {
-                    b.Navigation("AdminAuthorizedTips");
+                    b.Navigation("Customers");
 
-                    b.Navigation("BroadcasterTips");
+                    b.Navigation("EscalatedTips");
 
-                    b.Navigation("VGNGAAuthorizedTips");
+                    b.Navigation("VGNGAAdminApprovedSecurityTips");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.LGA", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcasterType", b =>
                 {
-                    b.Navigation("NPFAdmins");
-
-                    b.Navigation("NPFOperators");
-
-                    b.Navigation("VigilanteAdmins");
-
-                    b.Navigation("VigilanteOperators");
+                    b.Navigation("SecurityTips");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.Settlement", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Comment", b =>
                 {
-                    b.Navigation("NPFAdmins");
-
-                    b.Navigation("NPFOperators");
-
-                    b.Navigation("VigilanteAdmins");
-
-                    b.Navigation("VigilanteOperators");
+                    b.Navigation("CommentFlags");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.State", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTip", b =>
                 {
-                    b.Navigation("NPFAdmins");
+                    b.Navigation("Comments");
 
-                    b.Navigation("NPFOperators");
-
-                    b.Navigation("VigilanteAdmins");
-
-                    b.Navigation("VigilanteOperators");
+                    b.Navigation("EscalatedTips");
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Models.LocationEntities.Town", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipCategory", b =>
                 {
-                    b.Navigation("NPFAdmins");
+                    b.Navigation("SecurityTips");
+                });
 
-                    b.Navigation("NPFOperators");
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipStatus", b =>
+                {
+                    b.Navigation("SecurityTips");
+                });
 
-                    b.Navigation("VigilanteAdmins");
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Source", b =>
+                {
+                    b.Navigation("SecurityTips");
+                });
 
-                    b.Navigation("VigilanteOperators");
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SourceCategory", b =>
+                {
+                    b.Navigation("Sources");
+                });
+
+            modelBuilder.Entity("Domain.Entities.CompanyEntities.Department", b =>
+                {
+                    b.Navigation("VGNGAStaff");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Identity.ApplicationUser", b =>
+                {
+                    b.Navigation("AdminAuthorizedCurfews");
+
+                    b.Navigation("ApprovedEscalatedTips");
+
+                    b.Navigation("CommentFlags");
+
+                    b.Navigation("Comments");
+
+                    b.Navigation("CustomerMissingItems");
+
+                    b.Navigation("CustomerMissingPeople");
+
+                    b.Navigation("CustomerSecurityTips");
+
+                    b.Navigation("ExternalStaffAuthorizedTips");
+
+                    b.Navigation("ExternalStaffIniatedTips");
+
+                    b.Navigation("HODDepartments");
+
+                    b.Navigation("OperatorIniatedCurfews");
+
+                    b.Navigation("SecretaryDepartments");
+
+                    b.Navigation("TrustedPeople");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LocationEntities.LGA", b =>
+                {
+                    b.Navigation("SecurityTips");
+
+                    b.Navigation("Towns");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LocationEntities.Settlement", b =>
+                {
+                    b.Navigation("DepartureSettlementCommutes");
+
+                    b.Navigation("DestinationSettlementCommutes");
+
+                    b.Navigation("SecurityTips");
+
+                    b.Navigation("SettlementMissingItems");
+
+                    b.Navigation("SettlementMissingPeople");
+
+                    b.Navigation("SettlementWantedPeople");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LocationEntities.State", b =>
+                {
+                    b.Navigation("LGAs");
+
+                    b.Navigation("SecurityTips");
+                });
+
+            modelBuilder.Entity("Domain.Entities.LocationEntities.Town", b =>
+                {
+                    b.Navigation("DepartureTownCommutes");
+
+                    b.Navigation("DestinationTownCommutes");
+
+                    b.Navigation("SecurityTips");
+
+                    b.Navigation("Settlements");
+
+                    b.Navigation("TownMissingItems");
+
+                    b.Navigation("TownMissingPeople");
+
+                    b.Navigation("TownWantedPeople");
                 });
 #pragma warning restore 612, 618
         }

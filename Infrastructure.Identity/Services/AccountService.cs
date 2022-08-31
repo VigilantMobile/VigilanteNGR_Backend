@@ -1,31 +1,27 @@
 ﻿using Application.DTOs.Account;
+using Application.DTOs.Email;
+using Application.Enums;
 using Application.Exceptions;
 using Application.Interfaces;
 using Application.Wrappers;
 using Domain.Settings;
+using Infrastructure.Identity.Contexts;
 using Infrastructure.Identity.Helpers;
 using Infrastructure.Identity.Models;
+using Infrastructure.Shared.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Org.BouncyCastle.Ocsp;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Net.Cache;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Application.Enums;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Primitives;
-using Application.DTOs.Email;
-using Infrastructure.Identity.Contexts;
-using Infrastructure.Shared.Services;
-using Microsoft.AspNetCore.Http;
 
 namespace Infrastructure.Identity.Services
 {
@@ -101,7 +97,7 @@ namespace Infrastructure.Identity.Services
             var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
             response.Roles = rolesList.ToList();
             response.IsVerified = user.EmailConfirmed;
-           
+
             //var refreshToken = GenerateRefreshToken(ipAddress);
             //response.RefreshToken = refreshToken.Token;
 
@@ -119,8 +115,8 @@ namespace Infrastructure.Identity.Services
                 response.RefreshToken = refreshToken.Token;
                 response.RefreshTokenExpiration = refreshToken.Expires;
                 user.RefreshTokens.Add(refreshToken);
-               _context.Update(user);
-               _context.SaveChanges();
+                _context.Update(user);
+                _context.SaveChanges();
             }
 
             return new Response<AuthenticationResponse>(response, $"Authenticated {user.UserName}");
@@ -132,8 +128,8 @@ namespace Infrastructure.Identity.Services
             var userWithSameUserName = await _userManager.FindByNameAsync(request.PhoneNumber);
             if (userWithSameUserName != null)
             {
-                CustomerRegistrationResponse response = new CustomerRegistrationResponse { Message = "Account already exists.", UserAlreadyExists = true};
-                return new Response<CustomerRegistrationResponse>(response, message: $"Phone number is already registered, proceed to login. Thanks.", successStatus:false);
+                CustomerRegistrationResponse response = new CustomerRegistrationResponse { Message = "Account already exists.", UserAlreadyExists = true };
+                return new Response<CustomerRegistrationResponse>(response, message: $"Phone number is already registered, proceed to login. Thanks.", successStatus: false);
 
                 //throw new ApiException($"User already exists.");
             }
@@ -175,7 +171,7 @@ namespace Infrastructure.Identity.Services
 
                     // throw new ApiException($"{string.Join(", ", result.Errors.Select(x => "Code " + x.Code + " Description" + x.Description))}"); 
 
-                    throw new ApiException($"{string.Join(", ", result.Errors.Select(x => x.Description))}"); 
+                    throw new ApiException($"{string.Join(", ", result.Errors.Select(x => x.Description))}");
                 }
             }
             else
@@ -193,7 +189,7 @@ namespace Infrastructure.Identity.Services
             var userWithSameUserName = await _userManager.FindByEmailAsync(request.Email);
             if (userWithSameUserName != null)
             {
-               // throw new ApiException($"Username '{request.Email}' is already taken.");
+                // throw new ApiException($"Username '{request.Email}' is already taken.");
 
                 StaffRegistrationResponse response = new StaffRegistrationResponse { Message = "Account already exists.", UserAlreadyExists = true };
 
@@ -235,7 +231,7 @@ namespace Infrastructure.Identity.Services
 
 
                     //TODO: Attach Email Service here and configure it via appsettings
-                    await _emailService.SendAsync(new Application.DTOs.Email.EmailRequest() { From = "admin@vigilanteng.com", To = user.Email, BodyParagraph1 = $"Please confirm your account by visiting this URL {verificationUri}", Subject = "Email Set Up", Heading = "Email Setup Successful"  });
+                    await _emailService.SendAsync(new Application.DTOs.Email.EmailRequest() { From = "admin@vigilanteng.com", To = user.Email, BodyParagraph1 = $"Please confirm your account by visiting this URL {verificationUri}", Subject = "Email Set Up", Heading = "Email Setup Successful" });
 
                     StaffRegistrationResponse response = new StaffRegistrationResponse { Message = "Staff account created.", VerificationUrl = verificationUri, UserAlreadyExists = false };
                     return new Response<StaffRegistrationResponse>(response, message: $"Staff account was registered successfully. {verificationUri}");
@@ -272,7 +268,7 @@ namespace Infrastructure.Identity.Services
                 roleClaims.Add(new Claim("roles", roles[i]));
             }
 
-         
+
 
             string ipAddress = IpHelper.GetIpAddress();
 
@@ -458,7 +454,7 @@ namespace Infrastructure.Identity.Services
         //    {
         //        return $"No Accounts Registered with {model.Email}.";
         //    }
-     
+
         //    var roleExists = Enum.GetNames(typeof(Roles)).Any(x => x.ToLower() == model.Role.ToLower());
         //    if (roleExists)
         //    {

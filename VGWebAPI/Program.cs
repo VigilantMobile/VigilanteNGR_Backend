@@ -1,4 +1,4 @@
-using Infrastructure.Persistence.Models.Identity;
+using Domain.Entities.Identity;
 using Infrastructure.Persistence.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -8,10 +8,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Azure.Identity;
+using Domain.Entities.Identity;
+using Infrastructure.Persistence.Helpers;
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
 
 namespace VGWebAPI
 {
@@ -48,6 +51,11 @@ namespace VGWebAPI
                         await Infrastructure.Persistence.Seeds.DefaultRoles.SeedAsync(userManager, roleManager);
                     }
 
+                    //dbInitializer.Initialize();
+                    //dbInitializer.SeedStatesandLGAs();
+                    //dbInitializer.SeedAppTrooperHelpers();
+                    Log.Information("Finished Seeding Default Data");
+
                     //Seed Users
                     if (!userManager.Users.Any())
                     {
@@ -55,17 +63,13 @@ namespace VGWebAPI
                         await Infrastructure.Persistence.Seeds.DefaultSuperAdmin.SeedAsync(userManager, roleManager);
                     }
 
+
                     //Seed Default Entities
-                    //dbInitializer.Initialize();
-                    dbInitializer.SeedStatesandLGAs();
-                    // dbInitializer.SeedAppTrooperHelpers();
-                    //Log.Information("Finished Seeding Default Data");
-                    //Log.Information("Application Starting");
+
+                    Log.Information("Application Starting");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message.ToString());
-                    Console.WriteLine(ex.StackTrace);
                     Log.Warning(ex, "An error occurred seeding the DB");
                 }
                 finally
@@ -79,15 +83,20 @@ namespace VGWebAPI
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                //.ConfigureAppConfiguration((context, config) =>
-                //{
-                //var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VGWebAPIVaultUri"));
-                //config.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
-                //})
+              //.ConfigureAppConfiguration((context, config) =>
+              //{
+              //var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VGWebAPIVaultUri"));
+              //config.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
+              //})
               .UseSerilog() //Uses Serilog instead of default .NET Logger
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureContainer<ContainerBuilder>(builder =>
+                {
+                    builder.RegisterModule(new AutofacContainerModule());
                 });
     }
 }

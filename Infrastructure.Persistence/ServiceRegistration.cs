@@ -1,10 +1,16 @@
 ﻿using Application.Interfaces;
 using Application.Interfaces.Repositories;
+using Application.Interfaces.Repositories.AppTroopers.Panic;
+using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
+using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
+using Domain.Entities.Identity;
 using Domain.Settings;
 using Infrastructure.Persistence.Contexts;
-using Infrastructure.Persistence.Models.Identity;
 using Infrastructure.Persistence.Repositories;
+using Infrastructure.Persistence.Repositories.Location;
+using Infrastructure.Persistence.Repositories.Panic;
+using Infrastructure.Persistence.Repositories.SecurityTips;
 using Infrastructure.Persistence.Repository;
 using Infrastructure.Persistence.Services;
 using Infrastructure.Shared.Services;
@@ -15,7 +21,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using NetTopologySuite.Geometries;
 using Newtonsoft.Json;
 using System;
 using System.Text;
@@ -51,12 +56,15 @@ namespace Infrastructure.Persistence
             })
             .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-
             #region Services
             services.AddTransient<IAccountService, AccountService>();
             #endregion
+
+
             services.Configure<JWTSettings>(configuration.GetSection("JWTSettings"));
             services.Configure<VGNGAEmailSenders>(configuration.GetSection("VGNGAEmailSenders"));
+            services.Configure<APIURLs>(configuration.GetSection("APIURLs"));
+            services.Configure<AppConfig>(configuration.GetSection("AppConfig"));
 
             //authentication
             services.AddAuthentication(options =>
@@ -165,10 +173,23 @@ namespace Infrastructure.Persistence
                options.UseSqlServer(
                    configuration.GetConnectionString("DefaultConnection"),
                      b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName).UseNetTopologySuite()).EnableSensitiveDataLogging(true));
-           
+
             #region Repositories
             services.AddTransient(typeof(IGenericRepositoryAsync<>), typeof(GenericRepositoryAsync<>));
             services.AddTransient<IProductRepositoryAsync, ProductRepositoryAsync>();
+            //User Profile
+
+            //App Troopers
+            services.AddTransient<ISecurityTipCategoryRepositoryAsync, SecurityTipCategoryRepositoryAsync>();
+
+            //Location
+            services.AddTransient<ITownRepositoryAsync, TownRepositoryAsync>();
+            services.AddTransient<ILGARepositoryAsync, LGARepositoryAsync>();
+            services.AddTransient<IStateRepositoryAsync, StateRepositoryAsync>();
+
+            //Panic
+            services.AddTransient<ITrustedPersonRepositoryAsync, TrustedPersonRepositoryAsync>();
+
             #endregion
 
             #region DbInitializer

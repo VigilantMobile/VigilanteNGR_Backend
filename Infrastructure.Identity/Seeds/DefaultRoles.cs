@@ -1,12 +1,10 @@
-﻿using Infrastructure.Identity.Models;
+﻿using Application.Enums;
+using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity;
-using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Application.Enums;
-using System.Security.Claims;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Identity.Seeds
 {

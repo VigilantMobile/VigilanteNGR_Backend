@@ -1,14 +1,9 @@
 ﻿using Application.DTOs.Email;
-using Infrastructure.Shared.Services.Notification.EmailHelperClasses;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using RestSharp;
-using RestSharp.Authenticators;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Shared.Services
-{ 
+{
     public interface IEmailService
     {
         Task SendAsync(EmailRequest request);
@@ -19,9 +14,8 @@ namespace Infrastructure.Shared.Services
 
     public interface IMandrillEmailService
     {
-        IRestResponse SendAsync(EmailRequest request);
+        Task<RestResponse> SendAsync(EmailRequest request);
     }
-
 
     //public interface IEmailService
     //{
@@ -29,5 +23,4 @@ namespace Infrastructure.Shared.Services
     //    Task SendWelcomeEmailAsync(EmailRequest request);
     //    Task SendStaffVerificationEmailAsync(EmailRequest request);
     //}
-
 }

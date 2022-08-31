@@ -1,11 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace Application.DTOs.Account
 {
-    [Owned]
+    //[Owned]
     public class RefreshToken
     {
         public int Id { get; set; }

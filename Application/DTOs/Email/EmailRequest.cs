@@ -1,7 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Http;
 
 namespace Application.DTOs.Email
 {
