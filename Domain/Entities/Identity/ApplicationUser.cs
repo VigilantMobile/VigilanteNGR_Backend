@@ -3,6 +3,7 @@ using Domain.Entities.AppTroopers.Curfew;
 using Domain.Entities.AppTroopers.Missing;
 using Domain.Entities.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.SecurityTips;
+using Domain.Entities.AppTroopers.Subscription;
 using Domain.Entities.CompanyEntities;
 using Domain.Entities.LocationEntities;
 using Microsoft.AspNetCore.Identity;
@@ -26,14 +27,24 @@ namespace Domain.Entities.Identity
         public string LastName { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
-        public int LocationId { get; set; }
 
-        //CustomerLocationTier
 
-        [ForeignKey("LocationLevel")]
-        public int? LocationLevelId { get; set; }
-        public virtual BroadcastLevel LocationLevel { get; set; }
+        //CustomerLocation
+        //public int LocationId { get; set; }
+        //[ForeignKey("LocationLevel")]
+        //public int? LocationLevelId { get; set; }
+        //public virtual BroadcastLevel LocationLevel { get; set; }
 
+  
+        [ForeignKey("Town")]
+        public int? TownId { get; set; }
+        public virtual Town CustomerTown { get; set; }
+
+        //Subscription
+
+        [ForeignKey("Subscription")]
+        public int? SubscriptionId { get; set; }
+        public virtual Subscription Subscription { get; set; }
         //State
         //[ForeignKey("State")]
         //public int StateId { get; set; }

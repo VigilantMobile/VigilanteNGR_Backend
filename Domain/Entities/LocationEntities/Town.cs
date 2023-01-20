@@ -23,7 +23,7 @@ namespace Domain.Entities.LocationEntities
         public string NPFPhone { get; set; }
 
         //Customers
-        //public virtual ICollection<ApplicationUser> Customers { get; set; }
+        public virtual ICollection<ApplicationUser> TownResidents { get; set; }
 
         // VGNGA Users
         public virtual ICollection<ApplicationUser> VGNGATownStaff { get; set; }

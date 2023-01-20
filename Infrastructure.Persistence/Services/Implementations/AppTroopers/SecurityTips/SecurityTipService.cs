@@ -238,8 +238,8 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                                               SecurityTipCategory = category.CategoryName,
                                               BroadcastLevelId = securityTip.BroadcastLevelId,
                                               BroadcastLocationId = securityTip.LocationId,
-                                              BroadcasterLocationLevelId = (int)broadcaster.LocationLevelId,
-                                              BroadcasterLocationId = broadcaster.LocationId,
+                                              BroadcasterLocationLevelId = (int)broadcaster.TownId,
+                                              BroadcasterLocationId = (int)broadcaster.TownId,
                                          }).FirstOrDefaultAsync();
 
                 //Get Tip Broadcast Location
@@ -290,8 +290,8 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                                              SecurityTipCategory = category.CategoryName,
                                              BroadcastLevelId = securityTip.BroadcastLevelId,
                                              BroadcastLocationId = securityTip.LocationId,
-                                             BroadcasterLocationLevelId = (int)broadcaster.LocationLevelId,
-                                             BroadcasterLocationId = broadcaster.LocationId,
+                                             BroadcasterLocationLevelId = (int)broadcaster.TownId,
+                                             BroadcasterLocationId = (int)broadcaster.TownId,
                                          }).Skip((pageNumber - 1) * pageSize)
                                          .Take(pageSize)
                                          .AsNoTracking()
@@ -352,8 +352,8 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                                                   SecurityTipCategory = category.CategoryName,
                                                   BroadcastLevelId = securityTip.BroadcastLevelId,
                                                   BroadcastLocationId = securityTip.LocationId,
-                                                  BroadcasterLocationLevelId = (int)broadcaster.LocationLevelId,
-                                                  BroadcasterLocationId = broadcaster.LocationId,
+                                                  BroadcasterLocationLevelId = (int)broadcaster.TownId,
+                                                  BroadcasterLocationId = (int)broadcaster.TownId,
                                               }).Skip((pageNumber - 1) * pageSize)
                                          .Take(pageSize)
                                          .AsNoTracking()
@@ -414,8 +414,8 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                                                   SecurityTipCategory = category.CategoryName,
                                                   BroadcastLevelId = securityTip.BroadcastLevelId,
                                                   BroadcastLocationId = securityTip.LocationId,
-                                                  BroadcasterLocationLevelId = (int)broadcaster.LocationLevelId,
-                                                  BroadcasterLocationId = broadcaster.LocationId,
+                                                  BroadcasterLocationLevelId = (int)broadcaster.TownId,
+                                                  BroadcasterLocationId = (int)broadcaster.TownId,
                                               }).Skip((pageNumber - 1) * pageSize)
                                          .Take(pageSize)
                                          .AsNoTracking()
@@ -476,8 +476,8 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                                                   SecurityTipCategory = category.CategoryName,
                                                   BroadcastLevelId = securityTip.BroadcastLevelId,
                                                   BroadcastLocationId = securityTip.LocationId,
-                                                  BroadcasterLocationLevelId = (int)broadcaster.LocationLevelId,
-                                                  BroadcasterLocationId = broadcaster.LocationId,
+                                                  BroadcasterLocationLevelId = (int)broadcaster.TownId,
+                                                  BroadcasterLocationId = (int)broadcaster.TownId,
                                               }).Skip((pageNumber - 1) * pageSize)
                                          .Take(pageSize)
                                          .AsNoTracking()

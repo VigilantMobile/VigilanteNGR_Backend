@@ -15,7 +15,6 @@ namespace Application.DTOs.Account
         [EmailAddress]
         public string Email { get; set; }
 
-
         [RegularExpression(@"^([0-9]{11})$", ErrorMessage = "Invalid Mobile Number. Phone number must be 11 characters.")]
         public string PhoneNumber { get; set; }
 
@@ -25,15 +24,11 @@ namespace Application.DTOs.Account
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
 
-        public int StateId { get; set; }
 
         [Required]
-        public int LGAId { get; set; }
-
         public int TownId { get; set; }
 
         public int SettlementId { get; set; }
-
     }
 
     public class StaffRegisterRequest

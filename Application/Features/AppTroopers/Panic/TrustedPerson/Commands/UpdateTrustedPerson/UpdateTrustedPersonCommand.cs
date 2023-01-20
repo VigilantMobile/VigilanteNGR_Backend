@@ -14,8 +14,10 @@ namespace Application.Features.AppTroopers.Panic.Commands.UpdateTrustedPerson
     {
         public int UserId { get; set; }
         public string FullName { get; set; }
+        public string FullAddress { get; set; }
         public string EmailAddress { get; set; }
         public string PhoneNumber { get; set; }
+        public string Gender { get; set; }
 
         public class UpdateTrustedPersonCommandHandler : IRequestHandler<UpdateTrustedPersonCommand, Response<TrustedPerson>>
         {

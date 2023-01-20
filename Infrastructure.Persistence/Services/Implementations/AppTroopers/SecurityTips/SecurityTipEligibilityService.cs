@@ -50,7 +50,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
             _geocodingService = geocodingService;
         }
 
-        public async Task<CreateSecurityTipEligibilityResponse> GetSecurityTipPostEligibility(string CustomerId, int PostLocationId, int PostLocationLevel, int alertLevelId, string currentLocationCoordinates)
+        public async Task<CreateSecurityTipEligibilityResponse> GetSecurityTipPostEligibility(string CustomerId, int IncidentLocationId, int BroadcastLevel, int alertLevelId, string currentLocationCoordinates)
         {
 
             CreateSecurityTipEligibilityResponse createSecurityTipEligibilityResponse = new CreateSecurityTipEligibilityResponse();
@@ -58,10 +58,8 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
            try
            {
                 // Customer Live location 
-
                 
                 var customerLiveLocation = await _geocodingService.GetCustomerLiveAddresses(currentLocationCoordinates);
-
 
                 var alertLevel = await _alertLevelRespositoryAsync.GetByIdAsync(alertLevelId);
 
@@ -72,194 +70,73 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                 //1. Determine if that location is customer's location
 
                 //If customer is not in specified location live: 
-                var customerLocationandLevel = (from customer in _context.Users
-                                             join loclevel in _context.BroadcastLevels on customer.LocationLevelId equals loclevel.Id
+                var customerRegisteredLocation = (from customer in _context.Users
+                                             join town in _context.Towns on customer.TownId equals town.Id
+                                             join lga in _context.LGAs on town.LGAId equals lga.Id
+                                             join state in _context.States on lga.StateId equals state.Id
+
                                              select new
                                              {
-                                                 LocationId = customer.LocationId,
-                                                 LocationLevelId = customer.LocationLevelId,
-                                                 LocationLevel = loclevel.broadcastLevel.ToString()
+                                                 TownId = customer.TownId,
+                                                 TownName = town.Name,
+                                                 LGAId = lga.Id,
+                                                 LGAName = lga.Name,
+                                                 StateId = state.Id,
+                                                 StateName = state.Name,
                                              }).FirstOrDefault();
 
+                var IncidentLocation = (from incidentTown in _context.Towns
+                                                  join incidentLga in _context.LGAs on incidentTown.LGAId equals incidentLga.Id
+                                                  join incidentState in _context.States on incidentLga.StateId equals incidentState.Id
 
+                                                  select new
+                                                  {
+                                                      TownId = incidentTown.Id,
+                                                      TownName = incidentTown.Name,
+                                                      LGAId = incidentLga.Id,
+                                                      LGAName = incidentLga.Name,
+                                                      StateId = incidentState.Id,
+                                                      StateName = incidentState.Name,
+                                                  }).FirstOrDefault();
 
-                if (PostLocationLevel == 1) //proposed location is state
+                if (customerRegisteredLocation.TownId == IncidentLocation.TownId) // 
                 {
-                    CanImmediatelyBroadcast = false; //categorically
-
-
-                    if ((customerLocationandLevel.LocationLevel == BroadcastLevelEnum.State.ToString()))
-                    {
-                        var customerState = await _stateRepositoryAsync.GetByIdAsync(customerLocationandLevel.LocationId);
-                        //check eligibility for specific state
-                        if (customerLocationandLevel.LocationId == PostLocationId) // check if customer is registered with state
-                        {
-                            canPostTip = true;
-                        }
-                        else if (customerLiveLocation.Data?.StateName == customerState.Name) //customer live location is in state
-                        {
-                            canPostTip = true;
-                        }
-                        else
-                        {
-                            canPostTip = false;
-                            createSecurityTipEligibilityResponse.FailureReason = $"Oops, tip could not be created: To post a tip for {customerState.Name} state, it must either be your registered state or your live location.";
-                        }
-                    }
-                    else if (customerLocationandLevel.LocationLevel == BroadcastLevelEnum.LGA.ToString())
-                    {
-                        CanImmediatelyBroadcast = false;
-                        var customerLGAWithState = await _lGARepositoryAsync.GetLGAWithStateAsync(customerLocationandLevel.LocationId);
-                        if (customerLGAWithState.State.Id == PostLocationId) //check if customer lga is in state
-                        {
-                            canPostTip = true;
-                        }
-                        else if (customerLiveLocation.Data?.LGAName == customerLGAWithState.Name) //customer is in state
-                        {
-                            canPostTip = true;
-                        }
-                        else
-                        {
-                            canPostTip = false;
-                            createSecurityTipEligibilityResponse.FailureReason = $"Oops, tip could not be created: To post this tip, the LGA must be in your registered state or your live location.";
-
-                        }
-
-                        if (canPostTip)
-                        {
-                            EscalationRequested = true;
-                        }
-                    }
-
-                    else if (customerLocationandLevel.LocationLevel == BroadcastLevelEnum.Town.ToString())
-                    {
-
-                        var customerTownWithState = await _townRepositoryAsync.GetTownStateAsync(customerLocationandLevel.LocationId); //check if town is in state
-                        if (customerTownWithState.Id == PostLocationId)
-                        {
-                            canPostTip = true;
-                        }
-                        else if (customerTownWithState.Name.Contains(customerLiveLocation.Data.DistrictName)) //customer is in state
-                        {
-                            canPostTip = true;
-                        }
-                        else
-                        {
-                            canPostTip = false;
-                            canPostTip = false;
-                            createSecurityTipEligibilityResponse.FailureReason = $"Oops, tip could not be created: To post this tip, the district must be in your registered state or your live location.";
-                        }
-
-                        if (canPostTip)
-                        {
-                            EscalationRequested = true;
-                        }
-                    }
-                }
-                else if (PostLocationLevel == 2) //Post location is LGA
-                {
-                    CanImmediatelyBroadcast = false; //categorically
-
-                    if ((customerLocationandLevel.LocationLevel == BroadcastLevelEnum.State.ToString())) //Customer Location level is state
-                    {
-
-                        //check eligibility for specific lga
-                        if (currentLocationCoordinates != null)
-                        {
-                            canPostTip = true;
-                        }
-                        else
-                        {
-                            canPostTip = false;
-                            createSecurityTipEligibilityResponse.FailureReason = $"Oops, tip could not be created: To post a tip for this district it must be your live location.";
-                        }
-                    }
-                    else if (customerLocationandLevel.LocationLevel == BroadcastLevelEnum.LGA.ToString())
-                    {
-                        if (customerLocationandLevel.LocationId == PostLocationId) // customer post location lga is same as customer registered lga.
-                        {
-                            canPostTip = true;
-                        }
-
-                        else if (currentLocationCoordinates != null) //customer is in state
-                        {
-                            canPostTip = true;
-                        }
-                        else
-                        {
-                            canPostTip = false;
-                            createSecurityTipEligibilityResponse.FailureReason = $"Oops, tip could not be created: To post this tip, the lga must be your registered lga or your live location.";
-
-                        }
-                    }
-
-                    else if (customerLocationandLevel.LocationLevel == BroadcastLevelEnum.Town.ToString())
-                    {
-                        var customerTownWithLGA = await _townRepositoryAsync.GetTownWithLGAAsync(customerLocationandLevel.LocationId); //check if town is in state
-                        if (customerTownWithLGA.Id == PostLocationId)
-                        {
-                            canPostTip = true;
-                        }
-                        else if (currentLocationCoordinates != null) //customer town is not in lga
-                        {
-                            canPostTip = true;
-                        }
-                        else
-                        {
-                            canPostTip = false;
-                            createSecurityTipEligibilityResponse.FailureReason = $"Oops, tip could not be created: To post this tip, the district must be in your registered lga or your live location.";
-                        }
-
-                        if (canPostTip)
-                        {
-                            EscalationRequested = true;
-                        }
-                    }
+                    canPostTip = true;
                 }
 
-                else if (PostLocationLevel == 3) //Post location is Town
+                else if (customerLiveLocation.Data?.DistrictName == IncidentLocation.TownName) //customer live location is in state
                 {
-                    if ((customerLocationandLevel.LocationLevel == BroadcastLevelEnum.State.ToString()) || (customerLocationandLevel.LocationLevel == BroadcastLevelEnum.LGA.ToString()))
-                    {
-                        if (currentLocationCoordinates != null) //customer not in specified town
-                        {
-                            canPostTip = true;
-                        }
-                        else
-                        {
-                            canPostTip = false;
-                            createSecurityTipEligibilityResponse.FailureReason = $"Oops, tip could not be created: To post this tip, the district must be your live location.";
+                    canPostTip = true;
+                }
 
-                        }
+                else
+                {
+                    canPostTip = false;
+                    createSecurityTipEligibilityResponse.FailureReason = $"Oops, tip could not be created: To post a tip for {customerRegisteredLocation.StateName} state, it must either be your registered state or your live location.";
+                }
+
+                if (canPostTip)
+                {
+                    if (BroadcastLevel == 1) //proposed post location level is state /
+                    {
+                        EscalationRequested = true;
+                    }
+                    else if (BroadcastLevel == 2) //Post location is LGA
+                    {
+                        EscalationRequested = true;
                     }
 
-                    else if (customerLocationandLevel.LocationLevel == BroadcastLevelEnum.Town.ToString())
-                    {
+                    ////Alert Levels
+                    //if (alertLevel.alertLevel == AlertLevelEnum.Critical)
+                    //{
+                    //    CanImmediatelyBroadcast = true;
+                    //}
 
-                        if (customerLocationandLevel.LocationId == PostLocationId) // customer post location lga is same as customer registered lga.
-                        {
-                            canPostTip = true;
-                        }
-                        else if (currentLocationCoordinates != null) //customer town is not in lga
-                        {
-                            canPostTip = true;
-                        }
-                        else
-                        {
-                            canPostTip = false;
-                            createSecurityTipEligibilityResponse.FailureReason = $"Oops, tip could not be created: To post this tip, the district must be your registered district or your live location.";
-
-                        }
-
-                        if (canPostTip)
-                        {
-                            if (alertLevel.alertLevel == AlertLevelEnum.Critical)
-                            {
-                                CanImmediatelyBroadcast = true;
-                            }
-
-                        }
-                    }
+                }
+                else
+                {
+                    canPostTip = false;
+                    createSecurityTipEligibilityResponse.FailureReason = $"Oops, tip could not be created: security tips can only be posted for your registered location or live location.";
                 }
 
                 createSecurityTipEligibilityResponse.CanPostTip = canPostTip;
@@ -274,9 +151,5 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                 return createSecurityTipEligibilityResponse;
            }
         }
-
-
-
-
     }
 }

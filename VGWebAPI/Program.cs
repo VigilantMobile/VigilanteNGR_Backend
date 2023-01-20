@@ -11,7 +11,6 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Azure.Identity;
-using Domain.Entities.Identity;
 using Infrastructure.Persistence.Helpers;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
@@ -62,7 +61,6 @@ namespace VGWebAPI
                         await Infrastructure.Persistence.Seeds.DefaultBasicUser.SeedAsync(userManager, roleManager);
                         await Infrastructure.Persistence.Seeds.DefaultSuperAdmin.SeedAsync(userManager, roleManager);
                     }
-
 
                     //Seed Default Entities
 

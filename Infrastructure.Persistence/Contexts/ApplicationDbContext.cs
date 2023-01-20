@@ -5,6 +5,7 @@ using Domain.Entities.AppTroopers.Curfew;
 using Domain.Entities.AppTroopers.Missing;
 using Domain.Entities.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.SecurityTips;
+using Domain.Entities.AppTroopers.Subscription;
 using Domain.Entities.AppTroopers.Wanted;
 using Domain.Entities.CompanyEntities;
 using Domain.Entities.Identity;
@@ -94,6 +95,9 @@ namespace Infrastructure.Persistence.Contexts
         //Comments
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentFlags> CommentFlags { get; set; }
+
+        //Subscriptions
+        public DbSet<Subscription> Subscriptions { get; set; }
 
         //Test
         public DbSet<Product> Products { get; set; }
@@ -330,8 +334,13 @@ namespace Infrastructure.Persistence.Contexts
 
             //BroadcastLevel
 
-            builder.Entity<BroadcastLevel>().HasMany(s => s.Customers)
-             .WithOne(g => g.LocationLevel).HasForeignKey(s => s.LocationLevelId).OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Town>().HasMany(s => s.TownResidents)
+             .WithOne(g => g.CustomerTown).HasForeignKey(s => s.TownId).OnDelete(DeleteBehavior.Restrict);
+
+            //Subscription
+
+            //builder.Entity<Subscription>().HasMany(s => s.SubscribedUsers)
+            // .WithOne(g => g.Subscription).HasForeignKey(s => s.SubscriptionId).OnDelete(DeleteBehavior.Restrict);
 
             //Comments
             builder.Entity<Comment>().HasMany(s => s.CommentFlags)

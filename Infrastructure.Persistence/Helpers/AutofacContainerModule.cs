@@ -2,6 +2,7 @@
 using Application.Services.Interfaces.UserProfile;
 using Autofac;
 using Infrastructure.Persistence.Services;
+using Infrastructure.Shared.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,8 @@ namespace Infrastructure.Persistence.Helpers
             .As<IAutoDependencyService>()
             .AsImplementedInterfaces().InstancePerLifetimeScope();
 
-            //builder.RegisterType<ICustomerProfileService>().As<CustomerProfileService>()
-            //   .InstancePerLifetimeScope();
+            builder.RegisterType<MailgunEmailService>().As<IMailgunEmailService>();
+            //builder.RegisterType<MailgunEmailService>().As<IMailgunEmailService>().InstancePerLifetimeScope();
         }
     }
 }

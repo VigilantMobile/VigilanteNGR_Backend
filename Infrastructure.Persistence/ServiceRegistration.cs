@@ -50,8 +50,8 @@ namespace Infrastructure.Persistence
                 opt.Password.RequireDigit = false;
                 opt.Password.RequireUppercase = false;
                 opt.User.RequireUniqueEmail = true;
-                opt.SignIn.RequireConfirmedEmail = true;
-                opt.SignIn.RequireConfirmedPhoneNumber = false;
+                opt.SignIn.RequireConfirmedEmail = false;
+                opt.SignIn.RequireConfirmedPhoneNumber = true;
 
             })
             .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();

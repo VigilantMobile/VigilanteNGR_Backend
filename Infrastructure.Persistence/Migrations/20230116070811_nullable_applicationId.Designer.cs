@@ -4,6 +4,7 @@ using Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,10 @@ using NetTopologySuite.Geometries;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230116070811_nullable_applicationId")]
+    partial class nullable_applicationId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -504,13 +506,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FullAddress")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("FullName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModified")
@@ -1334,7 +1330,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int?>("SubscriptionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TownId")
+                    b.Property<int>("TownId")
                         .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -2253,16 +2249,17 @@ namespace Infrastructure.Persistence.Migrations
                         .WithMany("SubscribedUsers")
                         .HasForeignKey("SubscriptionId");
 
-                    b.HasOne("Domain.Entities.LocationEntities.Town", "CustomerTown")
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "Town")
                         .WithMany("TownResidents")
                         .HasForeignKey("TownId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("CustomerTown");
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Department");
 
                     b.Navigation("Subscription");
+
+                    b.Navigation("Town");
                 });
 
             modelBuilder.Entity("Domain.Entities.LocationEntities.LGA", b =>

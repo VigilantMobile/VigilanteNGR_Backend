@@ -60,7 +60,7 @@ namespace Infrastructure.Persistence.Services
                 //var customer = await _userManager.FindByIdAsync(CustomerId);
 
                 var customerandLocation = (from customer in _context.Users
-                                           join loclevel in _context.BroadcastLevels on customer.LocationLevelId equals loclevel.Id
+                                           join loclevel in _context.BroadcastLevels on customer.TownId equals loclevel.Id
                                            select new
                                            {
                                              LocationLevel = loclevel.broadcastLevel.ToString()
@@ -70,7 +70,7 @@ namespace Infrastructure.Persistence.Services
                 if (customerandLocation.LocationLevel == BroadcastLevelEnum.Town.ToString())
                 {
                     customerProfile = (from customer in _context.Users
-                                           join town in _context.Towns on customer.LocationId equals town.Id
+                                           join town in _context.Towns on customer.TownId equals town.Id
                                            join lga in _context.LGAs on town.LGAId equals lga.Id
                                            join state in _context.States on lga.StateId equals state.Id
                                            where customer.Id == CustomerId
@@ -104,7 +104,7 @@ namespace Infrastructure.Persistence.Services
                 else if (customerandLocation.LocationLevel == BroadcastLevelEnum.LGA.ToString())
                 {
                     customerProfile = (from customer in _context.Users
-                                       join lga in _context.LGAs on customer.LocationId equals lga.Id
+                                       join lga in _context.LGAs on customer.TownId equals lga.Id
                                        join state in _context.States on lga.StateId equals state.Id
                                        where customer.Id == CustomerId
                                        select new CustomerProfileVM()
@@ -131,7 +131,7 @@ namespace Infrastructure.Persistence.Services
                 else if (customerandLocation.LocationLevel == BroadcastLevelEnum.State.ToString())
                 {
                     customerProfile = (from customer in _context.Users
-                                       join state in _context.States on customer.LocationId equals state.Id
+                                       join state in _context.States on customer.TownId equals state.Id
                                        where customer.Id == CustomerId
                                        select new CustomerProfileVM()
                                        {
