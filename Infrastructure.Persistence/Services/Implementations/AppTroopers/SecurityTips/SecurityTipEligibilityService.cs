@@ -29,6 +29,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
         private readonly IStateRepositoryAsync _stateRepositoryAsync;
         private readonly ITownRepositoryAsync _townRepositoryAsync;
         private readonly IAlertLevelRespositoryAsync _alertLevelRespositoryAsync;
+        private readonly IBroadcastLevelRespositoryAsync _broadcastLevelRespositoryAsync;
         private readonly IGeoCodingService _geocodingService;
 
         private readonly ILogger _logger;
@@ -37,6 +38,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
         IStateRepositoryAsync stateRepositoryAsync,
         ILGARepositoryAsync lGARepositoryAsync,
         IAlertLevelRespositoryAsync alertLevelRespositoryAsync,
+        IBroadcastLevelRespositoryAsync broadcastLevelRespositoryAsync,
         ITownRepositoryAsync townRepositoryAsync,
         IGeoCodingService geocodingService,ILogger logger)
         {
@@ -47,81 +49,83 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
             _stateRepositoryAsync = stateRepositoryAsync;
             _townRepositoryAsync = townRepositoryAsync; 
             _alertLevelRespositoryAsync = alertLevelRespositoryAsync;
+            _broadcastLevelRespositoryAsync = broadcastLevelRespositoryAsync;
             _geocodingService = geocodingService;
         }
 
-        public async Task<CreateSecurityTipEligibilityResponse> GetSecurityTipPostEligibility(string CustomerId, int IncidentLocationId, int BroadcastLevel, int alertLevelId, string currentLocationCoordinates)
+        public async Task<CreateSecurityTipEligibilityResponse> GetSecurityTipPostEligibility(string CustomerId, string BroadcastLevelId, string alertLevelId, string currentLocationCoordinates, string IncidentLocationId = null) //Add Post Type Filter parameter for registered loc or live loc
         {
 
-            CreateSecurityTipEligibilityResponse createSecurityTipEligibilityResponse = new CreateSecurityTipEligibilityResponse();
+           CreateSecurityTipEligibilityResponse createSecurityTipEligibilityResponse = new CreateSecurityTipEligibilityResponse();
 
            try
            {
-                // Customer Live location 
-                
                 var customerLiveLocation = await _geocodingService.GetCustomerLiveAddresses(currentLocationCoordinates);
-
                 var alertLevel = await _alertLevelRespositoryAsync.GetByIdAsync(alertLevelId);
-
+                var broadcastLevel = await _broadcastLevelRespositoryAsync.GetByIdAsync(BroadcastLevelId);
                 bool CanImmediatelyBroadcast = false;
                 bool canPostTip = false;
                 bool EscalationRequested = false;
 
-                //1. Determine if that location is customer's location
-
-                //If customer is not in specified location live: 
-                var customerRegisteredLocation = (from customer in _context.Users
-                                             join town in _context.Towns on customer.TownId equals town.Id
-                                             join lga in _context.LGAs on town.LGAId equals lga.Id
-                                             join state in _context.States on lga.StateId equals state.Id
-
-                                             select new
-                                             {
-                                                 TownId = customer.TownId,
-                                                 TownName = town.Name,
-                                                 LGAId = lga.Id,
-                                                 LGAName = lga.Name,
-                                                 StateId = state.Id,
-                                                 StateName = state.Name,
-                                             }).FirstOrDefault();
-
                 var IncidentLocation = (from incidentTown in _context.Towns
-                                                  join incidentLga in _context.LGAs on incidentTown.LGAId equals incidentLga.Id
-                                                  join incidentState in _context.States on incidentLga.StateId equals incidentState.Id
+                                        join incidentLga in _context.LGAs on incidentTown.LGAId equals incidentLga.Id
+                                        join incidentState in _context.States on incidentLga.StateId equals incidentState.Id
 
-                                                  select new
-                                                  {
-                                                      TownId = incidentTown.Id,
-                                                      TownName = incidentTown.Name,
-                                                      LGAId = incidentLga.Id,
-                                                      LGAName = incidentLga.Name,
-                                                      StateId = incidentState.Id,
-                                                      StateName = incidentState.Name,
-                                                  }).FirstOrDefault();
+                                        select new
+                                        {
+                                            TownId = incidentTown.Id,
+                                            TownName = incidentTown.Name,
+                                            LGAId = incidentLga.Id,
+                                            LGAName = incidentLga.Name,
+                                            StateId = incidentState.Id,
+                                            StateName = incidentState.Name,
+                                        }).FirstOrDefault();
 
-                if (customerRegisteredLocation.TownId == IncidentLocation.TownId) // 
+                if (!string.IsNullOrEmpty(IncidentLocationId))
                 {
-                    canPostTip = true;
-                }
+                    var customerRegisteredLocation = (from customer in _context.Users
+                                                      join town in _context.Towns on customer.TownId equals town.Id
+                                                      join lga in _context.LGAs on town.LGAId equals lga.Id
+                                                      join state in _context.States on lga.StateId equals state.Id
 
-                else if (customerLiveLocation.Data?.DistrictName == IncidentLocation.TownName) //customer live location is in state
-                {
-                    canPostTip = true;
-                }
+                                                      select new
+                                                      {
+                                                          TownId = customer.TownId,
+                                                          TownName = town.Name,
+                                                          LGAId = lga.Id.ToString(),
+                                                          LGAName = lga.Name,
+                                                          StateId = state.Id.ToString(),
+                                                          StateName = state.Name,
+                                                      }).FirstOrDefault();
 
-                else
-                {
-                    canPostTip = false;
-                    createSecurityTipEligibilityResponse.FailureReason = $"Oops, tip could not be created: To post a tip for {customerRegisteredLocation.StateName} state, it must either be your registered state or your live location.";
+                   
+
+                    if (customerRegisteredLocation.TownId == IncidentLocation.TownId) // 
+                    {
+                        canPostTip = true;
+                    }
+                    else
+                    {
+                        canPostTip = false;
+                        createSecurityTipEligibilityResponse.FailureReason = $"Oops, tip could not be created: To post a tip for this location, it must either be your registered state or your live location.";
+                    }
                 }
+                else //Live Location Post
+                {
+                    if (customerLiveLocation.Data?.DistrictName == IncidentLocation.TownName) //Check for 90% Match...   //customer live location is in state
+                    {
+                        canPostTip = true;
+                    }
+                    else
+                    {
+                        canPostTip = false;
+                        createSecurityTipEligibilityResponse.FailureReason = $"Oops, tip could not be created: To post a tip for this location, it must either be your registered state or your live location.";
+                    }
+                }    
 
                 if (canPostTip)
                 {
-                    if (BroadcastLevel == 1) //proposed post location level is state /
-                    {
-                        EscalationRequested = true;
-                    }
-                    else if (BroadcastLevel == 2) //Post location is LGA
+                    if (broadcastLevel.broadcastLevel == BroadcastLevelEnum.State || broadcastLevel.broadcastLevel == BroadcastLevelEnum.State) //Broadcast Location is LGA or State
                     {
                         EscalationRequested = true;
                     }

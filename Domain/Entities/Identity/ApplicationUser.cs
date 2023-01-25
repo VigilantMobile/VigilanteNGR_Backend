@@ -37,13 +37,13 @@ namespace Domain.Entities.Identity
 
   
         [ForeignKey("Town")]
-        public int? TownId { get; set; }
+        public Guid? TownId { get; set; }
         public virtual Town CustomerTown { get; set; }
 
         //Subscription
 
         [ForeignKey("Subscription")]
-        public int? SubscriptionId { get; set; }
+        public Guid? SubscriptionId { get; set; }
         public virtual Subscription Subscription { get; set; }
         //State
         //[ForeignKey("State")]
@@ -74,7 +74,7 @@ namespace Domain.Entities.Identity
         // VGNGA Staff Fields //
 
         [ForeignKey("Department")]
-        public int? DepartmentId { get; set; }
+        public Guid? DepartmentId { get; set; }
         public virtual Department Department { get; set; }
 
         public string StaffId { get; set; }

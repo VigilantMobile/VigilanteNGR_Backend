@@ -31,12 +31,12 @@ namespace Domain.Entities.AppTroopers.Missing
 
 
         [ForeignKey("Town")]
-        public int? TownId { get; set; }
+        public Guid? TownId { get; set; }
         public virtual Town Town { get; set; }
 
 
         [ForeignKey("Settlement")]
-        public int SettlementId { get; set; }
+        public Guid SettlementId { get; set; }
         public virtual Settlement Settlement { get; set; }
 
         //Admin Authorization
@@ -52,7 +52,7 @@ namespace Domain.Entities.AppTroopers.Missing
         public virtual ApplicationUser VGNGAStaff { get; set; }
 
         [ForeignKey("BroadcastLevel")]
-        public int BroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
+        public Guid BroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
         public virtual BroadcastLevel BroadcastLevel { get; set; }
     }
 }

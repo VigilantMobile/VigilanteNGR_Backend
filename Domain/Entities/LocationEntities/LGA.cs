@@ -2,6 +2,7 @@
 using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.Identity;
 using NetTopologySuite.Geometries;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,7 +16,7 @@ namespace Domain.Entities.LocationEntities
 
         [Required]
         [ForeignKey("State")]
-        public int StateId { get; set; }
+        public Guid StateId { get; set; }
         public virtual State State { get; set; }
 
 

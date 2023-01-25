@@ -11,6 +11,6 @@ namespace Application.Services.Interfaces.AppTroopers.SecurityTips
 {
     public interface ISecurityTipEligibilityService : IAutoDependencyService
     {
-        Task<CreateSecurityTipEligibilityResponse> GetSecurityTipPostEligibility(string CustomerId, int PostLocationId, int PostLocationLevel, int alertLevelId, string currentLocationCoordinates);
+        Task<CreateSecurityTipEligibilityResponse> GetSecurityTipPostEligibility(string CustomerId, string BroadcastLevel, string alertLevelId, string currentLocationCoordinates, string IncidentLocationId = null);
     }
 }

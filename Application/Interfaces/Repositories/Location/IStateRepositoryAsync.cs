@@ -13,6 +13,6 @@ namespace Application.Interfaces.Repositories.Location
     {
         //Task<bool> IsUniqueLGAinState(int StateId, string LGAName);
         //Task<LGA> GetLGAWithStateAsync(int LGAid);
-        Task<List<LGA>> GetLGAsinStateAsync(int StateId);
+        Task<List<LGA>> GetLGAsinStateAsync(string StateId);
     }
 }

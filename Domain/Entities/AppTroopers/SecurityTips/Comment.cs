@@ -19,7 +19,7 @@ namespace Domain.Entities.AppTroopers.SecurityTips
 
         //Tip Status
         [ForeignKey("SecurityTip")]
-        public int SecurityTipId { get; set; }
+        public Guid SecurityTipId { get; set; }
         public virtual SecurityTip SecurityTip { get; set; }
 
         //broadcaster

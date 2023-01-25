@@ -25,16 +25,16 @@ namespace Infrastructure.Persistence.Repositories.Location
             _lga = dbContext.Set<LGA>();
         }
        
-        public async Task<LGA> GetLGAWithStateAsync(int id)
+        public async Task<LGA> GetLGAWithStateAsync(string id)
         {
             return await
-            _lga.Where(x => x.Id == id).Include(l => l.State).FirstOrDefaultAsync();
+            _lga.Where(x => x.Id == Guid.Parse(id)).Include(l => l.State).FirstOrDefaultAsync();
         }
 
-        public async Task<List<LGA>> GetLGAsinStateAsync(int StateId)
+        public async Task<List<LGA>> GetLGAsinStateAsync(string StateId)
         {
             return await
-            _lga.Where(x => x.StateId == StateId).ToListAsync();
+            _lga.Where(x => x.StateId == Guid.Parse(StateId)).ToListAsync();
         }
     }
 }

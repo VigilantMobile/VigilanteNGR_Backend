@@ -26,9 +26,9 @@ namespace Application.DTOs.Account
 
 
         [Required]
-        public int TownId { get; set; }
+        public string TownId { get; set; }
 
-        public int SettlementId { get; set; }
+        public string SettlementId { get; set; }
     }
 
     public class StaffRegisterRequest

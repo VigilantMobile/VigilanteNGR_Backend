@@ -15,7 +15,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
 {
     public class GetStateLevelSecurityTipsByIdQuery : IRequest<Response<GetSecurityTipsListResponse>>
     {
-        public int StateId { get; set; }
+        public string StateId { get; set; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
         public class GetStateLevelSecurityTipsByIdQueryHandler : IRequestHandler<GetStateLevelSecurityTipsByIdQuery, Response<GetSecurityTipsListResponse>>
@@ -34,7 +34,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
                 var validFilter = _mapper.Map<GetSecurityTipsListQueryParameter>(query);
                 var SecurityTipsForState = await _securityTipService.GetSecurityTipsForState(query.StateId, validFilter.PageNumber, validFilter.PageSize);
                 if (SecurityTipsForState == null) throw new ApiException($"No security tips found for the specified state.");
-                return new Response<GetSecurityTipsListResponse>(SecurityTipsForState, $"Security tip retrieval for {SecurityTipsForState.SecurityTipsList.First().BroadcasterLocation} state successful");
+                return new Response<GetSecurityTipsListResponse>(SecurityTipsForState, $"Security tip retrieval for {SecurityTipsForState.SecurityTipsList.First().BroadcasterFullLocation} state successful");
             }
         }
     }

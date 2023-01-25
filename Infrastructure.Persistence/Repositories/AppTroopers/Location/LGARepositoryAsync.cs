@@ -3,6 +3,7 @@ using Domain.Entities.LocationEntities;
 using Infrastructure.Persistence.Contexts;
 using Infrastructure.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,16 +21,16 @@ namespace Infrastructure.Persistence.Repositories.Location
             _lga = dbContext.Set<LGA>();
         }
 
-        public async Task<LGA> GetLGAWithStateAsync(int id)
+        public async Task<LGA> GetLGAWithStateAsync(string LGAid)
         {
             return await
-            _lga.Where(x => x.Id == id).Include(l => l.State).FirstOrDefaultAsync();
+            _lga.Where(x => x.Id == Guid.Parse(LGAid)).Include(l => l.State).FirstOrDefaultAsync();
         }
 
-        public async Task<List<Town>> GetDistrictsinLGAAsync(int LGAid)
+        public async Task<List<Town>> GetDistrictsinLGAAsync(string LGAid)
         {
             return await
-            _context.Towns.Where(x => x.LGAId == LGAid).ToListAsync();
+            _context.Towns.Where(x => x.LGAId == Guid.Parse(LGAid)).ToListAsync();
         }
     }
 }

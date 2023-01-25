@@ -14,14 +14,14 @@ namespace Domain.Entities.AppTroopers.SecurityTips
     public class EscalatedTip : AuditableBaseEntity
     {
         [ForeignKey("SecurityTip")]
-        public int SecurityTipId { get; set; }
+        public Guid SecurityTipId { get; set; }
         public virtual SecurityTip SecurityTip { get; set; }
 
-        public int EscalationLocationId { get; set; } //No FK
+        public string EscalationLocationId { get; set; } //No FK
 
         [Required]
         [ForeignKey("EscalationBroadcastLevel")]
-        public int EscalationBroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
+        public Guid EscalationBroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
         public virtual BroadcastLevel EscalationBroadcastLevel { get; set; }
 
         [ForeignKey("EscalationAuthorizer")]

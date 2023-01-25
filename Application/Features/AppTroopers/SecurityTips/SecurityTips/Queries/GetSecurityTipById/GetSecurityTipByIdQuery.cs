@@ -10,7 +10,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Queries
 {
     public class GetSecurityTipByIdQuery : IRequest<Response<GetSecurityTipResponse>>
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public class GetSecurityTipByIdQueryHandler : IRequestHandler<GetSecurityTipByIdQuery, Response<GetSecurityTipResponse>>
         {
             private readonly ISecurityTipService _securityTipService;

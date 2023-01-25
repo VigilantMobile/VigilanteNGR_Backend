@@ -28,22 +28,22 @@ namespace Domain.Entities.AppTroopers.Curfew
         public bool IsAuthorized { get; set; }
         //State
         [ForeignKey("State")]
-        public int? StateId { get; set; }
+        public Guid? StateId { get; set; }
         public virtual State State { get; set; }
 
         //LGA
         [ForeignKey("LGA")]
-        public int? LGAId { get; set; }
+        public Guid? LGAId { get; set; }
         public virtual LGA LGA { get; set; }
 
         //Town
         [ForeignKey("Town")]
-        public int? TownId { get; set; }
+        public Guid? TownId { get; set; }
         public virtual Town Town { get; set; }
 
         //Settlement
         [ForeignKey("Settlement")]
-        public int? SettlementId { get; set; }
+        public Guid? SettlementId { get; set; }
 
         public virtual Settlement Settlement { get; set; }
     }

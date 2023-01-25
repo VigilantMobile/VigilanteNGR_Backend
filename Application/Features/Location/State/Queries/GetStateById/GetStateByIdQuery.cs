@@ -18,7 +18,7 @@ namespace Application.Features.Location
 {
     public class GetStateByIdQuery : IRequest<Response<GetStateViewModel>>
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public class GetLGAByIdQueryHandler : IRequestHandler<GetStateByIdQuery, Response<GetStateViewModel>>
         {
             private readonly IStateRepositoryAsync _stateRepositoryAsync;

@@ -23,19 +23,19 @@ namespace VGWebAPI.Controllers.v1
         }
 
         [HttpGet("state-security-tips/{StateId}")]
-        public async Task<IActionResult> GetStateSecurityTips(int StateId, [FromQuery] GetSecurityTipsListQueryParameter filter)
+        public async Task<IActionResult> GetStateSecurityTips(string StateId, [FromQuery] GetSecurityTipsListQueryParameter filter)
         {
             return Ok(await Mediator.Send(new GetStateLevelSecurityTipsByIdQuery { StateId = StateId, PageNumber = filter.PageNumber, PageSize = filter.PageSize }));
         }
 
         [HttpGet("lga-security-tips/{LGAId}")]
-        public async Task<IActionResult> GetLGASecurityTips(int LGAId, [FromQuery] GetSecurityTipsListQueryParameter filter)
+        public async Task<IActionResult> GetLGASecurityTips(string LGAId, [FromQuery] GetSecurityTipsListQueryParameter filter)
         {
             return Ok(await Mediator.Send(new GetLGALevelSecurityTipsByIdQuery { LGAId = LGAId, PageNumber = filter.PageNumber, PageSize = filter.PageSize }));
         }
 
         [HttpGet("districts-security-tips/{DistrictId}")]
-        public async Task<IActionResult> GetDistrictSecurityTips(int DistrictId, [FromQuery] GetSecurityTipsListQueryParameter filter)
+        public async Task<IActionResult> GetDistrictSecurityTips(string DistrictId, [FromQuery] GetSecurityTipsListQueryParameter filter)
         {
             return Ok(await Mediator.Send(new GetDistrictLevelSecurityTipsByIdQuery { DistrictId = DistrictId, PageNumber = filter.PageNumber, PageSize = filter.PageSize }));
         } 

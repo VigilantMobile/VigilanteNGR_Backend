@@ -5,6 +5,7 @@ using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.AppTroopers.Wanted;
 using Domain.Entities.Identity;
 using NetTopologySuite.Geometries;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -18,7 +19,7 @@ namespace Domain.Entities.LocationEntities
 
         [Required]
         [ForeignKey("Town")]
-        public int TownId { get; set; }
+        public Guid TownId { get; set; }
         public virtual Town Town { get; set; }
 
         public string NPFSettlementAuthorityAddress { get; set; }

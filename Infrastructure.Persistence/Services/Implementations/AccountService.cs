@@ -173,7 +173,7 @@ namespace Infrastructure.Persistence.Services
                     LastName = request.LastName,
                     UserName = request.PhoneNumber,
                     PhoneNumber = request.PhoneNumber,
-                    TownId = request.TownId,
+                    TownId = Guid.Parse(request.TownId),
                     EmailConfirmed = false,      // set email and phone confirmed automatically after configuring twilio sendgrid for Otps
                     PhoneNumberConfirmed = false,
                     isActive = true
@@ -423,7 +423,7 @@ namespace Infrastructure.Persistence.Services
                 existingUser.FirstName = request.FirstName;
                 existingUser.LastName = request.LastName;
                 existingUser.PhoneNumber = request.PhoneNumber;
-                existingUser.TownId = request.LocationLevelId;
+                existingUser.TownId = Guid.Parse(request.LocationLevelId);
                 existingUser.UserName = request.PhoneNumber;
 
                 var result = await _userManager.UpdateAsync(existingUser);

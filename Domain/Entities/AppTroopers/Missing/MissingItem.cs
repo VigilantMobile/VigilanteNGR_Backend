@@ -25,11 +25,11 @@ namespace Domain.Entities.AppTroopers.Missing
         public DateTime DateLastSeen { get; set; }
 
         [ForeignKey("Town")]
-        public int? TownId { get; set; }
+        public Guid? TownId { get; set; }
         public virtual Town Town { get; set; }
 
         [ForeignKey("Settlement")]
-        public int? SettlementId { get; set; }
+        public Guid? SettlementId { get; set; }
         public virtual Settlement Settlement { get; set; }
 
         //Admin Authorization
@@ -48,7 +48,7 @@ namespace Domain.Entities.AppTroopers.Missing
 
 
         [ForeignKey("BroadcastLevel")]
-        public int BroadcastLevelId { get; set; }
+        public Guid BroadcastLevelId { get; set; }
         public virtual BroadcastLevel BroadcastLevel { get; set; }
 
     }

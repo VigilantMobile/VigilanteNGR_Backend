@@ -139,7 +139,7 @@ namespace Infrastructure.Persistence.Services
 
                                 StateNamesandIdsVM nameIdPair = new StateNamesandIdsVM
                                 {
-                                    stateId = stateEntity.Id,
+                                    stateId = stateEntity.Id.ToString(),
                                     stateName = stateEntity.Name
                                 };
 
@@ -158,7 +158,7 @@ namespace Infrastructure.Persistence.Services
                                     (from s in context.States
                                      select new StateNamesandIdsVM
                                      {
-                                         stateId = s.Id,
+                                         stateId = s.Id.ToString(),
                                          stateName = s.Name
                                      }).ToList();
                             }
@@ -217,7 +217,7 @@ namespace Infrastructure.Persistence.Services
                                     {
                                         Name = lga.properties.NAME_2,
                                         Boundary = multipolygon,
-                                        StateId = stateNamesandIdsList.Where(x => x.stateName == lga.properties.NAME_1).FirstOrDefault().stateId,
+                                        StateId = Guid.Parse(stateNamesandIdsList.Where(x => x.stateName == lga.properties.NAME_1).FirstOrDefault().stateId),
 
                                     };
 
@@ -253,7 +253,7 @@ namespace Infrastructure.Persistence.Services
                                     {
                                         Name = lga.properties.NAME_2,
                                         Boundary = reversedPolygon,
-                                        StateId = stateNamesandIdsList.Where(x => x.stateName == lga.properties.NAME_1).FirstOrDefault().stateId,
+                                        StateId = Guid.Parse(stateNamesandIdsList.Where(x => x.stateName == lga.properties.NAME_1).FirstOrDefault().stateId),
                                         Created = DateTime.UtcNow.AddHours(1)
 
                                     };

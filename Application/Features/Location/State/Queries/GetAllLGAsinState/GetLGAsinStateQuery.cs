@@ -18,7 +18,7 @@ namespace Application.Features.Location
 {
     public class GetLGAsinStateQuery : IRequest<Response<GetAllLGAsinStateViewModel>>
     {
-        public int StateId { get; set; }
+        public string StateId { get; set; }
         public class GetLGAsinStateQueryHandler : IRequestHandler<GetLGAsinStateQuery, Response<GetAllLGAsinStateViewModel>>
         {
             private readonly IStateRepositoryAsync stateRepositoryAsync;
@@ -44,7 +44,7 @@ namespace Application.Features.Location
                     {
                         LGAViewModel lgaViewModel = new LGAViewModel
                         {
-                            Id = lga.Id,
+                            Id = lga.Id.ToString(),
                             LGAName = lga.Name,
                             Created = lga.Created,
                         };
@@ -54,7 +54,7 @@ namespace Application.Features.Location
                     GetAllLGAsinStateViewModel getAllDistrictsViewModel = new GetAllLGAsinStateViewModel
                     {
                         State = state.Name,
-                        StateId = state.Id,
+                        StateId = state.Id.ToString(),
                         LGAs = lgas,
                         Count = lgas.Count
                     };

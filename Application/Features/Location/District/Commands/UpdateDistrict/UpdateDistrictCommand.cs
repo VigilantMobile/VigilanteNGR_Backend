@@ -12,9 +12,9 @@ namespace Application.Features.Location
 {
     public class UpdateDistrictCommand : IRequest<Response<Town>>
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public int LGAId { get; set; }
+        public string LGAId { get; set; }
 
         public class UpdateDistrictCommandHandler : IRequestHandler<UpdateDistrictCommand, Response<Town>>
         {
@@ -43,7 +43,7 @@ namespace Application.Features.Location
                     else
                     {
                         town.Name = command.Name;
-                        town.LGAId = command.LGAId;
+                        town.LGAId = Guid.Parse(command.LGAId);
                         town.LastModifiedBy = ModifiedBy;
                         town.LastModified = DateTime.UtcNow.AddHours(1);
                         await _townRepositoryAsync.UpdateAsync(town);
