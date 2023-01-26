@@ -53,7 +53,8 @@ namespace VGWebAPI
                     //dbInitializer.Initialize();
                     //dbInitializer.SeedStatesandLGAs();
                     //dbInitializer.SeedAppTrooperHelpers();
-                    Log.Information("Finished Seeding Default Data");
+                    //Log.Information("Finished Seeding Default Data");
+                    Log.Information("-------Vigilant NG-------");
 
                     //Seed Users
                     if (!userManager.Users.Any())
