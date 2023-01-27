@@ -98,6 +98,5 @@ namespace Domain.Entities.AppTroopers.SecurityTips
 
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<EscalatedTip> EscalatedTips { get; set; }
-
     }
 }

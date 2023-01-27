@@ -68,7 +68,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
             SecurityTip saveTipResult = new SecurityTip();
             try
             {
-                var source = await _context.Source.Where(x => x.SourceName == SourcesEnum.VGNGAUser.ToString()).FirstOrDefaultAsync();
+                var source = await _context.Sources.Where(x => x.SourceName == SourcesEnum.VGNGAUser.ToString()).FirstOrDefaultAsync();
                 //Get Post Eligibilitys
                 var postEligibility = await _securityTipEligibilityService.GetSecurityTipPostEligibility(securityTipRequest.BroadcasterId,
                     securityTipRequest.BroadcastLevelId, securityTipRequest.AlertLevelId, securityTipRequest.coordinates, securityTipRequest.LocationId);

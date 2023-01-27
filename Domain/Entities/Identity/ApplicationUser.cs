@@ -45,6 +45,8 @@ namespace Domain.Entities.Identity
         [ForeignKey("Subscription")]
         public Guid? SubscriptionId { get; set; }
         public virtual Subscription Subscription { get; set; }
+
+        public virtual Wallet Wallet { get; set; }
         //State
         //[ForeignKey("State")]
         //public int StateId { get; set; }
@@ -77,12 +79,13 @@ namespace Domain.Entities.Identity
         public Guid? DepartmentId { get; set; }
         public virtual Department Department { get; set; }
 
-        public string StaffId { get; set; }
-        public decimal Salary { get; set; }
-        public string SalaryCurrency { get; set; }
-        public bool IsAppSuperAdmin { get; set; }
-        public bool IsAppAdmin { get; set; }
-        public bool IsAppOperator { get; set; }
+        //public string StaffId { get; set; }
+        //public decimal Salary { get; set; }
+        //public string SalaryCurrency { get; set; }
+        //public bool IsAppSuperAdmin { get; set; }
+        //public bool IsAppAdmin { get; set; }
+        //public bool IsAppOperator { get; set; }
+
         public virtual ICollection<Department> SecretaryDepartments { get; set; }
         public virtual ICollection<Department> HODDepartments { get; set; }
         public virtual ICollection<State> InternalStaffStates { get; set; }

@@ -4,6 +4,7 @@ using Application.Enums;
 using Application.Exceptions;
 using Application.Interfaces;
 using Application.Wrappers;
+using Domain.Entities.AppTroopers.Subscription;
 using Domain.Entities.Identity;
 using Domain.Settings;
 using Infrastructure.Persistence.Contexts;
@@ -27,6 +28,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Net.WebRequestMethods;
 
 namespace Infrastructure.Persistence.Services
@@ -176,7 +178,9 @@ namespace Infrastructure.Persistence.Services
                     TownId = Guid.Parse(request.TownId),
                     EmailConfirmed = false,      // set email and phone confirmed automatically after configuring twilio sendgrid for Otps
                     PhoneNumberConfirmed = false,
-                    isActive = true
+                    isActive = true,
+                    SubscriptionId = Guid.Parse("47C3F904-DD6F-43C4-B9B1-645A4D99155C")
+
                 };
 
                 var userWithSameEmail = await _userManager.FindByEmailAsync(request.Email);
@@ -188,6 +192,19 @@ namespace Infrastructure.Persistence.Services
                     if (result.Succeeded)
                     {
                         await _userManager.AddToRoleAsync(user, Roles.Customer.ToString());
+
+                        //Create Customer Wallet
+                        Wallet wallet = new Wallet
+                        {
+                            Id = Guid.NewGuid(),
+                            ApplicationUserId = user.Id,
+                            WalletBalance = 0.00M,
+                            CreatedBy = user.Id,
+                        };
+
+                        _context.Wallets.Add(wallet);
+                        _context.SaveChanges();
+
 
                         var verificationUri = await SendVerificationEmail(user, origin);
                         //TODO: Attach Email Service here and configure it via appsettings
@@ -239,7 +256,7 @@ namespace Infrastructure.Persistence.Services
                                     data_coding = "text",
                                     originator = "Vigilant",
                                     recipients = new List<string>(){ request.PhoneNumber }
-                                } 
+                                }
                             }
                         });
 

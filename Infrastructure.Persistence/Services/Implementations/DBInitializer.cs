@@ -1,6 +1,7 @@
 ﻿using Domain.Common.Enums;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.SecurityTips;
+using Domain.Entities.AppTroopers.Subscription;
 using Domain.Entities.LocationEntities;
 using Infrastructure.Persistence.Contexts;
 using Infrastructure.Persistence.Models;
@@ -401,7 +402,7 @@ namespace Infrastructure.Persistence.Services
 
                         #region seed sources
                         //Seed default source cateories levels
-                        if (!(context.Source.Any()))
+                        if (!(context.Sources.Any()))
                         {
                             IList<Source> sources = new List<Source>() {
                             new Source() { Id = Guid.NewGuid(), SourceName = "The Guardian", Description = "The Guardian", SourceCategoryId=Guid.Parse("E531B1FB-4558-490E-9C91-E4DDBD4D2BD7"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
@@ -411,7 +412,7 @@ namespace Infrastructure.Persistence.Services
 
                             };
 
-                            context.Source.AddRange(sources);
+                            context.Sources.AddRange(sources);
                         }
 
                         #endregion seed sources
@@ -436,7 +437,23 @@ namespace Infrastructure.Persistence.Services
                         }
 
                         #endregion seed tip categories 
-                        
+
+                        #region subscription plans
+                        //Seed default subscription plan
+                        if (!(context.Subscriptions.Any()))
+                        {
+                            IList<Subscription> sources = new List<Subscription>() {
+                            new Subscription() { Id = Guid.NewGuid(), SubscriptionName = "Basic", SubscriptionDescription = "Basic",  MonthlyFee=0.00M, CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new Subscription() { Id = Guid.NewGuid(), SubscriptionName = "Advanced", SubscriptionDescription = "Advanced", MonthlyFee=100.00M, CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+
+                            };
+
+                            context.Subscriptions.AddRange(sources);
+                        }
+                        #endregion subscription plans
+
+
+
                         context.SaveChanges();
                     }
                 }
