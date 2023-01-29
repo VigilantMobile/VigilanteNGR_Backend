@@ -1,4 +1,5 @@
 ﻿using Application.Features.Location;
+using Application.Features.Location.State;
 using Application.Features.Products.Commands.DeleteProductById;
 using Application.Features.Products.Commands.UpdateProduct;
 using Microsoft.AspNetCore.Authorization;
@@ -16,7 +17,7 @@ namespace VGWebAPI.Controllers.v1
     {
 
         #region Districts 
-        [HttpGet("get-all-districts")]
+        [HttpGet("districts")]
         public async Task<IActionResult> GetAllDistrictsAsync([FromQuery] GetAllDistrictsParameter filter)
         {
             return Ok(await Mediator.Send(new GetAllDistrictsQuery() { PageSize = filter.PageSize, PageNumber = filter.PageNumber }));
@@ -74,6 +75,16 @@ namespace VGWebAPI.Controllers.v1
         {
             return Ok(await Mediator.Send(new GetLGAsinStateQuery { StateId = id }));
         }
+
+        [HttpGet("states")]
+        public async Task<IActionResult> GetStates([FromQuery] GetAllDistrictsParameter filter)
+        {
+            return Ok(await Mediator.Send(new GetAllStatesQuery() { PageSize = filter.PageSize, PageNumber = filter.PageNumber }));
+        }
+
+        //
+
+
         #endregion State
 
     }

@@ -111,7 +111,6 @@ namespace VGWebAPI.Controllers
             }
         }
 
-
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest model)
         {

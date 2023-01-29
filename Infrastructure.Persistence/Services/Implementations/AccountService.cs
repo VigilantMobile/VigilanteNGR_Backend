@@ -729,7 +729,6 @@ namespace Infrastructure.Persistence.Services
 
                 //Revoke Current Refresh Token
 
-
                 //Generate new Refresh Token and save to Database
                 var newRefreshToken = GenerateRefreshToken();
                 user.RefreshToken = newRefreshToken.Token;
