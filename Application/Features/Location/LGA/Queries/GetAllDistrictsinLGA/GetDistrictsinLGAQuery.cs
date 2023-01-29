@@ -11,7 +11,7 @@ namespace Application.Features.Location
 {
     public class GetDistrictsinLGAQuery : IRequest<Response<GetAllDistrictsinLGAViewModel>>
     {
-        public int LGAId { get; set; }
+        public string LGAId { get; set; }
         public class GetDistrictinLGAQueryHandler : IRequestHandler<GetDistrictsinLGAQuery, Response<GetAllDistrictsinLGAViewModel>>
         {
             private readonly ILGARepositoryAsync lgaRepositoryAsync;
@@ -37,7 +37,7 @@ namespace Application.Features.Location
                     {
                         DistrictViewModel districtViewModel = new DistrictViewModel
                         {
-                            Id = district.Id,
+                            Id = district.Id.ToString(),
                             DistrictName = district.Name,
                             Created = district.Created,
                         };
@@ -47,7 +47,7 @@ namespace Application.Features.Location
                     GetAllDistrictsinLGAViewModel getAllDistrictsViewModel = new GetAllDistrictsinLGAViewModel
                     {
                         LGA = lga.Name,
-                        LGAId = lga.Id,
+                        LGAId = lga.Id.ToString(),
                         Districts = districts,
                         Count = districts.Count
                     };

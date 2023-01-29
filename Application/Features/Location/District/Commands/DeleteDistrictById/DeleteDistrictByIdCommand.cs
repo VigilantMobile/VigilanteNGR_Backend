@@ -11,7 +11,7 @@ namespace Application.Features.Location
 {
     public class DeleteDistrictByIdCommand : IRequest<Response<Town>>
     {
-        public int Id { get; set; }
+        public string TownId { get; set; }
         public class DeleteDistrictByIdCommandHandler : IRequestHandler<DeleteDistrictByIdCommand, Response<Town>>
         {
             private readonly ITownRepositoryAsync _townRepositoryAsync;
@@ -26,7 +26,7 @@ namespace Application.Features.Location
             {
                 string UpdatedBy = _userAccessor.GetUserId();
 
-                var town = await _townRepositoryAsync.GetByIdAsync(command.Id);
+                var town = await _townRepositoryAsync.GetByIdAsync(command.TownId);
 
                 if (town == null)
                 {

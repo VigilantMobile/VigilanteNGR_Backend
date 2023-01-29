@@ -4,6 +4,7 @@
     {
         Neutral,
         Low,
+        Moderate,
         High,
         Critical
     }

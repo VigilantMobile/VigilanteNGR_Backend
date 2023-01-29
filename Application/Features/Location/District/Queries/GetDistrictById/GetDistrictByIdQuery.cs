@@ -10,7 +10,7 @@ namespace Application.Features.Location
 {
     public class GetDistrictByIdQuery : IRequest<Response<GetDistrictViewModel>>
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public class GetDistrictByIdQueryHandler : IRequestHandler<GetDistrictByIdQuery, Response<GetDistrictViewModel>>
         {
             private readonly ITownRepositoryAsync _townRepositoryAsync;

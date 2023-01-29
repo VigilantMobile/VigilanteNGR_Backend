@@ -18,18 +18,18 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Location
 {
-    public class GetCustomerProfileQuery : IRequest<Response<CustomerProfileVM>>
+    public class GetCustomerProfileQuery : IRequest<Response<CustomerProfileViewModel>>
     {
         public string CustomerId { get; set; }
-        public class GetCustomerProfileQueryHandler : IRequestHandler<GetCustomerProfileQuery, Response<CustomerProfileVM>>
+        public class GetCustomerProfileQueryHandler : IRequestHandler<GetCustomerProfileQuery, Response<CustomerProfileViewModel>>
         {
-            private readonly ICustomerProfileService _customerProfileService;
-            public GetCustomerProfileQueryHandler(ICustomerProfileService customerProfileService)
+            private readonly ICustomerService _customerProfileService;
+            public GetCustomerProfileQueryHandler(ICustomerService customerProfileService)
             {
                 _customerProfileService = customerProfileService;
             }
 
-            public async Task<Response<CustomerProfileVM>> Handle(GetCustomerProfileQuery query, CancellationToken cancellationToken)
+            public async Task<Response<CustomerProfileViewModel>> Handle(GetCustomerProfileQuery query, CancellationToken cancellationToken)
             {
                 try
                 {
@@ -39,7 +39,7 @@ namespace Application.Features.Location
                     if (customerProfile == null)
                         throw new ApiException($"Unable to retrieve customer profile.");
                
-                    return new Response<CustomerProfileVM>(customerProfile, message: $"Customer profile successfully retrieved.", successStatus: true);
+                    return new Response<CustomerProfileViewModel>(customerProfile, message: $"Customer profile successfully retrieved.", successStatus: true);
                 }
                 catch (Exception ex)
                 {

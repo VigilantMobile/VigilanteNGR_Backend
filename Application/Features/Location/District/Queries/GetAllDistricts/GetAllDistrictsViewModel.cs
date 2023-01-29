@@ -4,7 +4,8 @@ namespace Application.Features.Location
 {
     public class GetAllDistrictsViewModel
     {
-        public string DistrictName { get; set; }
+        public string Name { get; set; }
+        public string Id { get; set; }
         public DateTime Created { get; set; }
         public DateTime? LastModified { get; set; }
     }
@@ -16,8 +17,4 @@ namespace Application.Features.Location
         public DateTime Created { get; set; }
         public DateTime? LastModified { get; set; }
     }
-
-
-
-
 }

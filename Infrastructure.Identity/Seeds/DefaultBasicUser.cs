@@ -20,6 +20,7 @@ namespace Infrastructure.Identity.Seeds
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true
             };
+
             if (userManager.Users.All(u => u.Id != defaultUser.Id))
             {
                 var user = await userManager.FindByEmailAsync(defaultUser.Email);
@@ -28,7 +29,6 @@ namespace Infrastructure.Identity.Seeds
                     await userManager.CreateAsync(defaultUser, "123Pa$$word!");
                     await userManager.AddToRoleAsync(defaultUser, Roles.Basic.ToString());
                 }
-
             }
         }
     }

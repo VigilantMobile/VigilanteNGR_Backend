@@ -30,9 +30,7 @@ namespace Infrastructure.Persistence.Seeds
                 FirstName = "Anthony",
                 LastName = "Odu",
                 EmailConfirmed = true,
-                PhoneNumberConfirmed = true,
-                LocationLevelId = 2,
-                LocationId = 2
+                PhoneNumberConfirmed = true
             };
 
             if (userManager.Users.All(u => u.Id != superAdminUser.Id))

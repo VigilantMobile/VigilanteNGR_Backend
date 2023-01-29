@@ -8,7 +8,6 @@ namespace Application.Wrappers
         {
         }
 
-
         public Response(T data, string message = null)
         {
             Succeeded = true;
@@ -22,6 +21,11 @@ namespace Application.Wrappers
             Message = message;
         }
 
+        public Response(string message, bool success = true)
+        {
+            Succeeded = success;
+            Message = message;
+        }
 
         public Response(T data, string message = null, bool successStatus = false)
         {

@@ -31,11 +31,11 @@ namespace Domain.Entities.AppTroopers.Wanted
         public DateTime DateLastSeen { get; set; }
 
         [ForeignKey("Town")]
-        public int TownId { get; set; }
+        public Guid TownId { get; set; }
         public virtual Town Town { get; set; }
 
         [ForeignKey("Settlement")]
-        public int SettlementId { get; set; }
+        public Guid SettlementId { get; set; }
         public virtual Settlement Settlement { get; set; }
 
 
@@ -46,7 +46,7 @@ namespace Domain.Entities.AppTroopers.Wanted
 
         [Required]
         [ForeignKey("BroadcastLevel")]
-        public int BroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
+        public Guid BroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
         public virtual BroadcastLevel BroadcastLevel { get; set; }
 
     }

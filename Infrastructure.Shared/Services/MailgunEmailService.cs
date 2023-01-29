@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Shared.Services
 {
-    public class MailgunEmailService : IMandrillEmailService
+    public class MailgunEmailService : IMailgunEmailService
     {
         public MailSettings _mailSettings { get; }
         private readonly IUtilities _utilities;

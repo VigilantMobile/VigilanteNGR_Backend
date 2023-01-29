@@ -10,6 +10,6 @@ namespace Application.DTOs.Account
 
         [RegularExpression(@"^([0-9]{11})$", ErrorMessage = "Invalid Mobile Number. Phone number must be 11 characters.")]
         public string PhoneNumber { get; set; }
-        public int LocationLevelId { get; set; }
+        public string LocationLevelId { get; set; }
     }
 }

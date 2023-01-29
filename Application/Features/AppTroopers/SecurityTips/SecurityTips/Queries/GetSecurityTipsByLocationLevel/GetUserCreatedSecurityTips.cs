@@ -35,7 +35,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
                 var validFilter = _mapper.Map<GetSecurityTipsListQueryParameter>(query);
                 var SecurityTipsForUser = await _securityTipService.GetSecurityTipsForUser(query.UserId, validFilter.PageNumber, validFilter.PageSize);
                 if (SecurityTipsForUser == null) throw new ApiException($"No security tips found for the specified User.");
-                return new Response<GetSecurityTipsListResponse>(SecurityTipsForUser, $"Security tip retrieval for {SecurityTipsForUser.SecurityTipsList.First().BroadcasterLocation} user successful");
+                return new Response<GetSecurityTipsListResponse>(SecurityTipsForUser, $"Security tip retrieval for {SecurityTipsForUser.SecurityTipsList.First().BroadcasterFullLocation} user successful");
             }
         }
     }

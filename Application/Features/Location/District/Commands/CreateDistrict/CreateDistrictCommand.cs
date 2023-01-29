@@ -14,7 +14,7 @@ namespace Application.Features.Location
     public partial class CreateDistrictCommand : IRequest<Response<Town>>
     {
         public string Name { get; set; }
-        public int LGAId { get; set; }
+        public string LGAId { get; set; }
     }
     public class CreateDistrictCommandHandler : IRequestHandler<CreateDistrictCommand, Response<Town>>
     {

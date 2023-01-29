@@ -5,6 +5,7 @@ using Domain.Entities.AppTroopers.Curfew;
 using Domain.Entities.AppTroopers.Missing;
 using Domain.Entities.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.SecurityTips;
+using Domain.Entities.AppTroopers.Subscription;
 using Domain.Entities.AppTroopers.Wanted;
 using Domain.Entities.CompanyEntities;
 using Domain.Entities.Identity;
@@ -16,6 +17,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Threading;
 using System.Threading.Tasks;
 //using Domain.Entities.Identity.Identity;
@@ -66,7 +68,7 @@ namespace Infrastructure.Persistence.Contexts
         public DbSet<BroadcastLevel> BroadcastLevels { get; set; }
         public DbSet<AlertLevel> AlertLevels { get; set; }
         public DbSet<SourceCategory> SourceCategories { get; set; }
-        public DbSet<Source> Source { get; set; }
+        public DbSet<Source> Sources { get; set; }
         public DbSet<SecurityTipStatus> SecurityTipStatuses { get; set; }
         public DbSet<EscalatedTip> EscalatedTips { get; set; }
         
@@ -94,6 +96,10 @@ namespace Infrastructure.Persistence.Contexts
         //Comments
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentFlags> CommentFlags { get; set; }
+
+        //Subscriptions
+        public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<Wallet> Wallets { get; set; }
 
         //Test
         public DbSet<Product> Products { get; set; }
@@ -330,8 +336,13 @@ namespace Infrastructure.Persistence.Contexts
 
             //BroadcastLevel
 
-            builder.Entity<BroadcastLevel>().HasMany(s => s.Customers)
-             .WithOne(g => g.LocationLevel).HasForeignKey(s => s.LocationLevelId).OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Town>().HasMany(s => s.TownResidents)
+             .WithOne(g => g.CustomerTown).HasForeignKey(s => s.TownId).OnDelete(DeleteBehavior.Restrict);
+
+            //Subscription
+
+            //builder.Entity<Subscription>().HasMany(s => s.SubscribedUsers)
+            // .WithOne(g => g.Subscription).HasForeignKey(s => s.SubscriptionId).OnDelete(DeleteBehavior.Restrict);
 
             //Comments
             builder.Entity<Comment>().HasMany(s => s.CommentFlags)
@@ -339,6 +350,9 @@ namespace Infrastructure.Persistence.Contexts
 
             builder.Entity<Comment>().HasMany(s => s.CommentFlags)
             .WithOne(g => g.Comment).HasForeignKey(s => s.CommentId).OnDelete(DeleteBehavior.Restrict);
+
+            //Wallet
+            builder.Entity<ApplicationUser>().HasOne(e => e.Wallet).WithOne(e => e.Customer);
 
 
             builder.Entity<ApplicationUser>().HasMany(s => s.Comments)

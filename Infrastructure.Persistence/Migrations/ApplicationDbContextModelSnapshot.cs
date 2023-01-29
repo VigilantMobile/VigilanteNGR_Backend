@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
+#nullable disable
+
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
@@ -16,14 +18,15 @@ namespace Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("ProductVersion", "5.0.11")
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("ApplicationUserLGA", b =>
                 {
-                    b.Property<int>("InternalStaffLGAsId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("InternalStaffLGAsId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("VGNGALGAStaffId")
                         .HasColumnType("nvarchar(450)");
@@ -37,8 +40,8 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("ApplicationUserSettlement", b =>
                 {
-                    b.Property<int>("InternalStaffSettlementsId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("InternalStaffSettlementsId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("VGNGASettlementStaffId")
                         .HasColumnType("nvarchar(450)");
@@ -52,8 +55,8 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("ApplicationUserState", b =>
                 {
-                    b.Property<int>("InternalStaffStatesId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("InternalStaffStatesId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("VGNGAStateStaffId")
                         .HasColumnType("nvarchar(450)");
@@ -67,8 +70,8 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("ApplicationUserTown", b =>
                 {
-                    b.Property<int>("InternalStaffTownsId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("InternalStaffTownsId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("VGNGATownStaffId")
                         .HasColumnType("nvarchar(450)");
@@ -84,8 +87,9 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AffectedColumns")
                         .HasColumnType("nvarchar(max)");
@@ -118,10 +122,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.Curfew.Curfew", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdminAuthorizerId")
                         .HasColumnType("nvarchar(450)");
@@ -144,8 +147,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsAuthorized")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("LGAId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("LGAId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -156,17 +159,17 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("OperatorIniatorId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("SettlementId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("SettlementId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("StateId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("StateId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("TownId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("TownId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -187,16 +190,15 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.Missing.MissingItem", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdminAuthorizerID")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("BroadcastLevelId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("BroadcastLevelId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -234,11 +236,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LoserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("SettlementId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("SettlementId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("TownId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("TownId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("VGNGAStaffId")
                         .HasColumnType("nvarchar(450)");
@@ -263,16 +265,15 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.Missing.MissingPerson", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdminAuthorizerID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("BroadcastLevelId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("BroadcastLevelId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -309,11 +310,11 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<int>("SettlementId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SettlementId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("TownId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("TownId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("age")
                         .HasColumnType("int");
@@ -349,10 +350,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.Commute", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdditionalTripInformation")
                         .HasColumnType("nvarchar(max)");
@@ -373,16 +373,16 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DepartureSettlementId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DepartureSettlementId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DepartureTownAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DepartureTownId")
+                    b.Property<Guid>("DepartureTownId")
                         .HasMaxLength(150)
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DestinationCoordinates")
                         .HasColumnType("nvarchar(max)");
@@ -390,15 +390,15 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("DestinationSettlementAddress")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DestinationSettlementId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DestinationSettlementId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DestinationTownAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DestinationTownId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("DestinationTownId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -439,13 +439,12 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.Panic", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CommuteId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CommuteId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -480,10 +479,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.TrustedPerson", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -494,7 +492,13 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("EmailAddress")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FullAddress")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("FullName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModified")
@@ -509,6 +513,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("TownId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OwnerId");
@@ -518,10 +525,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.AlertLevel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -552,48 +558,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("AlertLevels");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("broadcastLevel")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BroadcastLevels");
-                });
-
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcasterType", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Broadcaster")
                         .HasColumnType("int");
@@ -624,12 +593,46 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("BroadcasterTypes");
                 });
 
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("broadcastLevel")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BroadcastLevels");
+                });
+
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Comment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CommenterId")
                         .IsRequired()
@@ -647,8 +650,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SecurityTipId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SecurityTipId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UserComment")
                         .IsRequired()
@@ -666,13 +669,12 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.CommentFlags", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CommentId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CommentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("CommentVote")
                         .HasColumnType("int");
@@ -704,10 +706,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.EscalatedTip", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -718,11 +719,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("EscalationAuthorizerID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("EscalationBroadcastLevelId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("EscalationBroadcastLevelId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("EscalationLocationId")
-                        .HasColumnType("int");
+                    b.Property<string>("EscalationLocationId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -730,8 +731,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SecurityTipId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SecurityTipId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("isEscalationApproved")
                         .HasColumnType("bit");
@@ -749,31 +750,30 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTip", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AdminAuthorizerID")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("AlertLevelId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AlertLevelId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Body")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("BroadcastLevelId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("BroadcastLevelId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("BroadcasterId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("BroadcasterTypeId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("BroadcasterTypeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("BroadcasterTypeString")
                         .HasMaxLength(100)
@@ -800,8 +800,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsBroadcasted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("LGAId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("LGAId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -809,23 +809,24 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
+                    b.Property<string>("LocationId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SecurityTipCategoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SecurityTipCategoryId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("SecurityTipStatusId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SecurityTipStatusId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("SettlementId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("SettlementId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("SourceId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SourceId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("StateId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("StateId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Subject")
                         .IsRequired()
@@ -836,8 +837,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int?>("TownId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("TownId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("isAdminAuthorized")
                         .HasColumnType("bit");
@@ -877,10 +878,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipCategory", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
@@ -910,10 +910,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipStatus", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -941,10 +940,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Source", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -968,8 +966,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LogoUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SourceCategoryId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SourceCategoryId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("SourceName")
                         .IsRequired()
@@ -980,15 +978,14 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("SourceCategoryId");
 
-                    b.ToTable("Source");
+                    b.ToTable("Sources");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SourceCategory", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CategoryName")
                         .IsRequired()
@@ -1016,15 +1013,79 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("SourceCategories");
                 });
 
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Subscription.Subscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("MonthlyFee")
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<string>("SubscriptionDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubscriptionName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Subscriptions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Subscription.Wallet", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("WalletBalance")
+                        .HasColumnType("decimal(18,6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId")
+                        .IsUnique()
+                        .HasFilter("[ApplicationUserId] IS NOT NULL");
+
+                    b.ToTable("Wallets");
+                });
+
             modelBuilder.Entity("Domain.Entities.AppTroopers.Wanted.WantedPerson", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("BroadcastLevelId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("BroadcastLevelId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -1064,11 +1125,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("NPFAuthorizerID")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SettlementId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("SettlementId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("TownId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TownId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("age")
                         .HasColumnType("int");
@@ -1100,10 +1161,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.CompanyEntities.Department", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -1159,6 +1219,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("AddressLine2")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("BroadcastLevelId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -1175,8 +1238,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("DepartmentId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -1192,15 +1255,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("FirstTimePromoUsed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsAppAdmin")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsAppOperator")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsAppSuperAdmin")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsExternalAdmin")
@@ -1220,12 +1274,6 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LocationId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("LocationLevelId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -1259,17 +1307,14 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("RefreshTokenExpiry")
                         .HasColumnType("datetime2");
 
-                    b.Property<decimal>("Salary")
-                        .HasColumnType("decimal(18,6)");
-
-                    b.Property<string>("SalaryCurrency")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StaffId")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<Guid?>("SubscriptionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("TownId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -1286,9 +1331,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DepartmentId");
+                    b.HasIndex("BroadcastLevelId");
 
-                    b.HasIndex("LocationLevelId");
+                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -1298,15 +1343,18 @@ namespace Infrastructure.Persistence.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("Users");
+                    b.HasIndex("SubscriptionId");
+
+                    b.HasIndex("TownId");
+
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Identity.CustomClaims", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -1331,15 +1379,14 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("CustomClaims");
+                    b.ToTable("CustomClaims", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.LocationEntities.LGA", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Geometry>("Boundary")
                         .HasColumnType("geography");
@@ -1366,8 +1413,8 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("StateId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("StateId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("isCapital")
                         .HasColumnType("bit");
@@ -1381,10 +1428,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.LocationEntities.Settlement", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AuthorityPhone")
                         .HasColumnType("nvarchar(max)");
@@ -1411,8 +1457,8 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TownId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TownId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -1423,10 +1469,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.LocationEntities.State", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Geometry>("Boundary")
                         .HasColumnType("geography");
@@ -1466,10 +1511,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.LocationEntities.Town", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Geometry>("Boundary")
                         .HasColumnType("geography");
@@ -1480,8 +1524,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LGAId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("LGAId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -1508,10 +1552,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Barcode")
                         .HasColumnType("nvarchar(max)");
@@ -1544,10 +1587,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Infrastructure.Persistence.Models.DemographicEntitiesCoordinatesJSON", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
@@ -1596,15 +1638,16 @@ namespace Infrastructure.Persistence.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -1620,15 +1663,16 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RoleClaims");
+                    b.ToTable("RoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -1644,7 +1688,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserClaims");
+                    b.ToTable("UserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -1666,7 +1710,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserLogins");
+                    b.ToTable("UserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -1681,7 +1725,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -1700,7 +1744,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("UserTokens");
+                    b.ToTable("UserTokens", (string)null);
                 });
 
             modelBuilder.Entity("ApplicationUserLGA", b =>
@@ -2087,9 +2131,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Navigation("ApplicationUser");
 
-                    b.Navigation("BroadcasterType");
-
                     b.Navigation("BroadcastLevel");
+
+                    b.Navigation("BroadcasterType");
 
                     b.Navigation("ExternalAuthorizer");
 
@@ -2113,6 +2157,15 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("SourceCategory");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Subscription.Wallet", b =>
+                {
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "Customer")
+                        .WithOne("Wallet")
+                        .HasForeignKey("Domain.Entities.AppTroopers.Subscription.Wallet", "ApplicationUserId");
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.Wanted.WantedPerson", b =>
@@ -2161,19 +2214,29 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Identity.ApplicationUser", b =>
                 {
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", null)
+                        .WithMany("Customers")
+                        .HasForeignKey("BroadcastLevelId");
+
                     b.HasOne("Domain.Entities.CompanyEntities.Department", "Department")
                         .WithMany("VGNGAStaff")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", "LocationLevel")
-                        .WithMany("Customers")
-                        .HasForeignKey("LocationLevelId")
+                    b.HasOne("Domain.Entities.AppTroopers.Subscription.Subscription", "Subscription")
+                        .WithMany("SubscribedUsers")
+                        .HasForeignKey("SubscriptionId");
+
+                    b.HasOne("Domain.Entities.LocationEntities.Town", "CustomerTown")
+                        .WithMany("TownResidents")
+                        .HasForeignKey("TownId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("CustomerTown");
 
                     b.Navigation("Department");
 
-                    b.Navigation("LocationLevel");
+                    b.Navigation("Subscription");
                 });
 
             modelBuilder.Entity("Domain.Entities.LocationEntities.LGA", b =>
@@ -2265,6 +2328,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("SecurityTips");
                 });
 
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcasterType", b =>
+                {
+                    b.Navigation("SecurityTips");
+                });
+
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", b =>
                 {
                     b.Navigation("Customers");
@@ -2272,11 +2340,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("EscalatedTips");
 
                     b.Navigation("VGNGAAdminApprovedSecurityTips");
-                });
-
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcasterType", b =>
-                {
-                    b.Navigation("SecurityTips");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Comment", b =>
@@ -2311,6 +2374,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Sources");
                 });
 
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Subscription.Subscription", b =>
+                {
+                    b.Navigation("SubscribedUsers");
+                });
+
             modelBuilder.Entity("Domain.Entities.CompanyEntities.Department", b =>
                 {
                     b.Navigation("VGNGAStaff");
@@ -2343,6 +2411,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("SecretaryDepartments");
 
                     b.Navigation("TrustedPeople");
+
+                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("Domain.Entities.LocationEntities.LGA", b =>
@@ -2387,6 +2457,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("TownMissingItems");
 
                     b.Navigation("TownMissingPeople");
+
+                    b.Navigation("TownResidents");
 
                     b.Navigation("TownWantedPeople");
                 });

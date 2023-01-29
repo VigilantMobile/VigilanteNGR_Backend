@@ -13,7 +13,7 @@ namespace Application.Features.Location
 
     public class GetAllLGAsinStateViewModel
     {
-        public int StateId { get; set; }
+        public string StateId { get; set; }
         public string State { get; set; }
         public int Count { get; set; }
         public List<LGAViewModel> LGAs { get; set; }
@@ -21,7 +21,7 @@ namespace Application.Features.Location
 
     public class LGAViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string LGAName { get; set; }
         public DateTime Created { get; set; }
     }

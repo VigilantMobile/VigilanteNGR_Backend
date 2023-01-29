@@ -1,6 +1,7 @@
 ﻿using Domain.Common;
 using Domain.Common.Enums;
 using Domain.Entities.LocationEntities;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -17,7 +18,7 @@ namespace Domain.Entities.AppTroopers.Panic
         //Town
         //Departure
         [ForeignKey("DepartureTown")]
-        public int DepartureTownId { get; set; }
+        public Guid DepartureTownId { get; set; }
         public virtual Town DepartureTown { get; set; }
 
         [Required]
@@ -25,7 +26,7 @@ namespace Domain.Entities.AppTroopers.Panic
 
         //Destination
         [ForeignKey("DestinationTown")]
-        public int DestinationTownId { get; set; }
+        public Guid DestinationTownId { get; set; }
         public virtual Town DestinationTown { get; set; }
         public string DestinationCoordinates { get; set; }
         [Required]
@@ -35,7 +36,7 @@ namespace Domain.Entities.AppTroopers.Panic
         //Settlement
         //Departure
         [ForeignKey("DepartureSettlement")]
-        public int DepartureSettlementId { get; set; }
+        public Guid DepartureSettlementId { get; set; }
         public virtual Settlement DepartureSettlement { get; set; }
 
         [Required]
@@ -43,7 +44,7 @@ namespace Domain.Entities.AppTroopers.Panic
 
         //Destination
         [ForeignKey("DestinationSettlement")]
-        public int DestinationSettlementId { get; set; }
+        public Guid DestinationSettlementId { get; set; }
         public virtual Settlement DestinationSettlement { get; set; }
         public string DestinationSettlementAddress { get; set; }
 

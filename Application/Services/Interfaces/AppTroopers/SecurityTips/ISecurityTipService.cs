@@ -14,12 +14,12 @@ namespace Application.Services.Interfaces.AppTroopers.SecurityTips
     public interface ISecurityTipService : IAutoDependencyService
     {
         Task<CreateSecurityTipResponse> CreateSecurityTipAsync(CreateSecurityTipCommand securityTipRequest);
-        Task<GetSecurityTipResponse> GetSecurityTip(int SecurityTipId);
-        Task<BroadcasterandTipLocations> GetBroadcasterandTipLocations(int BroadcastLevelId, int BroadcastLocationId, int BroadcasterLocationLevelId, int BroadcasterLocationId);
+        Task<GetSecurityTipResponse> GetSecurityTip(string SecurityTipId);
+        Task<BroadcasterandTipLocations> GetBroadcasterandTipLocations(string BroadcastLevelId, string BroadcastLocationId, string BroadcasterTownId);
         Task<GetSecurityTipsListResponse> GetSecurityTipsForUser(string Userid, int pageNumber, int pageSize);
-        Task<GetSecurityTipsListResponse> GetSecurityTipsForState(int StateId, int pageNumber, int pageSize);
-        Task<GetSecurityTipsListResponse> GetSecurityTipsForLGA(int LGAId, int pageNumber, int PageSize);
-        Task<GetSecurityTipsListResponse> GetSecurityTipsForDistrict(int DistrictId, int pageNumber, int PageSize);
+        Task<GetSecurityTipsListResponse> GetSecurityTipsForState(string StateId, int pageNumber, int pageSize);
+        Task<GetSecurityTipsListResponse> GetSecurityTipsForLGA(string LGAId, int pageNumber, int PageSize);
+        Task<GetSecurityTipsListResponse> GetSecurityTipsForDistrict(string DistrictId, int pageNumber, int PageSize);
 
         //Task<GetSecurityTipsListResponse> GetSecurityTipsForUserLiveLocation(string UserId, string coordinates, int pageNumber, int PageSize);
 

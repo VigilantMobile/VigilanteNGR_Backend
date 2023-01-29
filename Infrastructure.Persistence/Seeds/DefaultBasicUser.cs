@@ -21,9 +21,7 @@ namespace Infrastructure.Persistence.Seeds
                     FirstName = "John",
                     LastName = "Doe",
                     EmailConfirmed = true,
-                    PhoneNumberConfirmed = true,
-                    LocationLevelId = 3,
-                    LocationId = 514
+                    PhoneNumberConfirmed = true
                 };
                 if (userManager.Users.All(u => u.Id != defaultUser.Id))
                 {

@@ -1,6 +1,7 @@
 ﻿using Domain.Common.Enums;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.SecurityTips;
+using Domain.Entities.AppTroopers.Subscription;
 using Domain.Entities.LocationEntities;
 using Infrastructure.Persistence.Contexts;
 using Infrastructure.Persistence.Models;
@@ -128,6 +129,7 @@ namespace Infrastructure.Persistence.Services
 
                                 var stateEntity = new State
                                 {
+                                    Id = Guid.NewGuid(),
                                     Name = state.admin1Name,
                                     Boundary = reversedmultiPolygon,
                                     shapeArea = (decimal)state.Shape_Area,
@@ -135,11 +137,11 @@ namespace Infrastructure.Persistence.Services
                                     Created = DateTime.UtcNow.AddHours(1)
                                 };
                                 context.States.Add(stateEntity);
-                                context.SaveChanges();
+                                
 
                                 StateNamesandIdsVM nameIdPair = new StateNamesandIdsVM
                                 {
-                                    stateId = stateEntity.Id,
+                                    stateId = stateEntity.Id.ToString(),
                                     stateName = stateEntity.Name
                                 };
 
@@ -158,7 +160,7 @@ namespace Infrastructure.Persistence.Services
                                     (from s in context.States
                                      select new StateNamesandIdsVM
                                      {
-                                         stateId = s.Id,
+                                         stateId = s.Id.ToString(),
                                          stateName = s.Name
                                      }).ToList();
                             }
@@ -215,9 +217,10 @@ namespace Infrastructure.Persistence.Services
 
                                     var lgaEntity = new LGA
                                     {
+                                        Id = Guid.NewGuid(),
                                         Name = lga.properties.NAME_2,
                                         Boundary = multipolygon,
-                                        StateId = stateNamesandIdsList.Where(x => x.stateName == lga.properties.NAME_1).FirstOrDefault().stateId,
+                                        StateId = Guid.Parse(stateNamesandIdsList.Where(x => x.stateName == lga.properties.NAME_1).FirstOrDefault().stateId),
 
                                     };
 
@@ -251,19 +254,36 @@ namespace Infrastructure.Persistence.Services
 
                                     var lgaEntity = new LGA
                                     {
+                                        Id = Guid.NewGuid(),
                                         Name = lga.properties.NAME_2,
                                         Boundary = reversedPolygon,
-                                        StateId = stateNamesandIdsList.Where(x => x.stateName == lga.properties.NAME_1).FirstOrDefault().stateId,
+                                        StateId = Guid.Parse(stateNamesandIdsList.Where(x => x.stateName == lga.properties.NAME_1).FirstOrDefault().stateId),
                                         Created = DateTime.UtcNow.AddHours(1)
 
                                     };
 
                                     context.LGAs.Add(lgaEntity);
                                 }
-                                context.SaveChanges();
                             }
                         }
                         #endregion seed LGAs
+
+                        #region
+                        //Seed default towns
+                        if (!(context.Towns.Any()))
+                        {
+                            IList<Town> newAlertLevels = new List<Town>() {
+                            new Town() { Id = Guid.NewGuid(), Name = "Victoria Island", LGAId = Guid.Parse("EAE874F6-B4C2-4C78-A138-4AAA5514C6BB"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new Town() { Id = Guid.NewGuid(), Name = "Ikoyi", LGAId = Guid.Parse("EAE874F6-B4C2-4C78-A138-4AAA5514C6BB"), CreatedBy = "Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new Town() { Id = Guid.NewGuid(), Name = "Ajah", LGAId = Guid.Parse("EAE874F6-B4C2-4C78-A138-4AAA5514C6BB"), CreatedBy = "Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            };
+
+                            context.Towns.AddRange(newAlertLevels);
+                        }
+                        #endregion seed LGAs
+
+                        context.SaveChanges();
+
                     }
                 }
             }
@@ -289,11 +309,12 @@ namespace Infrastructure.Persistence.Services
                         if (!(context.AlertLevels.Any()))
                         {
                             IList<AlertLevel> newAlertLevels = new List<AlertLevel>() {
-                        new AlertLevel() { Name = "Neutral", Description = "Neutral", alertLevel = AlertLevelEnum.Neutral, Created = DateTime.UtcNow.AddHours(1)},
-                        new AlertLevel() { Name = "Low", Description = "Low", alertLevel = AlertLevelEnum.Low, Created = DateTime.UtcNow.AddHours(1)},
-                        new AlertLevel() { Name = "High", Description = "High", alertLevel = AlertLevelEnum.High, Created = DateTime.UtcNow.AddHours(1)},
-                        new AlertLevel() { Name = "Critical", Description = "Critical", alertLevel = AlertLevelEnum.Critical, Created = DateTime.UtcNow.AddHours(1)},
-                        };
+                                new AlertLevel() { Id = Guid.NewGuid(), Name = "Neutral", Description = "Neutral", alertLevel = AlertLevelEnum.Neutral, Created = DateTime.UtcNow.AddHours(1)},
+                                new AlertLevel() { Id = Guid.NewGuid(), Name = "Low", Description = "Low", alertLevel = AlertLevelEnum.Low, Created = DateTime.UtcNow.AddHours(1)},
+                                new AlertLevel() { Id = Guid.NewGuid(), Name = "High", Description = "High", alertLevel = AlertLevelEnum.High, Created = DateTime.UtcNow.AddHours(1)},
+                                new AlertLevel() { Id = Guid.NewGuid(), Name = "Critical", Description = "Critical", alertLevel = AlertLevelEnum.Critical, Created = DateTime.UtcNow.AddHours(1)},
+                                new AlertLevel() { Id = Guid.NewGuid(), Name = "Moderate", Description = "Moderate", alertLevel = AlertLevelEnum.Moderate, Created = DateTime.UtcNow.AddHours(1)},
+                            };
 
                             context.AlertLevels.AddRange(newAlertLevels);
                         }
@@ -305,11 +326,11 @@ namespace Infrastructure.Persistence.Services
                         if (!(context.BroadcastLevels.Any()))
                         {
                             IList<BroadcastLevel> broadcastLevels = new List<BroadcastLevel>() {
-                        new BroadcastLevel() { Name = "Settlement", Description = "Settlement", broadcastLevel = BroadcastLevelEnum.Settlement, Created = DateTime.UtcNow.AddHours(1)},
-                        new BroadcastLevel() { Name = "Town", Description = "Town",  broadcastLevel = BroadcastLevelEnum.Town, Created = DateTime.UtcNow.AddHours(1)},
-                        new BroadcastLevel() { Name = "LGA", Description = "LGA",  broadcastLevel = BroadcastLevelEnum.LGA, Created = DateTime.UtcNow.AddHours(1)},
-                        new BroadcastLevel() { Name = "State", Description = "State",  broadcastLevel = BroadcastLevelEnum.State, Created = DateTime.UtcNow.AddHours(1)},
-                        new BroadcastLevel() { Name = "Nationwide", Description = "Nationwide",  broadcastLevel = BroadcastLevelEnum.Nationwide, Created = DateTime.UtcNow.AddHours(1)}
+                        new BroadcastLevel() { Id = Guid.NewGuid(), Name = "Settlement", Description = "Settlement", broadcastLevel = BroadcastLevelEnum.Settlement, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcastLevel() { Id = Guid.NewGuid(),  Name = "Town", Description = "Town",  broadcastLevel = BroadcastLevelEnum.Town, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcastLevel() { Id = Guid.NewGuid(),  Name = "LGA", Description = "LGA",  broadcastLevel = BroadcastLevelEnum.LGA, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcastLevel() { Id = Guid.NewGuid(),  Name = "State", Description = "State",  broadcastLevel = BroadcastLevelEnum.State, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcastLevel() { Id = Guid.NewGuid(),  Name = "Nationwide", Description = "Nationwide",  broadcastLevel = BroadcastLevelEnum.Nationwide, Created = DateTime.UtcNow.AddHours(1)}
                         };
 
                             context.BroadcastLevels.AddRange(broadcastLevels);
@@ -321,42 +342,119 @@ namespace Infrastructure.Persistence.Services
                         if (!(context.BroadcasterTypes.Any()))
                         {
                             IList<BroadcasterType> broadcasterTypes = new List<BroadcasterType>() {
-                        new BroadcasterType() { Name = "Settlement Vigilante Authority", Description = "Settlement Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialSettlementVigilante, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcasterType() { Id = Guid.NewGuid(),Name = "Settlement Vigilante Authority", Description = "Settlement Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialSettlementVigilante, Created = DateTime.UtcNow.AddHours(1)},
+                         
+                        new BroadcasterType() { Id = Guid.NewGuid(),  Name = "Town Vigilante Authority", Description = "Town Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialTownVigilante, Created = DateTime.UtcNow.AddHours(1)},
 
-                        new BroadcasterType() { Name = "Town Vigilante Authority", Description = "Town Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialTownVigilante, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcasterType() { Id = Guid.NewGuid(), Name = "LGA Vigilante Authority", Description = "LGA Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialLGAVigilante, Created = DateTime.UtcNow.AddHours(1)},
 
-                        new BroadcasterType() { Name = "LGA Vigilante Authority", Description = "LGA Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialLGAVigilante, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcasterType() { Id = Guid.NewGuid(), Name = "State Vigilante Authority", Description = "State Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialStateVigilante, Created = DateTime.UtcNow.AddHours(1)},
 
-                        new BroadcasterType() { Name = "State Vigilante Authority", Description = "State Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialStateVigilante, Created = DateTime.UtcNow.AddHours(1)},
-
-                        new BroadcasterType() { Name = "Country Vigilante Authority", Description = "Nationwide Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialFederalVigilante, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcasterType() { Id = Guid.NewGuid(), Name = "Country Vigilante Authority", Description = "Nationwide Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialFederalVigilante, Created = DateTime.UtcNow.AddHours(1)},
 
                         //npf
-                        new BroadcasterType() { Name = "NPF Settlement Authority", Description = "NPF Settlement Authority",  Broadcaster = BroadcasterTypeEnum.NPFSettlement, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcasterType() { Id = Guid.NewGuid(), Name = "NPF Settlement Authority", Description = "NPF Settlement Authority",  Broadcaster = BroadcasterTypeEnum.NPFSettlement, Created = DateTime.UtcNow.AddHours(1)},
 
-                        new BroadcasterType() { Name = "NPF Town Authority", Description = "NPF Town Authority",  Broadcaster = BroadcasterTypeEnum.NPFTown, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcasterType() { Id = Guid.NewGuid(),  Name = "NPF Town Authority", Description = "NPF Town Authority",  Broadcaster = BroadcasterTypeEnum.NPFTown, Created = DateTime.UtcNow.AddHours(1)},
 
-                        new BroadcasterType() { Name = "NPF Settlement Authority", Description = "NPF Settlement Authority",  Broadcaster = BroadcasterTypeEnum.NPFLGA, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcasterType() { Id = Guid.NewGuid(),  Name = "NPF Settlement Authority", Description = "NPF Settlement Authority",  Broadcaster = BroadcasterTypeEnum.NPFLGA, Created = DateTime.UtcNow.AddHours(1)},
 
-                        new BroadcasterType() { Name = "NPF Settlement Authority", Description = "NPF Settlement Authority",  Broadcaster = BroadcasterTypeEnum.NPFState, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcasterType() { Id = Guid.NewGuid(),  Name = "NPF Settlement Authority", Description = "NPF Settlement Authority",  Broadcaster = BroadcasterTypeEnum.NPFState, Created = DateTime.UtcNow.AddHours(1)},
 
-                        new BroadcasterType() { Name = "NPF Federal Authority", Description = "NPF Federal Authority",  Broadcaster = BroadcasterTypeEnum.NPFFederal, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcasterType() { Id = Guid.NewGuid(),  Name = "NPF Federal Authority", Description = "NPF Federal Authority",  Broadcaster = BroadcasterTypeEnum.NPFFederal, Created = DateTime.UtcNow.AddHours(1)},
 
                         // Users 
-                        new BroadcasterType() { Name = "VGNGA User", Description = "VGNGA Registered Users",  Broadcaster = BroadcasterTypeEnum.VGNGAUser, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcasterType() { Id = Guid.NewGuid(),  Name = "VGNGA User", Description = "VGNGA Registered Users",  Broadcaster = BroadcasterTypeEnum.VGNGAUser, Created = DateTime.UtcNow.AddHours(1)},
 
-                        new BroadcasterType() { Name = "VGNGA Verified User ", Description = "VGNGA Verified User",  Broadcaster = BroadcasterTypeEnum.VGNGAVerifiedUser, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcasterType() { Id = Guid.NewGuid(),  Name = "VGNGA Verified User ", Description = "VGNGA Verified User",  Broadcaster = BroadcasterTypeEnum.VGNGAVerifiedUser, Created = DateTime.UtcNow.AddHours(1)},
 
                         // VGNGA
-                           new BroadcasterType() { Name = "Official VGNGA", Description = "Official VGNGA",  Broadcaster = BroadcasterTypeEnum.OfficialVGNGA, Created = DateTime.UtcNow.AddHours(1)},
+                           new BroadcasterType() { Id = Guid.NewGuid(),  Name = "Official VGNGA", Description = "Official VGNGA",  Broadcaster = BroadcasterTypeEnum.OfficialVGNGA, Created = DateTime.UtcNow.AddHours(1)},
 
                         };
                             context.BroadcasterTypes.AddRange(broadcasterTypes);
                         }
 
-                        context.SaveChanges();
+                      
 
                         #endregion seed broadcaster types
+
+                        #region seed source categories
+                        //Seed default source cateories levels
+                        if (!(context.SourceCategories.Any()))
+                        {
+                            IList<SourceCategory> newSourceCategories = new List<SourceCategory>() {
+                            new SourceCategory() { Id = Guid.NewGuid(), CategoryName = "Online Blog", Description = "Online Blog", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new SourceCategory() { Id = Guid.NewGuid(), CategoryName = "Social Media", Description = "Social Media", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new SourceCategory() { Id = Guid.NewGuid(), CategoryName = "Newspaper", Description = "Newspaper", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new SourceCategory() { Id = Guid.NewGuid(), CategoryName = "Radio", Description = "Radio", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new SourceCategory() { Id = Guid.NewGuid(), CategoryName = "Magazine", Description = "Magazine", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new SourceCategory() { Id = Guid.NewGuid(), CategoryName = "Eye Witness", Description = "Eye Witness", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new SourceCategory() { Id = Guid.NewGuid(), CategoryName = "Word of Mouth", Description = "Word of Mouth", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new SourceCategory() { Id = Guid.NewGuid(), CategoryName = "Town Crier", Description = "Town Crier", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new SourceCategory() { Id = Guid.NewGuid(), CategoryName = "Security Authority", Description = "Such as Paramilitary or security agencies", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            };
+
+                            context.SourceCategories.AddRange(newSourceCategories);
+                        }
+
+                        #endregion seed default source categories 
+
+                        #region seed sources
+                        //Seed default source cateories levels
+                        if (!(context.Sources.Any()))
+                        {
+                            IList<Source> sources = new List<Source>() {
+                            new Source() { Id = Guid.NewGuid(), SourceName = "The Guardian", Description = "The Guardian", SourceCategoryId=Guid.Parse("E531B1FB-4558-490E-9C91-E4DDBD4D2BD7"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new Source() { Id = Guid.NewGuid(), SourceName = "Instagram", Description = "Instagram", SourceCategoryId=Guid.Parse("229B6F03-C70D-408E-8CB3-5781037E870B"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new Source() { Id = Guid.NewGuid(), SourceName = "Cool FM", Description = "Cool FM", SourceCategoryId=Guid.Parse("16E4779B-5EB6-49D1-A914-A0BCFA172F0E"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new Source() { Id = Guid.NewGuid(), SourceName = "Vigilant User", Description = "Vigilant NG User", SourceCategoryId=Guid.Parse("0AFEA415-9211-4F49-B62E-E58DBC5AEAB7"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)}
+
+                            };
+
+                            context.Sources.AddRange(sources);
+                        }
+
+                        #endregion seed sources
+
+                        #region seed tip categories
+                        //Seed default source cateories levels
+                        if (!(context.SecurityTipCategories.Any()))
+                        {
+                            IList<SecurityTipCategory> newTipCategories = new List<SecurityTipCategory>() {
+                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Robbery/Theft", Description = "Robbery/Theft", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Accident/Traffic", Description = "Accident/Traffic", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Arson/Fire", Description = "Arson/Fire", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Riot", Description = "Riot", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Terrorism", Description = "Terrorism", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Public Protests", Description = "Protest", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Confraternity/Cultism Activities", Description = "Confraternity/Cultism Activities", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Other", Description = "Other", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)}
+
+                            };
+
+                            context.SecurityTipCategories.AddRange(newTipCategories);
+                        }
+
+                        #endregion seed tip categories 
+
+                        #region subscription plans
+                        //Seed default subscription plan
+                        if (!(context.Subscriptions.Any()))
+                        {
+                            IList<Subscription> sources = new List<Subscription>() {
+                            new Subscription() { Id = Guid.NewGuid(), SubscriptionName = "Basic", SubscriptionDescription = "Basic",  MonthlyFee=0.00M, CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new Subscription() { Id = Guid.NewGuid(), SubscriptionName = "Advanced", SubscriptionDescription = "Advanced", MonthlyFee=100.00M, CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+
+                            };
+
+                            context.Subscriptions.AddRange(sources);
+                        }
+                        #endregion subscription plans
+
+
+
+                        context.SaveChanges();
                     }
                 }
             }

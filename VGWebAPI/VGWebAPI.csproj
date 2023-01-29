@@ -8,8 +8,12 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>VGWebAPI.xml</DocumentationFile>
-    <NoWarn>1701;1702;1591</NoWarn>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	  <!--<DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>-->
+	  <!--<DocumentationFile>bin\$(Configuration)\VGWebAPI.xml</DocumentationFile>-->
+	<NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
+
 
   <ItemGroup>
     <Content Remove="JSONDocs\ngstatesboundaries.json" />

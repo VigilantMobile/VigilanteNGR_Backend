@@ -10,7 +10,7 @@ namespace Application.Features.AppTroopers.Panic.GetTrustedPersonById
 {
     public class GetTrustedPersonByIdQuery : IRequest<Response<TrustedPerson>>
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public class GetTrustedPersonByIdQueryHandler : IRequestHandler<GetTrustedPersonByIdQuery, Response<TrustedPerson>>
         {
             private readonly ITrustedPersonRepositoryAsync _trustedPersonRepository;

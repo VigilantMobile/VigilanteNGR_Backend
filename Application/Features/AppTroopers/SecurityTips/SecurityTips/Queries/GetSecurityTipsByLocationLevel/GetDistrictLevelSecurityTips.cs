@@ -15,7 +15,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
 {
     public class GetDistrictLevelSecurityTipsByIdQuery : IRequest<Response<GetSecurityTipsListResponse>>
     {
-        public int DistrictId { get; set; }
+        public string DistrictId { get; set; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
         public class GetDistrictLevelSecurityTipsByIdQueryHandler : IRequestHandler<GetDistrictLevelSecurityTipsByIdQuery, Response<GetSecurityTipsListResponse>>
@@ -34,7 +34,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
                 var validFilter = _mapper.Map<GetSecurityTipsListQueryParameter>(query);
                 var SecurityTipsForDistrict = await _securityTipService.GetSecurityTipsForDistrict(query.DistrictId, validFilter.PageNumber, validFilter.PageSize);
                 if (SecurityTipsForDistrict == null) throw new ApiException($"No security tips found for the specified district.");
-                return new Response<GetSecurityTipsListResponse>(SecurityTipsForDistrict, $"Security tip retrieval for {SecurityTipsForDistrict.SecurityTipsList.First().BroadcasterLocation} district successful");
+                return new Response<GetSecurityTipsListResponse>(SecurityTipsForDistrict, $"Security tip retrieval for {SecurityTipsForDistrict.SecurityTipsList.First().BroadcasterFullLocation} district successful");
             }
         }
     }

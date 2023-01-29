@@ -19,7 +19,7 @@ namespace Domain.Entities.AppTroopers.SecurityTips
         public virtual ApplicationUser ApplicationUser { get; set; }
 
         [ForeignKey("Comment")]
-        public int CommentId { get; set; }
+        public Guid CommentId { get; set; }
         public virtual Comment Comment { get; set; }
 
         public CommentVoteEnum CommentVote { get; set; }

@@ -34,132 +34,78 @@ using Microsoft.EntityFrameworkCore;
 using Application.Services.Interfaces.UserProfile;
 using Application.Features.UserProfile.Customer.Queries.GetCustomerProfile;
 using Domain.Common.Enums;
+using Infrastructure.Persistence.Models.ViewModels.CustomerProfile;
+using Application.Interfaces.Repositories.AppTroopers.Panic;
+using Domain.Entities.AppTroopers.Panic;
 
 namespace Infrastructure.Persistence.Services
 {
-    public class CustomerProfileService : ICustomerProfileService
+    public class CustomerProfileService : ICustomerService
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger _logger;
+        ITrustedPersonRepositoryAsync _trustedPersonRepositoryAsync;
 
-
-        public CustomerProfileService( ApplicationDbContext context, UserManager<ApplicationUser> userManager, ILogger logger)
+        public CustomerProfileService( ApplicationDbContext context, UserManager<ApplicationUser> userManager, ITrustedPersonRepositoryAsync trustedPersonRepositoryAsync,
+        ILogger logger)
         {
             _context = context;
             _logger = logger;
             _userManager = userManager;
+            _trustedPersonRepositoryAsync = trustedPersonRepositoryAsync;
         }
 
-        public async Task<CustomerProfileVM> GetCustomerProfileAsync(string CustomerId)
+        public async Task<CustomerProfileViewModel> GetCustomerProfileAsync(string CustomerId)
         {
-            CustomerProfileVM customerProfile = new CustomerProfileVM();
+            CustomerProfileViewModel customerProfile = new CustomerProfileViewModel();
             try
             {
 
                 //var customer = await _userManager.FindByIdAsync(CustomerId);
 
-                var customerandLocation = (from customer in _context.Users
-                                           join loclevel in _context.BroadcastLevels on customer.LocationLevelId equals loclevel.Id
-                                           select new
-                                           {
-                                             LocationLevel = loclevel.broadcastLevel.ToString()
-                                           }).FirstOrDefault();
+                //var customerandLocation = (from customer in _context.Users
+                //                           join loclevel in _context.BroadcastLevels on customer.TownId equals loclevel.Id.
+                //                           select new
+                //                           {
+                //                             LocationLevel = loclevel.broadcastLevel.ToString()
+                //                           }).FirstOrDefault();
 
                 //Get Location(s)
-                if (customerandLocation.LocationLevel == BroadcastLevelEnum.Town.ToString())
-                {
-                    customerProfile = (from customer in _context.Users
-                                           join town in _context.Towns on customer.LocationId equals town.Id
-                                           join lga in _context.LGAs on town.LGAId equals lga.Id
-                                           join state in _context.States on lga.StateId equals state.Id
-                                           where customer.Id == CustomerId
-                                           select new CustomerProfileVM()
-                                           {
-                                               CustomerId = customer.Id,
-                                               CustomerName = customer.FirstName,
-                                               CustomerPhone = customer.PhoneNumber,
-                                               CustomerLocation = new CustomerLocationVM
-                                               {
-                                                   CustomerState = new CustomerStateVM
-                                                   {
-                                                       StateId = state.Id.ToString(),
-                                                       StateName = state.Name
-                                                   },
-                                                   CustomerLGA = new CustomerLGAVM
-                                                   {
 
-                                                       LGAId = lga.Id.ToString(),
-                                                       LGAName = lga.Name,
-                                                   },
-                                                   CustomerDistrict = new CustomerDistrictVM
-                                                   {
-                                                       DistrictId = lga.Id.ToString(),
-                                                       DistrictName = lga.Name
-                                                   }
-                                               }
-                                           }).FirstOrDefault();
-
-                }
-                else if (customerandLocation.LocationLevel == BroadcastLevelEnum.LGA.ToString())
-                {
-                    customerProfile = (from customer in _context.Users
-                                       join lga in _context.LGAs on customer.LocationId equals lga.Id
-                                       join state in _context.States on lga.StateId equals state.Id
-                                       where customer.Id == CustomerId
-                                       select new CustomerProfileVM()
+                customerProfile = await (from customer in _context.Users
+                                   join town in _context.Towns on customer.TownId equals town.Id
+                                   join lga in _context.LGAs on town.LGAId equals lga.Id
+                                   join state in _context.States on lga.StateId equals state.Id
+                                   where customer.Id == CustomerId
+                                   select new CustomerProfileViewModel()
+                                   {
+                                       CustomerId = customer.Id,
+                                       CustomerName = customer.FirstName,
+                                       CustomerPhone = customer.PhoneNumber,
+                                       CustomerLocation = new CustomerLocationViewModel
                                        {
-                                           CustomerId = customer.Id,
-                                           CustomerName = customer.FirstName,
-                                           CustomerPhone = customer.PhoneNumber,
-                                           CustomerLocation = new CustomerLocationVM
+                                           CustomerState = new CustomerStateViewModel
                                            {
-                                               CustomerState = new CustomerStateVM
-                                               {
-                                                   StateId = state.Id.ToString(),
-                                                   StateName = state.Name
-                                               },
-                                               CustomerLGA = new CustomerLGAVM
-                                               {
+                                               StateId = state.Id.ToString(),
+                                               StateName = state.Name
+                                           },
+                                           CustomerLGA = new CustomerLGAViewModel
+                                           {
 
-                                                   LGAId = lga.Id.ToString(),
-                                                   LGAName = lga.Name,
-                                               },
+                                               LGAId = lga.Id.ToString(),
+                                               LGAName = lga.Name,
+                                           },
+                                           CustomerDistrict = new CustomerDistrictViewModel
+                                           {
+                                               DistrictId = lga.Id.ToString(),
+                                               DistrictName = lga.Name
                                            }
-                                       }).FirstOrDefault();
-                }
-                else if (customerandLocation.LocationLevel == BroadcastLevelEnum.State.ToString())
-                {
-                    customerProfile = (from customer in _context.Users
-                                       join state in _context.States on customer.LocationId equals state.Id
-                                       where customer.Id == CustomerId
-                                       select new CustomerProfileVM()
-                                       {
-                                           CustomerId = customer.Id,
-                                           CustomerName = customer.FirstName,
-                                           CustomerPhone = customer.PhoneNumber,
-                                           CustomerLocation = new CustomerLocationVM
-                                           {
-                                               CustomerState = new CustomerStateVM
-                                               {
-                                                   StateId = state.Id.ToString(),
-                                                   StateName = state.Name
-                                               },
-                                           }
-                                       }).FirstOrDefault();
-                }
+                                       }
+                                   }).FirstOrDefaultAsync();
 
-
-                //Get Trusted Persons:
-                var trustedContacts = (from contact in _context.TrustedPeople
-                                       join customer in _context.Users on contact.OwnerId equals customer.Id
-                                       where customer.Id == CustomerId
-                                       select new CustomerTrustedContactVM()
-                                       {
-                                           EmailAddress = contact.EmailAddress,
-                                           FullName = contact.FullName,
-                                           PhoneNumber = contact.PhoneNumber,
-                                       }).ToList();
+                //Get Customer Trusted Contacts:
+                var trustedContacts = await GetCustomerTrustedContactsAsync(CustomerId);
 
                 customerProfile.CustomerTrustedContacts = trustedContacts;
 
@@ -167,7 +113,62 @@ namespace Infrastructure.Persistence.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError($"An error occurred while retrieving customer profile: {ex.Message}");
+                _logger.LogError($"An error occurred while retrieving customer profile: {ex.Message}, {ex}");
+                return null;
+            }
+        }
+
+        public async Task<List<CustomerTrustedContactViewModel>> CreateCustomerTrustedContactsAsync(CreateCustomerTrustedContactViewModel createCustomerTrustedContactsRequest)
+        {
+            try
+            {
+                foreach (var contact in createCustomerTrustedContactsRequest.customerTrustedContacts)
+                {
+                    TrustedPerson trustedPerson = new TrustedPerson
+                    {
+                        OwnerId = createCustomerTrustedContactsRequest.CustomerId,
+                        EmailAddress = contact.EmailAddress,
+                        FullName = contact.FullName,
+                        FullAddress = contact.FullAddress,
+                        Gender = contact.Gender,
+                        PhoneNumber = contact.PhoneNumber,
+                        TownId = contact.TownId
+                    };
+                    await _context.TrustedPeople.AddAsync(trustedPerson);
+                }
+
+                await _context.SaveChangesAsync();
+
+                return createCustomerTrustedContactsRequest.customerTrustedContacts;
+
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"An error occurred while creating customer tusted contacts: {ex.Message}, {ex}");
+                return null;
+            }
+        }
+
+
+        public async Task<List<CustomerTrustedContactViewModel>> GetCustomerTrustedContactsAsync(string CustomerId)
+        {
+            try
+            {
+                var trustedContacts = await (from contact in _context.TrustedPeople
+                                       join customer in _context.Users on contact.OwnerId equals customer.Id
+                                       where customer.Id == CustomerId
+                                       select new CustomerTrustedContactViewModel()
+                                       {
+                                           EmailAddress = contact.EmailAddress,
+                                           FullName = contact.FullName,
+                                           PhoneNumber = contact.PhoneNumber,
+                                       }).ToListAsync();
+
+                return trustedContacts;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"An error occurred while retrieving customer tusted contacts: {ex.Message}, {ex}");
                 return null;
             }
         }

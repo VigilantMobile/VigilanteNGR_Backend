@@ -2,7 +2,7 @@
 {
     public class StateNamesandIdsVM
     {
-        public int stateId { get; set; }
+        public string stateId { get; set; }
         public string stateName { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace Application.Features.Location
 {
     public class GetLGAByIdQuery : IRequest<Response<GetLGAViewModel>>
     {
-        public int Id { get; set; }
+        public string LGAId { get; set; }
         public class GetLGAByIdQueryHandler : IRequestHandler<GetLGAByIdQuery, Response<GetLGAViewModel>>
         {
             private readonly ILGARepositoryAsync _lgaRepositoryAsync;
@@ -25,7 +25,7 @@ namespace Application.Features.Location
                 {
                     GetLGAViewModel getlgaViewModel = new GetLGAViewModel();
 
-                    var lga = await _lgaRepositoryAsync.GetLGAWithStateAsync(query.Id);
+                    var lga = await _lgaRepositoryAsync.GetLGAWithStateAsync(query.LGAId);
                     if (lga == null)
                         throw new ApiException($"lga not found.");
 

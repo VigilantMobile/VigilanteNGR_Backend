@@ -21,7 +21,7 @@ namespace Domain.Entities.AppTroopers.SecurityTips
         public string LogoUrl { get; set; }
        
         [ForeignKey("SourceCategory")]
-        public int SourceCategoryId { get; set; }
+        public Guid SourceCategoryId { get; set; }
         public virtual SourceCategory SourceCategory { get; set; }
         public virtual ICollection<SecurityTip> SecurityTips { get; set; }
     }

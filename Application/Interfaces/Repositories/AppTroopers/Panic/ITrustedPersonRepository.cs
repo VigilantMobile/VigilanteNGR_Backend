@@ -5,7 +5,7 @@ namespace Application.Interfaces.Repositories.AppTroopers.Panic
 {
     public interface ITrustedPersonRepositoryAsync : IGenericRepositoryAsync<TrustedPerson>
     {
-        Task<TrustedPerson> IsOwnedByOwner(int Id, string ContactOwnerId);
+        Task<TrustedPerson> IsOwnedByOwner(string Id, string ContactOwnerId);
 
     }
 }

@@ -11,7 +11,7 @@ namespace Application.Features.AppTroopers.Panic.Commands.DeleteTrustedPersonByI
 {
     public class DeleteTrustedPersonByIdCommand : IRequest<Response<TrustedPerson>>
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public class DeleteTrustedPersonByIdCommandHandler : IRequestHandler<DeleteTrustedPersonByIdCommand, Response<TrustedPerson>>
         {
             private readonly ITrustedPersonRepositoryAsync _trustedPersonRepository;
