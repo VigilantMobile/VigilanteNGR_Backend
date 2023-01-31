@@ -7,7 +7,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.AppTroopers.Panic.Commands.DeleteTrustedPersonById
+namespace Application.Features.UserProfile
 {
     public class DeleteTrustedPersonByIdCommand : IRequest<Response<TrustedPerson>>
     {

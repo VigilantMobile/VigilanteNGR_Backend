@@ -1,5 +1,4 @@
-﻿using Application.Features.AppTroopers.SecurityTips.Queries.GetAllSecurityTipCategories;
-using Application.Filters;
+﻿using Application.Filters;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Repositories.AppTroopers.Panic;
 using Application.Wrappers;
@@ -9,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.AppTroopers.Panic.GetAllTrustedPeople
+namespace Application.Features.UserProfile
 {
     public class GetAllTrustedPeopleQuery : IRequest<PagedResponse<IEnumerable<GetAllTrustedPeopleViewModel>>>
     {

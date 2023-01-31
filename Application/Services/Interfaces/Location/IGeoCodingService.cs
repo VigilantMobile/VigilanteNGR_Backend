@@ -1,6 +1,6 @@
 ﻿using Application.DTOs.Location;
 using Application.Features.AppTroopers.SecurityTips;
-using Application.Features.UserProfile.Customer.Queries.GetCustomerProfile;
+using Application.Features.UserProfile;
 using Application.Wrappers;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.Panic;

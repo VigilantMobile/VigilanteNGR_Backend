@@ -1,6 +1,6 @@
 ﻿using Application.Filters;
 
-namespace Application.Features.AppTroopers.Panic.GetAllTrustedPeople
+namespace Application.Features.UserProfile
 {
     public class GetAllTrustedPeopleParameter : RequestParameter
     {

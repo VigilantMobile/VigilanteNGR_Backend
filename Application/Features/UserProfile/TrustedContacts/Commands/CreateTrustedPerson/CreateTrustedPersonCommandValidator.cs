@@ -2,7 +2,7 @@
 using Domain.Entities.AppTroopers.Panic;
 using FluentValidation;
 
-namespace Application.Features.AppTroopers.Panic.Commands.CreateTrustedPerson
+namespace Application.Features.UserProfile
 {
     public class CreateTrustedPersonsCommandValidator : AbstractValidator<TrustedPerson>
     {

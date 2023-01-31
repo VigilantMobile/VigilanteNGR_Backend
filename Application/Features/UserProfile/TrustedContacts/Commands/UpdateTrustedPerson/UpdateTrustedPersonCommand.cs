@@ -8,7 +8,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.AppTroopers.Panic.Commands.UpdateTrustedPerson
+namespace Application.Features.UserProfile
 {
     public class UpdateTrustedPersonCommand : IRequest<Response<TrustedPerson>>
     {

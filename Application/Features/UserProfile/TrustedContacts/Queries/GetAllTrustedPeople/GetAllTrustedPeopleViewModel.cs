@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Application.Features.AppTroopers.SecurityTips.Queries.GetAllSecurityTipCategories
+namespace Application.Features.UserProfile
 {
     public class GetAllTrustedPeopleViewModel
     {

@@ -6,7 +6,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Features.AppTroopers.Panic.GetTrustedPersonById
+namespace Application.Features.UserProfile
 {
     public class GetTrustedPersonByIdQuery : IRequest<Response<TrustedPerson>>
     {

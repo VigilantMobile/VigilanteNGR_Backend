@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.Features.UserProfile.Customer.Queries.GetCustomerProfile
+namespace Application.Features.UserProfile
 {
     public class CustomerProfileViewModel
     {
@@ -14,7 +14,8 @@ namespace Application.Features.UserProfile.Customer.Queries.GetCustomerProfile
         public string CustomerPhone { get; set; }
         public string DateOfBirth { get; set; }
         public string LocationLevel { get; set; }
-        [Required]
+
+        [Required, MinLength(1)]
         public List<CustomerTrustedContactViewModel> CustomerTrustedContacts { get; set; }
         public CustomerLocationViewModel CustomerLocation { get; set; }
     }
@@ -29,11 +30,19 @@ namespace Application.Features.UserProfile.Customer.Queries.GetCustomerProfile
 
     public class CustomerTrustedContactViewModel
     {
+        [Required]
         public string FullName { get; set; }
-        public Guid TownId { get; set; }
+        [Required]
+        public string TownId { get; set; }
+        [Required]
         public string FullAddress { get; set; }
+        [Required]
         public string PhoneNumber { get; set; }
+        [Required]
+        [EmailAddress]
         public string EmailAddress { get; set; }
+        [Required]
+
         public string Gender { get; set; }
     }
 

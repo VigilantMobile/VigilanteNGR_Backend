@@ -32,22 +32,22 @@ using Domain.Entities.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Application.Services.Interfaces.UserProfile;
-using Application.Features.UserProfile.Customer.Queries.GetCustomerProfile;
 using Domain.Common.Enums;
 using Infrastructure.Persistence.Models.ViewModels.CustomerProfile;
 using Application.Interfaces.Repositories.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.Panic;
+using Application.Features.UserProfile;
 
 namespace Infrastructure.Persistence.Services
 {
-    public class CustomerProfileService : ICustomerService
+    public class CustomerService : ICustomerService
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger _logger;
         ITrustedPersonRepositoryAsync _trustedPersonRepositoryAsync;
 
-        public CustomerProfileService( ApplicationDbContext context, UserManager<ApplicationUser> userManager, ITrustedPersonRepositoryAsync trustedPersonRepositoryAsync,
+        public CustomerService( ApplicationDbContext context, UserManager<ApplicationUser> userManager, ITrustedPersonRepositoryAsync trustedPersonRepositoryAsync,
         ILogger logger)
         {
             _context = context;
@@ -132,7 +132,7 @@ namespace Infrastructure.Persistence.Services
                         FullAddress = contact.FullAddress,
                         Gender = contact.Gender,
                         PhoneNumber = contact.PhoneNumber,
-                        TownId = contact.TownId
+                        TownId = Guid.Parse(contact.TownId)
                     };
                     await _context.TrustedPeople.AddAsync(trustedPerson);
                 }
