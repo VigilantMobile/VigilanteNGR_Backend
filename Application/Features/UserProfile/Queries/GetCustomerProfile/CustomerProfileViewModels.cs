@@ -12,8 +12,6 @@ namespace Application.Features.UserProfile
         public string CustomerId { get; set; }
         public string CustomerName { get; set; }
         public string CustomerPhone { get; set; }
-        public string DateOfBirth { get; set; }
-        public string LocationLevel { get; set; }
 
         [Required, MinLength(1)]
         public List<CustomerTrustedContactViewModel> CustomerTrustedContacts { get; set; }
@@ -24,6 +22,7 @@ namespace Application.Features.UserProfile
     {
         public string CustomerId { get; set; }
 
+        [Required, MinLength(1)]
         public List<CustomerTrustedContactViewModel> customerTrustedContacts { get; set; }
     }
 
@@ -42,7 +41,6 @@ namespace Application.Features.UserProfile
         [EmailAddress]
         public string EmailAddress { get; set; }
         [Required]
-
         public string Gender { get; set; }
     }
 

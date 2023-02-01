@@ -23,6 +23,7 @@ namespace Infrastructure.Persistence.Helpers
 
             builder.RegisterType<MailgunEmailService>().As<IMailgunEmailService>();
             //builder.RegisterType<MailgunEmailService>().As<IMailgunEmailService>().InstancePerLifetimeScope();
+            builder.RegisterType<CustomerService>().As<ICustomerService>().InstancePerLifetimeScope();
         }
     }
 }

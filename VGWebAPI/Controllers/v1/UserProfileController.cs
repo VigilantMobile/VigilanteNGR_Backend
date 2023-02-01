@@ -38,8 +38,6 @@ namespace VGWebAPI.Controllers.v1
             return Ok(await Mediator.Send(new CreateTrustedContactsCommand { createCustomerTrustedContactsRequest = createCustomerTrustedContactsRequest }));
         }
 
-
-        
         #endregion Customers
 
     }

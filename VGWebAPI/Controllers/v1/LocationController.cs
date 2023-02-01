@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace VGWebAPI.Controllers.v1
 {
     [ApiVersion("1.0")]
-    [Authorize(Roles = "SuperAdmin, Admin")]
+    [Authorize(Roles = "SuperAdmin, Admin, Customer")]
 
     public class LocationController : BaseApiController
     {
