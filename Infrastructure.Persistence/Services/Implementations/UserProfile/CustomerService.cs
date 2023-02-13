@@ -37,6 +37,7 @@ using Infrastructure.Persistence.Models.ViewModels.CustomerProfile;
 using Application.Interfaces.Repositories.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.Panic;
 using Application.Features.UserProfile;
+using Infrastructure.Persistence.Migrations;
 
 namespace Infrastructure.Persistence.Services
 {
@@ -77,7 +78,9 @@ namespace Infrastructure.Persistence.Services
                                    join town in _context.Towns on customer.TownId equals town.Id
                                    join lga in _context.LGAs on town.LGAId equals lga.Id
                                    join state in _context.States on lga.StateId equals state.Id
-                                   where customer.Id == CustomerId
+                                   join subscriptionPlan in _context.Subscriptions on customer.SubscriptionId equals subscriptionPlan.Id
+
+                                         where customer.Id == CustomerId
                                    select new CustomerProfileViewModel()
                                    {
                                        CustomerId = customer.Id,
@@ -100,13 +103,17 @@ namespace Infrastructure.Persistence.Services
                                            {
                                                DistrictId = lga.Id.ToString(),
                                                DistrictName = lga.Name
-                                           }
+                                           },                            
+                                       },
+                                       SubscriptionPlan = new CustomerSubscriptionPlan
+                                       {
+                                           SubscriptionPlanId = subscriptionPlan.Id.ToString(),
+                                           SubscriptionPlanName = subscriptionPlan.SubscriptionName
                                        }
                                    }).FirstOrDefaultAsync();
 
                 //Get Customer Trusted Contacts:
                 var trustedContacts = await GetCustomerTrustedContactsAsync(CustomerId);
-
                 customerProfile.CustomerTrustedContacts = trustedContacts;
 
                 return customerProfile;
@@ -126,6 +133,7 @@ namespace Infrastructure.Persistence.Services
                 {
                     TrustedPerson trustedPerson = new TrustedPerson
                     {
+                        Id = Guid.NewGuid(),
                         OwnerId = createCustomerTrustedContactsRequest.CustomerId,
                         EmailAddress = contact.EmailAddress,
                         FullName = contact.FullName,
@@ -145,7 +153,7 @@ namespace Infrastructure.Persistence.Services
             catch(Exception ex)
             {
                 _logger.LogError($"An error occurred while creating customer tusted contacts: {ex.Message}, {ex}");
-                return null;
+                throw ex;
             }
         }
 

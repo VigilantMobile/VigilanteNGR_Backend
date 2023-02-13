@@ -4,7 +4,9 @@ using Application.Interfaces.Repositories.AppTroopers.Panic;
 using Application.Wrappers;
 using Domain.Entities.AppTroopers.Panic;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,11 +14,22 @@ namespace Application.Features.UserProfile
 {
     public class UpdateTrustedPersonCommand : IRequest<Response<TrustedPerson>>
     {
-        public string UserId { get; set; }
+        [Required]
+        public string CustomerId { get; set; }
+
+        [Required]
+        public string TrustedPersonId { get; set; }
+        [Required]
         public string FullName { get; set; }
+        [Required]
+        public string TownId { get; set; }
+        [Required]
         public string FullAddress { get; set; }
-        public string EmailAddress { get; set; }
+        [Required]
         public string PhoneNumber { get; set; }
+        [Required]
+        public string EmailAddress { get; set; }
+        [Required]
         public string Gender { get; set; }
 
         public class UpdateTrustedPersonCommandHandler : IRequestHandler<UpdateTrustedPersonCommand, Response<TrustedPerson>>
@@ -35,7 +48,7 @@ namespace Application.Features.UserProfile
                 string OwnerId = _userAccessor.GetUserId();
 
                 //var trustedPerson = await _trustedPersonRepository.GetByIdAsync(command.UserId);
-                var trustedPerson = await _trustedPersonRepository.IsOwnedByOwner(command.UserId, OwnerId);
+                var trustedPerson = await _trustedPersonRepository.IsOwnedByOwner(command.TrustedPersonId, OwnerId);
 
                 if (trustedPerson == null)
                 {
@@ -43,10 +56,13 @@ namespace Application.Features.UserProfile
                 }
                 else
                 {
+                    trustedPerson.TownId = Guid.Parse(command.TownId); 
                     trustedPerson.FullName = command.FullName;
+                    trustedPerson.FullAddress = command.FullName;
                     trustedPerson.PhoneNumber = command.PhoneNumber;
                     trustedPerson.EmailAddress = command.EmailAddress;
                     trustedPerson.LastModified = DateTime.UtcNow.AddHours(1);
+
                     await _trustedPersonRepository.UpdateAsync(trustedPerson);
 
                     return new Response<TrustedPerson>(trustedPerson, $"Trusted contact successfully updated", successStatus: true);

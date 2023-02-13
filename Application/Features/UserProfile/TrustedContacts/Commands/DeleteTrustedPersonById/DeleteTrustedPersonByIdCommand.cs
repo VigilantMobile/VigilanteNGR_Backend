@@ -4,6 +4,7 @@ using Application.Interfaces.Repositories.AppTroopers.Panic;
 using Application.Wrappers;
 using Domain.Entities.AppTroopers.Panic;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,7 +12,8 @@ namespace Application.Features.UserProfile
 {
     public class DeleteTrustedPersonByIdCommand : IRequest<Response<TrustedPerson>>
     {
-        public string Id { get; set; }
+        [Required]
+        public string TrustedPersonId { get; set; }
         public class DeleteTrustedPersonByIdCommandHandler : IRequestHandler<DeleteTrustedPersonByIdCommand, Response<TrustedPerson>>
         {
             private readonly ITrustedPersonRepositoryAsync _trustedPersonRepository;
@@ -26,7 +28,7 @@ namespace Application.Features.UserProfile
             {
                 string OwnerId = _userAccessor.GetUserId();
 
-                var trustedPerson = await _trustedPersonRepository.IsOwnedByOwner(command.Id, OwnerId);
+                var trustedPerson = await _trustedPersonRepository.IsOwnedByOwner(command.TrustedPersonId, OwnerId);
 
                 if (trustedPerson == null)
                 {

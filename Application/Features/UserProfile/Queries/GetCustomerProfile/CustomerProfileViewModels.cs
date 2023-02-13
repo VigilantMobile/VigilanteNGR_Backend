@@ -16,6 +16,7 @@ namespace Application.Features.UserProfile
         [Required, MinLength(1)]
         public List<CustomerTrustedContactViewModel> CustomerTrustedContacts { get; set; }
         public CustomerLocationViewModel CustomerLocation { get; set; }
+        public CustomerSubscriptionPlan SubscriptionPlan { get; set; }
     }
 
     public class CreateCustomerTrustedContactViewModel
@@ -66,5 +67,11 @@ namespace Application.Features.UserProfile
     {
         public string DistrictId { get; set; }
         public string DistrictName { get; set; }
+    }
+
+    public class CustomerSubscriptionPlan
+    {
+        public string SubscriptionPlanId { get; set; }
+        public string SubscriptionPlanName { get; set; }
     }
 }

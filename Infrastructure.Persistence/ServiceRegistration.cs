@@ -24,6 +24,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence
 {
@@ -89,13 +90,14 @@ namespace Infrastructure.Persistence
                     };
                     o.Events = new JwtBearerEvents()
                     {
-                        OnAuthenticationFailed = c =>
-                        {
-                            c.NoResult();
-                            c.Response.StatusCode = 500;
-                            c.Response.ContentType = "text/plain";
-                            return c.Response.WriteAsync(c.Exception.ToString());
-                        },
+                        //OnAuthenticationFailed = c =>
+                        //{
+                        //    c.NoResult();
+                        //    c.Response.StatusCode = 500;
+                        //    c.Response.ContentType = "text/plain";
+                        //    c.Response.WriteAsync(c.Exception.ToString());
+                        //    return Task.CompletedTask;
+                        //},
                         OnChallenge = context =>
                         {
                             context.HandleResponse();
