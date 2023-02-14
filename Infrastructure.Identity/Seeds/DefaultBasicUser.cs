@@ -1,4 +1,5 @@
 ﻿using Application.Enums;
+using Domain.Entities.Identity;
 using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;

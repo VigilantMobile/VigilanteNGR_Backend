@@ -12,6 +12,7 @@ namespace Application.Features.UserProfile
         public string CustomerId { get; set; }
         public string CustomerName { get; set; }
         public string CustomerPhone { get; set; }
+        public string CustomerProfilePhoto { get; set; }
 
         [Required, MinLength(1)]
         public List<CustomerTrustedContactViewModel> CustomerTrustedContacts { get; set; }
