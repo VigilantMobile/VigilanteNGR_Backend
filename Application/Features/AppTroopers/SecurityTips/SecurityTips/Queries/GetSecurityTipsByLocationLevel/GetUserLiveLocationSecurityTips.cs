@@ -4,6 +4,7 @@ using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Application.Services.Interfaces.AppTroopers.SecurityTips;
 using Application.Wrappers;
 using AutoMapper;
+using Domain.Common.Enums;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.SecurityTips;
 using MediatR;
@@ -13,24 +14,26 @@ using System.Threading.Tasks;
 
 namespace Application.Features.AppTroopers.SecurityTips.Commands
 {
-    public class GetUserCreatedSecurityTipsByIdQuery : IRequest<Response<GetSecurityTipsListResponse>>
+    public class GetUserLiveLocationSecurityTipsByIdQuery : IRequest<Response<GetSecurityTipsListResponse>>
     {
         public string UserId { get; set; }
+        public string DesiredBroadcastLevel { get; set; }
+        public string coordinates { get; set; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
 
-        public class GetUserCreatedSecurityTipsByIdQueryHandler : IRequestHandler<GetUserCreatedSecurityTipsByIdQuery, Response<GetSecurityTipsListResponse>>
+        public class GetUserLiveLocationSecurityTipsByIdQueryHandler : IRequestHandler<GetUserLiveLocationSecurityTipsByIdQuery, Response<GetSecurityTipsListResponse>>
         {
             private readonly ISecurityTipService _securityTipService;
             private readonly IMapper _mapper;
 
-            public GetUserCreatedSecurityTipsByIdQueryHandler(ISecurityTipService securityTipService, IMapper mapper)
+            public GetUserLiveLocationSecurityTipsByIdQueryHandler(ISecurityTipService securityTipService, IMapper mapper)
             {
                 _securityTipService = securityTipService;
                 _mapper = mapper;
             }
 
-            public async Task<Response<GetSecurityTipsListResponse>> Handle(GetUserCreatedSecurityTipsByIdQuery query, CancellationToken cancellationToken)
+            public async Task<Response<GetSecurityTipsListResponse>> Handle(GetUserLiveLocationSecurityTipsByIdQuery query, CancellationToken cancellationToken)
             {
                 var validFilter = _mapper.Map<GetSecurityTipsListQueryParameter>(query);
                 var SecurityTipsForUser = await _securityTipService.GetSecurityTipsPostedByUser(query.UserId, validFilter.PageNumber, validFilter.PageSize);

@@ -12,33 +12,39 @@ using System.Threading.Tasks;
 namespace VGWebAPI.Controllers.v1
 {
     [ApiVersion("1.0")]
-    [Authorize(Roles = "SuperAdmin, Admin")]
+    [Authorize(Roles = "SuperAdmin, Admin, Customer")]
 
-    public class SecurityTipsController : BaseApiController 
+    public class SecurityTipsController : BaseApiController
     {
-        [HttpGet("user-security-tips/{UserId}")]
+        [HttpGet("user/{UserId}")] 
         public async Task<IActionResult> GetUserSecurityTips(string UserId, [FromQuery] GetSecurityTipsListQueryParameter filter)
         {
             return Ok(await Mediator.Send(new GetUserCreatedSecurityTipsByIdQuery {  UserId = UserId, PageNumber = filter.PageNumber, PageSize = filter.PageSize }));
         }
 
-        [HttpGet("state-security-tips/{StateId}")]
+        // To Do
+        [HttpGet("user/created-by/{UserId}")] //get tips posted by a user.
+        public async Task<IActionResult> GetUserPostedSecurityTips(string UserId, [FromQuery] GetSecurityTipsListQueryParameter filter)
+        {
+            return Ok(await Mediator.Send(new GetUserCreatedSecurityTipsByIdQuery { UserId = UserId, PageNumber = filter.PageNumber, PageSize = filter.PageSize }));
+        }
+
+        [HttpGet("state/{StateId}")] //All tips posted in a state at state level.
         public async Task<IActionResult> GetStateSecurityTips(string StateId, [FromQuery] GetSecurityTipsListQueryParameter filter)
         {
             return Ok(await Mediator.Send(new GetStateLevelSecurityTipsByIdQuery { StateId = StateId, PageNumber = filter.PageNumber, PageSize = filter.PageSize }));
         }
 
-        [HttpGet("lga-security-tips/{LGAId}")]
+        [HttpGet("lga/{LGAId}")] //All tips posted in an lga at lga level
         public async Task<IActionResult> GetLGASecurityTips(string LGAId, [FromQuery] GetSecurityTipsListQueryParameter filter)
         {
             return Ok(await Mediator.Send(new GetLGALevelSecurityTipsByIdQuery { LGAId = LGAId, PageNumber = filter.PageNumber, PageSize = filter.PageSize }));
         }
 
-        [HttpGet("districts-security-tips/{DistrictId}")]
+        [HttpGet("districts/{DistrictId}")] //Al tips posted in a district 
         public async Task<IActionResult> GetDistrictSecurityTips(string DistrictId, [FromQuery] GetSecurityTipsListQueryParameter filter)
         {
             return Ok(await Mediator.Send(new GetDistrictLevelSecurityTipsByIdQuery { DistrictId = DistrictId, PageNumber = filter.PageNumber, PageSize = filter.PageSize }));
-        } 
-
+        }
     }
 }

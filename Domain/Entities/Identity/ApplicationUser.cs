@@ -27,6 +27,7 @@ namespace Domain.Entities.Identity
         public string LastName { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
+        public string CustomerProfileUrl { get; set; }
 
 
         //CustomerLocation
@@ -35,7 +36,7 @@ namespace Domain.Entities.Identity
         //public int? LocationLevelId { get; set; }
         //public virtual BroadcastLevel LocationLevel { get; set; }
 
-  
+
         [ForeignKey("Town")]
         public Guid? TownId { get; set; }
         public virtual Town CustomerTown { get; set; }

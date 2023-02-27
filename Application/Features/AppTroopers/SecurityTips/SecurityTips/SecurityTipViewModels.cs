@@ -64,7 +64,6 @@ namespace Application.Features.AppTroopers.SecurityTips
         //Broadcaster
         public string BroadcasterTownId { get; set; }
         public string BroadcasterFullLocation { get; set; }
-
     }
 
     public class BroadcasterandTipLocations
@@ -77,5 +76,29 @@ namespace Application.Features.AppTroopers.SecurityTips
     public class GetSecurityTipsListResponse
     {
        public List<GetSecurityTipResponse> SecurityTipsList { get; set; }
+    }
+
+    //Live Location
+
+    public class GetLiveLocationSecurityTipResponse
+    {
+        public List<GetSecurityTipResponse> SecurityTipsList { get; set; }
+    }
+
+    public class LiveLocationSecurityTipResponse
+    {
+        public string Id { get; set; }
+        public string Subject { get; set; }
+        public string Body { get; set; }
+        public string TipStatus { get; set; }
+        public string BroadcasterName { get; set; }
+        public string SecurityTipCategory { get; set; }
+        public string AlertLevel { get; set; }
+        public string BroadcastLevel { get; set; }
+        public bool IsBroadcasted { get; set; }
+        public string BroadcastLevelId { get; set; }
+        public string BroadcastLocationId { get; set; }
+        public string BroadcastLocation { get; set; }
+        public string BroadcasterTownId { get; set; }
     }
 }

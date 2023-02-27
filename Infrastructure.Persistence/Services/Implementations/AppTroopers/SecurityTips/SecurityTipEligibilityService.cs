@@ -60,7 +60,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
 
            try
            {
-                var customerLiveLocation = await _geocodingService.GetCustomerLiveAddresses(currentLocationCoordinates);
+                var customerLiveLocation = await _geocodingService.GetCustomerLiveAddresses(currentLocationCoordinates); 
                 var alertLevel = await _alertLevelRespositoryAsync.GetByIdAsync(alertLevelId);
                 var broadcastLevel = await _broadcastLevelRespositoryAsync.GetByIdAsync(BroadcastLevelId);
                 bool CanImmediatelyBroadcast = false;
