@@ -17,7 +17,7 @@ namespace VGWebAPI.Controllers.v1
     public class SecurityTipsController : BaseApiController
     {
         [HttpGet("user/{UserId}")] 
-        public async Task<IActionResult> GetUserSecurityTips(string UserId, [FromQuery] GetSecurityTipsListQueryParameter filter)
+        public async Task<IActionResult> GetUserSecurityTips(string UserId, [FromQuery] GetSecurityTipsListQueryParameter filter) // for all user locations
         {
             return Ok(await Mediator.Send(new GetUserCreatedSecurityTipsByIdQuery {  UserId = UserId, PageNumber = filter.PageNumber, PageSize = filter.PageSize }));
         }
@@ -27,6 +27,12 @@ namespace VGWebAPI.Controllers.v1
         public async Task<IActionResult> GetUserPostedSecurityTips(string UserId, [FromQuery] GetSecurityTipsListQueryParameter filter)
         {
             return Ok(await Mediator.Send(new GetUserCreatedSecurityTipsByIdQuery { UserId = UserId, PageNumber = filter.PageNumber, PageSize = filter.PageSize }));
+        }
+
+        [HttpGet("user/created-by/{UserId}/{Coordinates}")] //get tips posted by a user.
+        public async Task<IActionResult> GetUserPostedSecurityTips(string UserId, [FromQuery] GetLiveLocationSecurityTipsQueryParameter filter)
+        {
+            return Ok(await Mediator.Send(new GetUserLiveLocationSecurityTipsQuery { UserId = UserId, coordinates = filter.Coordinates, DesiredBroadcastLevel = filter.BroadcastLevel, PageNumber = filter.PageNumber, PageSize = filter.PageSize }));
         }
 
         [HttpGet("state/{StateId}")] //All tips posted in a state at state level.
@@ -41,10 +47,10 @@ namespace VGWebAPI.Controllers.v1
             return Ok(await Mediator.Send(new GetLGALevelSecurityTipsByIdQuery { LGAId = LGAId, PageNumber = filter.PageNumber, PageSize = filter.PageSize }));
         }
 
-        [HttpGet("districts/{DistrictId}")] //Al tips posted in a district 
-        public async Task<IActionResult> GetDistrictSecurityTips(string DistrictId, [FromQuery] GetSecurityTipsListQueryParameter filter)
+        [HttpGet("town/{TownId}")] //Al tips posted in a district 
+        public async Task<IActionResult> GetDistrictSecurityTips(string TownId, [FromQuery] GetSecurityTipsListQueryParameter filter)
         {
-            return Ok(await Mediator.Send(new GetDistrictLevelSecurityTipsByIdQuery { DistrictId = DistrictId, PageNumber = filter.PageNumber, PageSize = filter.PageSize }));
+            return Ok(await Mediator.Send(new GetDistrictLevelSecurityTipsByIdQuery { DistrictId = TownId, PageNumber = filter.PageNumber, PageSize = filter.PageSize }));
         }
     }
 }

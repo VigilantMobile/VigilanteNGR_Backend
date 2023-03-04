@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.AppTroopers.SecurityTips.Commands
 {
-    public class GetUserLiveLocationSecurityTipsByIdQuery : IRequest<Response<GetSecurityTipsListResponse>>
+    public class GetUserLiveLocationSecurityTipsQuery : IRequest<Response<GetLiveLocationSecurityTipResponse>>
     {
         public string UserId { get; set; }
         public string DesiredBroadcastLevel { get; set; }
@@ -22,7 +22,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
 
-        public class GetUserLiveLocationSecurityTipsByIdQueryHandler : IRequestHandler<GetUserLiveLocationSecurityTipsByIdQuery, Response<GetSecurityTipsListResponse>>
+        public class GetUserLiveLocationSecurityTipsByIdQueryHandler : IRequestHandler<GetUserLiveLocationSecurityTipsQuery, Response<GetLiveLocationSecurityTipResponse>>
         {
             private readonly ISecurityTipService _securityTipService;
             private readonly IMapper _mapper;
@@ -33,12 +33,12 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
                 _mapper = mapper;
             }
 
-            public async Task<Response<GetSecurityTipsListResponse>> Handle(GetUserLiveLocationSecurityTipsByIdQuery query, CancellationToken cancellationToken)
+            public async Task<Response<GetLiveLocationSecurityTipResponse>> Handle(GetUserLiveLocationSecurityTipsQuery query, CancellationToken cancellationToken)
             {
                 var validFilter = _mapper.Map<GetSecurityTipsListQueryParameter>(query);
-                var SecurityTipsForUser = await _securityTipService.GetSecurityTipsPostedByUser(query.UserId, validFilter.PageNumber, validFilter.PageSize);
-                if (SecurityTipsForUser == null) throw new ApiException($"No security tips found for the specified User.");
-                return new Response<GetSecurityTipsListResponse>(SecurityTipsForUser, $"Security tip retrieval for {SecurityTipsForUser.SecurityTipsList.First().BroadcasterFullLocation} user successful");
+                var SecurityTipsForUserLiveLocation = await _securityTipService.GetSecurityTipsForUserLiveLocation(query.UserId, query.DesiredBroadcastLevel, query.coordinates, validFilter.PageNumber, validFilter.PageSize);
+                if (SecurityTipsForUserLiveLocation == null) throw new ApiException($"No security tips found for the specified User.");
+                return new Response<GetLiveLocationSecurityTipResponse>(SecurityTipsForUserLiveLocation, $"Security tip retrieval for {SecurityTipsForUserLiveLocation.SecurityTipsList.First().BroadcasterFullLocation} user successful");
             }
         }
     }

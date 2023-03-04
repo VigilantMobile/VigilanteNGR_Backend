@@ -7,6 +7,7 @@ using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Application.Interfaces.Repositories.Location;
 using Application.Services.Interfaces.AppTroopers.SecurityTips;
 using Application.Services.Interfaces.Location;
+using Application.Services.Interfaces.UserProfile;
 using Domain.Common.Enums;
 using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.Identity;
@@ -39,6 +40,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
         private readonly ISecurityTipCategoryRepositoryAsync _securityTipCategoryRepositoryAsync;
         private readonly IGeoCodingService _geocodingService;
         private readonly ILogger _logger;
+        private readonly ICustomerService _customerService;
 
         public SecurityTipService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, 
             IStateRepositoryAsync stateRepositoryAsync, 
@@ -49,7 +51,8 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
             IEscalatedTipsRepositoryAsync escalatedTipsRepositoryAsync,
             IAlertLevelRespositoryAsync alertLevelRespositoryAsync,
             ISecurityTipCategoryRepositoryAsync securityTipCategoryRepositoryAsync,
-            IGeoCodingService geocodingService
+            IGeoCodingService geocodingService,
+            ICustomerService customerService
            )
 
         {
@@ -65,6 +68,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
             _alertLevelRespositoryAsync = alertLevelRespositoryAsync;
             _securityTipCategoryRepositoryAsync = securityTipCategoryRepositoryAsync;
             _geocodingService = geocodingService;
+            _customerService = customerService;
         }
 
         public async Task<CreateSecurityTipResponse> CreateSecurityTipAsync(CreateSecurityTipCommand securityTipRequest)
@@ -192,7 +196,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                     broadcasterandTipLocations.BroadcastLocation = town.Name;
                 }
 
-                //Get Broadcaster Details 
+                //Get Broadcaster Location Details 
                 var townWithState = await _townRepositoryAsync.GetTownStateAndLGAAsync(BroadcasterTownId);
 
                 broadcasterandTipLocations.BroadcasterFullLocation = $"{townWithState.TownName}, {townWithState.LGAName}, {townWithState.StateName} ";
@@ -345,63 +349,25 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
 
                 if (myStatus == BroadcastLevelEnum.Town)
                 {
-                    var SecurityTipsForLiveLocation = await (from securityTip in _context.SecurityTips
-                                                             join broadcaster in _context.Users on securityTip.BroadcasterId equals broadcaster.Id
-                                                             join category in _context.SecurityTipCategories on securityTip.SecurityTipCategoryId equals category.Id
-                                                             join alertLevel in _context.AlertLevels on securityTip.AlertLevelId equals alertLevel.Id
-                                                             where securityTip.LocationId == town.Id.ToString()
-
-                                                             select new GetSecurityTipResponse
-                                                             {
-                                                                 Id = securityTip.Id.ToString(),
-                                                                 Subject = securityTip.Subject,
-                                                                 Body = securityTip.Body,
-                                                                 BroadcasterName = $"{broadcaster.FirstName} {broadcaster.LastName}",
-                                                                 TipStatus = securityTip.TipStatusString,
-                                                                 AlertLevel = alertLevel.Name,
-                                                                 SecurityTipCategory = category.CategoryName,
-                                                                 BroadcastLevelId = securityTip.BroadcastLevelId.ToString(),
-                                                                 BroadcastLocationId = securityTip.LocationId,
-                                                                 BroadcasterTownId = broadcaster.TownId.ToString(),
-                                                             }).Skip((pageNumber - 1) * pageSize)
-                                          .Take(pageSize)
-                                          .AsNoTracking()
-                                          .ToListAsync();
-
-                    getSecurityTipsListResponse.SecurityTipsList = SecurityTipsForLiveLocation;
-
+                    // Redo this by calling existing methods.
+                    getSecurityTipsListResponse = await _securityTipRepositoryAsync.GetSecurityTipDataForTown(town.Id.ToString(), pageNumber, pageSize);
+                    return getSecurityTipsListResponse;
                 }
-                else if (myStatus == BroadcastLevelEnum.LGA)
+                else
                 {
-                    //Same for LGA
-                    return null;
-                }
-                else if (myStatus == BroadcastLevelEnum.State)
-                {
-                    // Same for State
-                    return null;
-                }
+                    var tipTownlGAState = await _townRepositoryAsync.GetTownStateAndLGAAsync(town.Id.ToString());
 
-                //
-
-                
-                //// Get UserandTipLocations
-                //var broadcasterAndTipLocations = await GetBroadcasterandTipLocations(SecurityTipsForLiveLocation.First().BroadcastLevelId, SecurityTipsForLiveLocation.First().BroadcastLocationId, SecurityTipsForLiveLocation.First().BroadcasterTownId);
-
-                //if (broadcasterAndTipLocations == null)
-                //{
-                //    getSecurityTipsListResponse = null;
-                //    return getSecurityTipsListResponse;
-                //}
-
-               
-
-                //foreach (var securityTip in getSecurityTipsListResponse.SecurityTipsList)
-                //{
-                //    securityTip.BroadcastLevel = broadcasterAndTipLocations.BroadcastLocationLevel;
-                //    securityTip.BroadcastLocation = broadcasterAndTipLocations.BroadcastLocation;
-                //    securityTip.BroadcasterFullLocation = broadcasterAndTipLocations.BroadcasterFullLocation;
-                //}
+                    if (myStatus == BroadcastLevelEnum.LGA)
+                    {
+                        getSecurityTipsListResponse = await _securityTipRepositoryAsync.GetSecurityTipDataForLGA(tipTownlGAState.LGAId, pageNumber, pageSize);
+                        return getSecurityTipsListResponse;
+                    }
+                    else if (myStatus == BroadcastLevelEnum.State)
+                    {
+                        getSecurityTipsListResponse = await _securityTipRepositoryAsync.GetSecurityTipDataForState(tipTownlGAState.StateId.ToString(), pageNumber, pageSize);
+                        return getSecurityTipsListResponse;
+                    }
+                } 
 
                 return getSecurityTipsListResponse;
             }
@@ -410,6 +376,33 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                 _logger.LogError($"An error occurred while retrieving security tip: {ex.StackTrace}");
                 getSecurityTipsListResponse = null;
                 return getSecurityTipsListResponse;
+            }
+        }
+
+        public async Task<GetSecurityTipsForUserTownLGAandStateResponse> GetSecurityTipsForUserLocations(string Userid, int pageNumber, int pageSize) // state, lga and town
+        {
+            GetSecurityTipsForUserTownLGAandStateResponse getSecurityTipsForUserTownLGAandStateResponse = new GetSecurityTipsForUserTownLGAandStateResponse();
+
+            try
+            {
+                var customerLocations = await _customerService.GetCustomerProfileAsync(Userid);
+
+                var townTips = await _securityTipRepositoryAsync.GetSecurityTipDataForTown(customerLocations.CustomerLocation.CustomerDistrict.DistrictId, pageNumber, pageSize);
+                getSecurityTipsForUserTownLGAandStateResponse.SecurityTipsListforUserTown = townTips.SecurityTipsList;
+
+                var lgaTips = await _securityTipRepositoryAsync.GetSecurityTipDataForLGA(customerLocations.CustomerLocation.CustomerDistrict.DistrictId, pageNumber, pageSize);
+                getSecurityTipsForUserTownLGAandStateResponse.SecurityTipsListforUserLGA = lgaTips.SecurityTipsList;
+
+                var stateTips = await _securityTipRepositoryAsync.GetSecurityTipDataForState(customerLocations.CustomerLocation.CustomerDistrict.DistrictId, pageNumber, pageSize);
+                getSecurityTipsForUserTownLGAandStateResponse.SecurityTipsListforUserState = stateTips.SecurityTipsList;
+
+                return getSecurityTipsForUserTownLGAandStateResponse;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while retrieving security tip: {ex.StackTrace}");
+                getSecurityTipsForUserTownLGAandStateResponse = null;
+                return getSecurityTipsForUserTownLGAandStateResponse;
             }
         }
 
@@ -500,6 +493,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                                                   BroadcastLevelId = securityTip.BroadcastLevelId.ToString(),
                                                   BroadcastLocationId = securityTip.LocationId,
                                                   BroadcasterTownId = broadcaster.TownId.ToString(),
+                                                   
                                               }).Skip((pageNumber - 1) * pageSize)
                                          .Take(pageSize)
                                          .AsNoTracking()
@@ -539,34 +533,36 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
 
             try
             {
-                var UserSecuritytips = await (from securityTip in _context.SecurityTips
-                                              join broadcaster in _context.Users on securityTip.BroadcasterId equals broadcaster.Id.ToString()
-                                              join category in _context.SecurityTipCategories on securityTip.SecurityTipCategoryId equals category.Id
-                                              join alertLevel in _context.AlertLevels on securityTip.AlertLevelId equals alertLevel.Id
-                                              join broadcastLevel in _context.BroadcastLevels on securityTip.BroadcastLevelId equals broadcastLevel.Id
-                                              join district in _context.Towns on securityTip.LocationId equals district.Id.ToString()
-                                              where broadcastLevel.Name == BroadcastLevelEnum.Town.ToString() && district.Id == Guid.Parse(DistrictId.ToString())
-                                              && securityTip.IsBroadcasted == true
+                var UserSecuritytips = await _securityTipRepositoryAsync.GetSecurityTipDataForTown(DistrictId, pageNumber, pageSize);
 
-                                              select new GetSecurityTipResponse
-                                              {
-                                                  Id = securityTip.Id.ToString(),
-                                                  Subject = securityTip.Subject,
-                                                  Body = securityTip.Body,
-                                                  BroadcasterName = $"{broadcaster.FirstName} {broadcaster.LastName}",
-                                                  TipStatus = securityTip.TipStatusString,
-                                                  AlertLevel = alertLevel.Name,
-                                                  SecurityTipCategory = category.CategoryName,
-                                                  BroadcastLevelId = securityTip.BroadcastLevelId.ToString(),
-                                                  BroadcastLocationId = securityTip.LocationId,
-                                                  BroadcasterTownId =broadcaster.TownId.ToString(),
-                                              }).Skip((pageNumber - 1) * pageSize)
-                                         .Take(pageSize)
-                                         .AsNoTracking()
-                                         .ToListAsync();
+                //var dsd = await (from securityTip in _context.SecurityTips
+                //       join broadcaster in _context.Users on securityTip.BroadcasterId equals broadcaster.Id.ToString()
+                //       join category in _context.SecurityTipCategories on securityTip.SecurityTipCategoryId equals category.Id
+                //       join alertLevel in _context.AlertLevels on securityTip.AlertLevelId equals alertLevel.Id
+                //       join broadcastLevel in _context.BroadcastLevels on securityTip.BroadcastLevelId equals broadcastLevel.Id
+                //       join district in _context.Towns on securityTip.LocationId equals district.Id.ToString()
+                //       where broadcastLevel.Name == BroadcastLevelEnum.Town.ToString() && district.Id == Guid.Parse(DistrictId.ToString())
+                //       && securityTip.IsBroadcasted == true
+
+                //       select new GetSecurityTipResponse
+                //       {
+                //           Id = securityTip.Id.ToString(),
+                //           Subject = securityTip.Subject,
+                //           Body = securityTip.Body,
+                //           BroadcasterName = $"{broadcaster.FirstName} {broadcaster.LastName}",
+                //           TipStatus = securityTip.TipStatusString,
+                //           AlertLevel = alertLevel.Name,
+                //           SecurityTipCategory = category.CategoryName,
+                //           BroadcastLevelId = securityTip.BroadcastLevelId.ToString(),
+                //           BroadcastLocationId = securityTip.LocationId,
+                //           BroadcasterTownId = broadcaster.TownId.ToString(),
+                //       }).Skip((pageNumber - 1) * pageSize)
+                //                         .Take(pageSize)
+                //                         .AsNoTracking()
+                //                         .ToListAsync();
 
                 // Get UserandTipLocations
-                var broadcasterAndTipLocations = await GetBroadcasterandTipLocations(UserSecuritytips.First().BroadcastLevelId, UserSecuritytips.First().BroadcastLocationId, UserSecuritytips.First().BroadcasterTownId);
+                var broadcasterAndTipLocations = await GetBroadcasterandTipLocations(UserSecuritytips.SecurityTipsList.First().BroadcastLevelId, UserSecuritytips.SecurityTipsList.First().BroadcastLocationId, UserSecuritytips.SecurityTipsList.First().BroadcasterTownId);
 
                 if (broadcasterAndTipLocations == null)
                 {
@@ -574,7 +570,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                     return getSecurityTipsListResponse;
                 }
 
-                getSecurityTipsListResponse.SecurityTipsList = UserSecuritytips;
+                getSecurityTipsListResponse.SecurityTipsList = UserSecuritytips.SecurityTipsList;
 
                 foreach (var securityTip in getSecurityTipsListResponse.SecurityTipsList)
                 {

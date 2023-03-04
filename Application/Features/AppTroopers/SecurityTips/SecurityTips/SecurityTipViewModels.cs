@@ -85,6 +85,13 @@ namespace Application.Features.AppTroopers.SecurityTips
         public List<GetSecurityTipResponse> SecurityTipsList { get; set; }
     }
 
+    public class GetSecurityTipsForUserTownLGAandStateResponse
+    {
+        public List<GetSecurityTipResponse> SecurityTipsListforUserTown { get; set; }
+        public List<GetSecurityTipResponse> SecurityTipsListforUserLGA { get; set; }
+        public List<GetSecurityTipResponse> SecurityTipsListforUserState { get; set; }
+    }
+
     public class LiveLocationSecurityTipResponse
     {
         public string Id { get; set; }
