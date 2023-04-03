@@ -164,7 +164,7 @@ namespace Infrastructure.Persistence.Services
                 if (userWithSameUserName != null)
                 {
                     RegisterResponse response = new RegisterResponse { Message = "Account already exists.", UserAlreadyExists = true };
-                    return new Response<RegisterResponse>(response, message: $"Phone number is already registered, proceed to login. Thanks.", successStatus: false);
+                    return new Response<RegisterResponse>(response, message: $"Phone number is already registered, proceed to login. Thanks.", success: false);
                     //throw new ApiException($"User already exists.");
                 }
 
@@ -261,7 +261,7 @@ namespace Infrastructure.Persistence.Services
                         });
 
                         RegisterResponse response = new RegisterResponse { Message = "Account Created Successfully.", UserAlreadyExists = false };
-                        return new Response<RegisterResponse>(response, message: $"Your account has been created successfuly. ", successStatus: true);
+                        return new Response<RegisterResponse>(response, message: $"Your account has been created successfuly. ", success: true);
                     }
                     else
                     {
@@ -276,7 +276,7 @@ namespace Infrastructure.Persistence.Services
                 else
                 {
                     RegisterResponse response = new RegisterResponse { Message = "Account already exists.", UserAlreadyExists = true };
-                    return new Response<RegisterResponse>(response, message: $"Email is already registered, Kindly login with the associated details. Thanks.", successStatus: false);
+                    return new Response<RegisterResponse>(response, message: $"Email is already registered, Kindly login with the associated details. Thanks.", success: false);
 
                     //throw new ApiException($"Email {request.Email } is already registered.");
                 }
@@ -449,7 +449,7 @@ namespace Infrastructure.Persistence.Services
 
                 if (result.Succeeded)
                 {
-                    return new Response<UpdateProfileResponse>(response, message: $"User profile successfully updated.", successStatus: true);
+                    return new Response<UpdateProfileResponse>(response, message: $"User profile successfully updated.", success: true);
                 }
                 else
                 {
@@ -475,7 +475,7 @@ namespace Infrastructure.Persistence.Services
 
                     StaffRegistrationResponse response = new StaffRegistrationResponse { Message = "Account already exists.", UserAlreadyExists = true };
 
-                    return new Response<StaffRegistrationResponse>(response, message: $"User is already registered, Kindly login with the associated details. Thanks.", successStatus: false);
+                    return new Response<StaffRegistrationResponse>(response, message: $"User is already registered, Kindly login with the associated details. Thanks.", success: false);
                 }
 
                 string defaultPassword = _randomNumberGenerator.GenerateRandomNumber(6, Mode.AlphaNumeric);
@@ -540,7 +540,7 @@ namespace Infrastructure.Persistence.Services
                 {
                     StaffRegistrationResponse response = new StaffRegistrationResponse { Message = "Account already exists.", UserAlreadyExists = true };
 
-                    return new Response<StaffRegistrationResponse>(response, message: $"User is already registered, Kindly login with the associated details. Thanks.", successStatus: false);
+                    return new Response<StaffRegistrationResponse>(response, message: $"User is already registered, Kindly login with the associated details. Thanks.", success: false);
                 }
             }
             catch (Exception ex)

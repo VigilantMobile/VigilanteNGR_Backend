@@ -28,7 +28,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
         private readonly ILGARepositoryAsync _lGARepositoryAsync;
         private readonly IStateRepositoryAsync _stateRepositoryAsync;
         private readonly ITownRepositoryAsync _townRepositoryAsync;
-        private readonly IAlertLevelRespositoryAsync _alertLevelRespositoryAsync;
+        private readonly IAlertLevelRepositoryAsync _alertLevelRespositoryAsync;
         private readonly IBroadcastLevelRespositoryAsync _broadcastLevelRespositoryAsync;
         private readonly IGeoCodingService _geocodingService;
 
@@ -37,7 +37,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
         public SecurityTipEligibilityService(ApplicationDbContext context, UserManager<ApplicationUser> userManager,
         IStateRepositoryAsync stateRepositoryAsync,
         ILGARepositoryAsync lGARepositoryAsync,
-        IAlertLevelRespositoryAsync alertLevelRespositoryAsync,
+        IAlertLevelRepositoryAsync alertLevelRespositoryAsync,
         IBroadcastLevelRespositoryAsync broadcastLevelRespositoryAsync,
         ITownRepositoryAsync townRepositoryAsync,
         IGeoCodingService geocodingService,ILogger logger)

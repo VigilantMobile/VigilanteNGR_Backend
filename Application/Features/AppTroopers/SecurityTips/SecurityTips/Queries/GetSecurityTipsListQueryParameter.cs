@@ -1,4 +1,5 @@
 ﻿using Application.Filters;
+using System.ComponentModel.DataAnnotations;
 
 namespace Application.Features.AppTroopers.SecurityTips
 {
@@ -9,8 +10,10 @@ namespace Application.Features.AppTroopers.SecurityTips
 
     public class GetLiveLocationSecurityTipsQueryParameter : RequestParameter
     {
-        public string UserId { get; set; }
-        public string Coordinates { get; set; }
+        [Required]
         public string BroadcastLevel { get; set; }
+
+        [Required]
+        public string Coordinates { get; set; }
     }
 }

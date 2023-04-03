@@ -63,7 +63,7 @@ namespace Infrastructure.Persistence.Services
 
             if (user == null)
             {
-                return new Response<UserRolesViewModel>(userRoles, message: $"User does not exist", successStatus: false);
+                return new Response<UserRolesViewModel>(userRoles, message: $"User does not exist", success: false);
             }
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -72,7 +72,7 @@ namespace Infrastructure.Persistence.Services
 
             if (!result.Succeeded)
             {
-                return new Response<UserRolesViewModel>(userRoles, message: $"An error occurred while attempting to remove existing roles.", successStatus: false);
+                return new Response<UserRolesViewModel>(userRoles, message: $"An error occurred while attempting to remove existing roles.", success: false);
             }
 
             foreach (var role in _roleManager.Roles)
@@ -80,7 +80,7 @@ namespace Infrastructure.Persistence.Services
                 var AddtoRolesresult = await _userManager.AddToRolesAsync(user, addUserToRoleRequest.Roles.Where(x => x.Selected).Select(y => y.RoleName));
                 if (!AddtoRolesresult.Succeeded)
                 {
-                    return new Response<UserRolesViewModel>(userRoles, message: $"An error occurred while attempting to remove existing roles.", successStatus: false);
+                    return new Response<UserRolesViewModel>(userRoles, message: $"An error occurred while attempting to remove existing roles.", success: false);
                 }
             }
 
@@ -139,7 +139,7 @@ namespace Infrastructure.Persistence.Services
 
             if (staffUser == null)
             {
-                return new Response<UserRolesViewModel>(StaffUserRoles, message: $"User does not exist", successStatus: false);
+                return new Response<UserRolesViewModel>(StaffUserRoles, message: $"User does not exist", success: false);
             }
             var staffUserRoles = await GetUserRoles(staffUser);
 
@@ -150,7 +150,7 @@ namespace Infrastructure.Persistence.Services
             StaffUserRoles.UserName = staffUser.UserName;
             StaffUserRoles.Roles = staffUserRoles;
 
-            return new Response<UserRolesViewModel>(StaffUserRoles, message: $"An error occurred while attempting to remove existing roles.", successStatus: false);
+            return new Response<UserRolesViewModel>(StaffUserRoles, message: $"An error occurred while attempting to remove existing roles.", success: false);
 
         }
 
@@ -256,7 +256,7 @@ namespace Infrastructure.Persistence.Services
 
             if (claimsinClaimstoBeEditedDontThatExistInAllClaimsList.Any())
             {
-                return new Response<UsersAndClaimsResponse>(usersAndClaimsViewModel, message: $"An invalid claim pair was detected.", successStatus: false);
+                return new Response<UsersAndClaimsResponse>(usersAndClaimsViewModel, message: $"An invalid claim pair was detected.", success: false);
             }
 
             //remove existing users claims in role claims to prevent duplicate permissions

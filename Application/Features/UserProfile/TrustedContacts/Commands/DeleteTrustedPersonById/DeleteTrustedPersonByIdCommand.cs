@@ -39,7 +39,7 @@ namespace Application.Features.UserProfile
                     await _trustedPersonRepository.DeleteAsync(trustedPerson);
 
                     //return new Response<Product>(product.Id);
-                    return new Response<TrustedPerson>(null, $"Trusted contact was successfully deleted.", successStatus: true);
+                    return new Response<TrustedPerson>(null, $"Trusted contact was successfully deleted.", success: true);
                 }
             }
         }

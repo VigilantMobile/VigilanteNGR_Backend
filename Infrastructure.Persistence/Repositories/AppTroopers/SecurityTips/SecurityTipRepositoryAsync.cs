@@ -39,7 +39,7 @@ namespace Infrastructure.Persistence.Repositories.SecurityTips
                                                      && securityTip.IsBroadcasted == true
 
                                                      select new GetSecurityTipResponse
-                                                    {
+                                                     {
                                                         Id = securityTip.Id.ToString(),
                                                         Subject = securityTip.Subject,
                                                         Body = securityTip.Body,
@@ -50,7 +50,7 @@ namespace Infrastructure.Persistence.Repositories.SecurityTips
                                                         BroadcastLevelId = securityTip.BroadcastLevelId.ToString(),
                                                         BroadcastLocationId = securityTip.LocationId,
                                                         BroadcasterTownId = broadcaster.TownId.ToString(),
-                                                        BroadcastLevel= broadcastLevel.Name,
+                                                        BroadcastLevel = broadcastLevel.Name,
                                                         BroadcastLocation = town.Name
                                                      }).Skip((pageNumber - 1) * pageSize)
                                           .Take(pageSize)

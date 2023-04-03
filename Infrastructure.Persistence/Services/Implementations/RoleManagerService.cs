@@ -230,7 +230,7 @@ namespace Infrastructure.Persistence.Services
 
                 if (roletobeModified == null)
                 {
-                    return new Response<List<RolesAndClaimsResponse>>(rolesAndClaimsResponses, message: $"One or more of the roles supplied do not exist.", successStatus: false);
+                    return new Response<List<RolesAndClaimsResponse>>(rolesAndClaimsResponses, message: $"One or more of the roles supplied do not exist.", success: false);
 
                 }
                 // no foreign claims are introduced.
@@ -238,7 +238,7 @@ namespace Infrastructure.Persistence.Services
 
                 if (claimsinClaimstoBeEditedDontThatExistInAllClaimsList.Any())
                 {
-                    return new Response<List<RolesAndClaimsResponse>>(rolesAndClaimsResponses, message: $"An invalid claim pair was detected.", successStatus: false);
+                    return new Response<List<RolesAndClaimsResponse>>(rolesAndClaimsResponses, message: $"An invalid claim pair was detected.", success: false);
                 }
 
             }
@@ -283,7 +283,7 @@ namespace Infrastructure.Persistence.Services
 
             if (roletobeModified == null)
             {
-                return new Response<RolesAndClaimsResponse>(rolesAndClaimsResponses, message: $"Role not found", successStatus: false);
+                return new Response<RolesAndClaimsResponse>(rolesAndClaimsResponses, message: $"Role not found", success: false);
 
             }
 
@@ -296,7 +296,7 @@ namespace Infrastructure.Persistence.Services
 
                 if (claimsinClaimstoBeEditedDontThatExistInAllClaimsList.Any())
                 {
-                    return new Response<RolesAndClaimsResponse>(rolesAndClaimsResponses, message: $"An invalid claim pair was detected.", successStatus: false);
+                    return new Response<RolesAndClaimsResponse>(rolesAndClaimsResponses, message: $"An invalid claim pair was detected.", success: false);
                 }
 
             }

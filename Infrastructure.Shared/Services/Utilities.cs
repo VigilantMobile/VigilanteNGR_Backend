@@ -27,11 +27,11 @@ namespace Infrastructure.Shared.Services
             {
                 RestClientOptions opts = new RestClientOptions();
                 opts.RemoteCertificateValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
-                opts.BaseUrl = new Uri($"{baseAddress}{requestUri}");
+                opts.BaseUrl = new Uri(baseAddress);
 
                 using (RestClient client = new RestClient(opts))
                 {
-                    var restRequest = new RestRequest();
+                    var restRequest = new RestRequest(requestUri);
 
                     restRequest.AddHeader("Accept", "application/json");
                     restRequest.AddHeader("Content-Type", "application/json");
@@ -73,7 +73,7 @@ namespace Infrastructure.Shared.Services
             catch (Exception ex)
             {
                 _logger.LogInformation(ex, $"MakeHttpRequest Exception {baseAddress}{requestUri} {ex.Message}");
-                return null;
+                throw;
             }
         }
 

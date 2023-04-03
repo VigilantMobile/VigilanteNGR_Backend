@@ -36,6 +36,8 @@ namespace Application.Mappings
             //Security Tip Category
             CreateMap<CreateSecurityTipCategoryCommand, SecurityTipCategory>();
             CreateMap<SecurityTipCategory, GetAllSecurityTipCategoriesViewModel>().ReverseMap();
+            //Alert Level
+            CreateMap<AlertLevel, GetAllAlertLevelsViewModel>().ReverseMap();
         }
     }
 }

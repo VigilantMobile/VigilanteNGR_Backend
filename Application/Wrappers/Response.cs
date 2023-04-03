@@ -27,9 +27,9 @@ namespace Application.Wrappers
             Message = message;
         }
 
-        public Response(T data, string message = null, bool successStatus = false)
+        public Response(T data, string message = null, bool success = false)
         {
-            Succeeded = successStatus;
+            Succeeded = success;
             Message = message;
             Data = data;
         }

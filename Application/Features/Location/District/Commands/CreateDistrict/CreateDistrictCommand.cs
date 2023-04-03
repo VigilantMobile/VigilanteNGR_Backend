@@ -44,7 +44,7 @@ namespace Application.Features.Location
             town.Created = DateTime.UtcNow.AddHours(1);
             await _townRepositoryAsync.AddAsync(town, _userAccessor.GetUserId());
 
-            return new Response<Town>(town, message: $"District successfully created.", successStatus: true);
+            return new Response<Town>(town, message: $"District successfully created.", success: true);
         }
     }
 }

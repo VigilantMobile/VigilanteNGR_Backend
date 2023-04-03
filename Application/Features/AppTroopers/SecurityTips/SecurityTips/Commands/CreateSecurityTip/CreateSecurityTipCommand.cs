@@ -46,12 +46,12 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
       
             if (!createdTip.IsCreated)
             {
-                return new Response<CreateSecurityTipResponse>(null, createdTip.Message, successStatus: false);
+                return new Response<CreateSecurityTipResponse>(null, createdTip.Message, success: false);
             }
 
             else
             {
-                return new Response<CreateSecurityTipResponse>(createdTip, createdTip.Message, successStatus: true);
+                return new Response<CreateSecurityTipResponse>(createdTip, createdTip.Message, success: true);
             }
         }
     }

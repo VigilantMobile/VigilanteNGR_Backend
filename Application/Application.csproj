@@ -37,7 +37,6 @@
     <Folder Include="Features\UserProfile\TrustedContacts\Queries\GetAllTrustedPeopleForUser\" />
     <Folder Include="Features\AppTroopers\SecurityTips\SecurityTips\Commands\DeleteSecurityTip\" />
     <Folder Include="Features\AppTroopers\SecurityTips\SecurityTips\Commands\UpdateSecurityTip\" />
-    <Folder Include="Features\AppTroopers\SecurityTips\SecurityTips\Queries\GetAllSecurityTipCategories\" />
     <Folder Include="Features\AppTroopers\SecurityTip\" />
     <Folder Include="Features\Location\State\Commands\" />
     <Folder Include="Features\Location\LGA\Commands\" />

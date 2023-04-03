@@ -47,14 +47,16 @@ namespace Infrastructure.Persistence.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger _logger;
         ITrustedPersonRepositoryAsync _trustedPersonRepositoryAsync;
+        private readonly IUtilities _utilities;
 
         public CustomerService( ApplicationDbContext context, UserManager<ApplicationUser> userManager, ITrustedPersonRepositoryAsync trustedPersonRepositoryAsync,
-        ILogger logger)
+        ILogger logger, IUtilities utilities)
         {
             _context = context;
             _logger = logger;
             _userManager = userManager;
             _trustedPersonRepositoryAsync = trustedPersonRepositoryAsync;
+            _utilities = utilities;
         }
 
         public async Task<CustomerProfileViewModel> GetCustomerProfileAsync(string CustomerId)
@@ -99,10 +101,10 @@ namespace Infrastructure.Persistence.Services
                                                LGAId = lga.Id.ToString(),
                                                LGAName = lga.Name,
                                            },
-                                           CustomerDistrict = new CustomerDistrictViewModel
+                                           CustomerTown = new CustomerDistrictViewModel
                                            {
-                                               DistrictId = lga.Id.ToString(),
-                                               DistrictName = lga.Name
+                                               DistrictId = town.Id.ToString(),
+                                               DistrictName = town.Name
                                            },                            
                                        },
                                        SubscriptionPlan = new CustomerSubscriptionPlan

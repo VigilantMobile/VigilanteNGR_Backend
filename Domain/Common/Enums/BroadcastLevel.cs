@@ -2,10 +2,10 @@
 {
     public enum BroadcastLevelEnum
     {
-        State = 1,
-        LGA = 2,
-        Town = 3,
-        Settlement = 4,
-        Nationwide = 5
+        State = 0,
+        LGA = 1,
+        Town = 2,
+        Settlement = 3,
+        Nationwide = 4
     }
 }

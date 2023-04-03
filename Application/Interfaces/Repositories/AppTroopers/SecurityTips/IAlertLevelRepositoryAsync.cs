@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces.Repositories.AppTroopers.SecurityTips
 {
-    public interface IAlertLevelRespositoryAsync : IGenericRepositoryAsync<AlertLevel>
+    public interface IAlertLevelRepositoryAsync : IGenericRepositoryAsync<AlertLevel>
     {
     }
 }

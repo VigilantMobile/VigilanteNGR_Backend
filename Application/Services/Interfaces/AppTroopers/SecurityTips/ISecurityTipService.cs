@@ -19,8 +19,11 @@ namespace Application.Services.Interfaces.AppTroopers.SecurityTips
         Task<GetSecurityTipsListResponse> GetSecurityTipsPostedByUser(string Userid, int pageNumber, int pageSize);
         Task<GetSecurityTipsListResponse> GetSecurityTipsForState(string StateId, int pageNumber, int pageSize);
         Task<GetSecurityTipsListResponse> GetSecurityTipsForLGA(string LGAId, int pageNumber, int PageSize);
-        Task<GetSecurityTipsListResponse> GetSecurityTipsForDistrict(string DistrictId, int pageNumber, int PageSize);
-        Task<GetLiveLocationSecurityTipResponse> GetSecurityTipsForUserLiveLocation(string Userid, string BroadcastLevel, string coordinates, int pageNumber, int pageSize)
+        Task<GetSecurityTipsListResponse> GetSecurityTipsForTown(string DistrictId, int pageNumber, int PageSize);
+        Task<GetLiveLocationSecurityTipResponse> GetSecurityTipsForUserLiveLocation(string Userid, string BroadcastLevel, string coordinates, int pageNumber, int pageSize);
+
+        Task<GetSecurityTipsForUserTownLGAandStateResponse> GetSecurityTipsForUserLocations(string Userid, int pageNumber, int pageSize);
+
 
 
         //Task<GetSecurityTipsListResponse> GetSecurityTipsForUserLiveLocation(string UserId, string coordinates, int pageNumber, int PageSize);

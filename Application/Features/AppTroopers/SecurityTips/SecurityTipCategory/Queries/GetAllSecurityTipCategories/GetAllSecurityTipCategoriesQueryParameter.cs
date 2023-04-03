@@ -2,7 +2,7 @@
 
 namespace Application.Features.AppTroopers.SecurityTips.GetAllSecurityTipCategories
 {
-    public class GetAllSecurityTipCategoriesParameter : RequestParameter
+    public class GetAllSecurityTipCategoriesQueryParameter : RequestParameter
     {
     }
 }

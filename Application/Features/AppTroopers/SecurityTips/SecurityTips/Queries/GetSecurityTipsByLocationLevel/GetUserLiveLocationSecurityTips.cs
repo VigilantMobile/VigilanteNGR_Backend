@@ -8,6 +8,7 @@ using Domain.Common.Enums;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.SecurityTips;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +19,8 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
     {
         public string UserId { get; set; }
         public string DesiredBroadcastLevel { get; set; }
-        public string coordinates { get; set; }
+        [Required]
+        public string Coordinates { get; set; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
 
@@ -35,9 +37,11 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
 
             public async Task<Response<GetLiveLocationSecurityTipResponse>> Handle(GetUserLiveLocationSecurityTipsQuery query, CancellationToken cancellationToken)
             {
-                var validFilter = _mapper.Map<GetSecurityTipsListQueryParameter>(query);
-                var SecurityTipsForUserLiveLocation = await _securityTipService.GetSecurityTipsForUserLiveLocation(query.UserId, query.DesiredBroadcastLevel, query.coordinates, validFilter.PageNumber, validFilter.PageSize);
-                if (SecurityTipsForUserLiveLocation == null) throw new ApiException($"No security tips found for the specified User.");
+                //var validFilter = _mapper.Map<GetSecurityTipsListQueryParameter>(query);
+                var SecurityTipsForUserLiveLocation = await _securityTipService.GetSecurityTipsForUserLiveLocation(query.UserId, query.DesiredBroadcastLevel, query.Coordinates, query.PageNumber, query.PageSize);
+                if (!SecurityTipsForUserLiveLocation.Success) 
+                    throw new ApiException($"{SecurityTipsForUserLiveLocation.Message}");
+
                 return new Response<GetLiveLocationSecurityTipResponse>(SecurityTipsForUserLiveLocation, $"Security tip retrieval for {SecurityTipsForUserLiveLocation.SecurityTipsList.First().BroadcasterFullLocation} user successful");
             }
         }

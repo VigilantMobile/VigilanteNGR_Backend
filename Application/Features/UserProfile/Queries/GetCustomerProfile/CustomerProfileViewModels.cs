@@ -36,6 +36,7 @@ namespace Application.Features.UserProfile
         [Required]
         public string TownId { get; set; }
         [Required]
+
         public string FullAddress { get; set; }
         [Required]
         public string PhoneNumber { get; set; }
@@ -50,7 +51,7 @@ namespace Application.Features.UserProfile
     {
         public CustomerStateViewModel CustomerState { get; set; }
         public CustomerLGAViewModel CustomerLGA { get; set; }
-        public CustomerDistrictViewModel CustomerDistrict { get; set; }
+        public CustomerDistrictViewModel CustomerTown { get; set; }
     }
 
     public class CustomerStateViewModel

@@ -37,7 +37,7 @@ namespace Application.Features.Location
                     var lgasInState = await stateRepositoryAsync.GetLGAsinStateAsync(query.StateId);
                     if (lgasInState == null)
                     {
-                        return new Response<GetAllLGAsinStateViewModel>(new GetAllLGAsinStateViewModel { }, message: $"No lgas found in the specified State.", successStatus: false);
+                        return new Response<GetAllLGAsinStateViewModel>(new GetAllLGAsinStateViewModel { }, message: $"No lgas found in the specified State.", success: false);
                     }
 
                     foreach (var lga in lgasInState)
@@ -59,7 +59,7 @@ namespace Application.Features.Location
                         Count = lgas.Count
                     };
 
-                    return new Response<GetAllLGAsinStateViewModel>(getAllDistrictsViewModel, message: $"Successfully retrieved LGAs for the specified state.", successStatus: true);
+                    return new Response<GetAllLGAsinStateViewModel>(getAllDistrictsViewModel, message: $"Successfully retrieved LGAs for the specified state.", success: true);
                 }
                 catch (Exception ex)
                 {

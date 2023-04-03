@@ -25,7 +25,7 @@ namespace Application.Features.UserProfile
 
                     throw new ApiException($"Trusted contact not found.");
 
-                return new Response<TrustedPerson>(trustedPerson, message: $"Trusted contact successfully retrieved.", successStatus: true);
+                return new Response<TrustedPerson>(trustedPerson, message: $"Trusted contact successfully retrieved.", success: true);
 
             }
         }

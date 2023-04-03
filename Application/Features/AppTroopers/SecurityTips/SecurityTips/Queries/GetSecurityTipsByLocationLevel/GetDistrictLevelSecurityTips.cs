@@ -32,7 +32,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
             public async Task<Response<GetSecurityTipsListResponse>> Handle(GetDistrictLevelSecurityTipsByIdQuery query, CancellationToken cancellationToken)
             {
                 var validFilter = _mapper.Map<GetSecurityTipsListQueryParameter>(query);
-                var SecurityTipsForDistrict = await _securityTipService.GetSecurityTipsForDistrict(query.DistrictId, validFilter.PageNumber, validFilter.PageSize);
+                var SecurityTipsForDistrict = await _securityTipService.GetSecurityTipsForTown(query.DistrictId, validFilter.PageNumber, validFilter.PageSize);
                 if (SecurityTipsForDistrict == null) throw new ApiException($"No security tips found for the specified district.");
                 return new Response<GetSecurityTipsListResponse>(SecurityTipsForDistrict, $"Security tip retrieval for {SecurityTipsForDistrict.SecurityTipsList.First().BroadcasterFullLocation} district successful");
             }

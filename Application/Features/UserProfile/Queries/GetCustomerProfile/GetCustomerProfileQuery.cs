@@ -38,7 +38,7 @@ namespace Application.Features.UserProfile
                     if (customerProfile == null)
                         throw new ApiException($"Unable to retrieve customer profile.");
 
-                    return new Response<CustomerProfileViewModel>(customerProfile, message: $"Customer profile successfully retrieved.", successStatus: true);
+                    return new Response<CustomerProfileViewModel>(customerProfile, message: $"Customer profile successfully retrieved.", success: true);
                 }
                 catch (Exception ex)
                 {
