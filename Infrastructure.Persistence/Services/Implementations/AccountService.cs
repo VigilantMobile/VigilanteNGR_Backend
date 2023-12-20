@@ -49,6 +49,8 @@ namespace Infrastructure.Persistence.Services
         //private readonly IMailgunEmailService _mailgunEmailService;
         private readonly ILogger _logger;
         private readonly IMemoryCache _memoryCache;
+        private readonly AppConfig _appConfig;
+
 
 
 
@@ -65,7 +67,8 @@ namespace Infrastructure.Persistence.Services
             IHttpContextAccessor accessor,
             IMemoryCache memoryCache,
         //IMailgunEmailService mailgunEmailService,
-        ILogger logger)
+        ILogger logger,
+        IOptions<AppConfig> appConfig)
         {
             _context = context;
             _userManager = userManager;
@@ -80,7 +83,8 @@ namespace Infrastructure.Persistence.Services
             _accessor = accessor;
             //_mailgunEmailService = mailgunEmailService;
             _logger = logger;
-            _memoryCache= memoryCache;
+            _memoryCache = memoryCache;
+            _appConfig = appConfig.Value;
         }
 
         public ClaimsPrincipal User => _accessor.HttpContext.User;
@@ -163,7 +167,7 @@ namespace Infrastructure.Persistence.Services
                 var userWithSameUserName = await _userManager.FindByNameAsync(request.PhoneNumber);
                 if (userWithSameUserName != null)
                 {
-                    RegisterResponse response = new RegisterResponse { Message = "Account already exists.", UserAlreadyExists = true };
+                    RegisterResponse response = new RegisterResponse { Message = "Account already exists."};
                     return new Response<RegisterResponse>(response, message: $"Phone number is already registered, proceed to login. Thanks.", success: false);
                     //throw new ApiException($"User already exists.");
                 }
@@ -194,19 +198,19 @@ namespace Infrastructure.Persistence.Services
                         await _userManager.AddToRoleAsync(user, Roles.Customer.ToString());
 
                         //Create Customer Wallet
-                        Wallet wallet = new Wallet
-                        {
-                            Id = Guid.NewGuid(),
-                            ApplicationUserId = user.Id,
-                            WalletBalance = 0.00M,
-                            CreatedBy = user.Id,
-                        };
+                        //Wallet wallet = new Wallet
+                        //{
+                        //    Id = Guid.NewGuid(),
+                        //    ApplicationUserId = user.Id,
+                        //    WalletBalance = 0.00M,
+                        //    CreatedBy = user.Id,
+                        //};
 
-                        _context.Wallets.Add(wallet);
-                        _context.SaveChanges();
+                        //_context.Wallets.Add(wallet);
+                        //_context.SaveChanges();
 
 
-                        var verificationUri = await SendVerificationEmail(user, origin);
+                        var verificationUri = await SendVerificationEmail(user, _appConfig.AppOrigin);
                         //TODO: Attach Email Service here and configure it via appsettings
                         //await _emailService.SendAsync(new Application.DTOs.Email.EmailRequest() 
                         //{ 
@@ -260,7 +264,7 @@ namespace Infrastructure.Persistence.Services
                             }
                         });
 
-                        RegisterResponse response = new RegisterResponse { Message = "Account Created Successfully.", UserAlreadyExists = false };
+                        RegisterResponse response = new RegisterResponse { Message = "Account Created Successfully." };
                         return new Response<RegisterResponse>(response, message: $"Your account has been created successfuly. ", success: true);
                     }
                     else
@@ -275,7 +279,7 @@ namespace Infrastructure.Persistence.Services
                 }
                 else
                 {
-                    RegisterResponse response = new RegisterResponse { Message = "Account already exists.", UserAlreadyExists = true };
+                    RegisterResponse response = new RegisterResponse { Message = "Account already exists." };
                     return new Response<RegisterResponse>(response, message: $"Email is already registered, Kindly login with the associated details. Thanks.", success: false);
 
                     //throw new ApiException($"Email {request.Email } is already registered.");
@@ -609,7 +613,7 @@ namespace Infrastructure.Persistence.Services
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var route = "api/account/confirm-email/";
-            var _enpointUri = new Uri(string.Concat($"{origin}/", route));
+            var _enpointUri = new Uri(string.Concat($"{origin}/", route), UriKind.RelativeOrAbsolute);
             var verificationUri = QueryHelpers.AddQueryString(_enpointUri.ToString(), "userId", user.Id);
             verificationUri = QueryHelpers.AddQueryString(verificationUri, "code", code);
             //Email Service Call Here

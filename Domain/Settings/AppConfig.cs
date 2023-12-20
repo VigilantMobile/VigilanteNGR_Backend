@@ -7,5 +7,6 @@ namespace Domain.Settings
     public class AppConfig
     {
         public string GeocodingApiKey { get; set; }
+        public string AppOrigin { get; set; }
     }
 }
