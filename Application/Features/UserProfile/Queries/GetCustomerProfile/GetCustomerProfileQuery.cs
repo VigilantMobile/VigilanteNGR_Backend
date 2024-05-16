@@ -3,6 +3,7 @@ using Application.Interfaces.Repositories;
 using Application.Interfaces.Repositories.Location;
 using Application.Services.Interfaces.UserProfile;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.SecurityTips;
@@ -38,7 +39,7 @@ namespace Application.Features.UserProfile
                     if (customerProfile == null)
                         throw new ApiException($"Unable to retrieve customer profile.");
 
-                    return new Response<CustomerProfileViewModel>(customerProfile, message: $"Customer profile successfully retrieved.", success: true);
+                    return new Response<CustomerProfileViewModel>(customerProfile, responsestatus: ResponseStatus.success.ToString(), message: $"Customer profile successfully retrieved.");
                 }
                 catch (Exception ex)
                 {

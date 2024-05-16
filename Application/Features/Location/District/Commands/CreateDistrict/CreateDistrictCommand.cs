@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
 using AutoMapper;
+using Domain.Common.Enums;
 using Domain.Entities.LocationEntities;
 using MediatR;
 using System;
@@ -44,7 +45,7 @@ namespace Application.Features.Location
             town.Created = DateTime.UtcNow.AddHours(1);
             await _townRepositoryAsync.AddAsync(town, _userAccessor.GetUserId());
 
-            return new Response<Town>(town, message: $"District successfully created.", success: true);
+            return new Response<Town>(town, responsestatus: ResponseStatus.success.ToString(), message: $"District successfully created.");
         }
     }
 }

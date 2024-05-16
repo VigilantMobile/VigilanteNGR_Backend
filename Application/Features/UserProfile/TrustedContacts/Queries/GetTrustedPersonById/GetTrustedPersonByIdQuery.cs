@@ -1,6 +1,7 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces.Repositories.AppTroopers.Panic;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using Domain.Entities.AppTroopers.Panic;
 using MediatR;
 using System.Threading;
@@ -25,7 +26,7 @@ namespace Application.Features.UserProfile
 
                     throw new ApiException($"Trusted contact not found.");
 
-                return new Response<TrustedPerson>(trustedPerson, message: $"Trusted contact successfully retrieved.", success: true);
+                return new Response<TrustedPerson>(trustedPerson, responsestatus: ResponseStatus.success.ToString(), message: $"Trusted contact successfully retrieved.");
 
             }
         }

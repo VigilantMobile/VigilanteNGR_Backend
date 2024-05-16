@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using Application.Interfaces.Repositories.AppTroopers.Panic;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using Domain.Entities.AppTroopers.Panic;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -65,7 +66,7 @@ namespace Application.Features.UserProfile
 
                     await _trustedPersonRepository.UpdateAsync(trustedPerson);
 
-                    return new Response<TrustedPerson>(trustedPerson, $"Trusted contact successfully updated", success: true);
+                    return new Response<TrustedPerson>(trustedPerson, responsestatus: ResponseStatus.success.ToString(), $"Trusted contact successfully updated");
                 }
             }
         }

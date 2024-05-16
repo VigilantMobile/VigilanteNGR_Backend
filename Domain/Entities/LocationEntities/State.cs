@@ -11,7 +11,6 @@ namespace Domain.Entities.LocationEntities
     {
         [Required]
         public string Name { get; set; }
-
         public string NPFStateAuthorityPhone { get; set; }
         public string NPFStateAuthorityAddress { get; set; }
 

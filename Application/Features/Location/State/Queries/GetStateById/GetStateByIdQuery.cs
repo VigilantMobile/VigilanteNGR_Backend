@@ -2,6 +2,7 @@
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.SecurityTips;
@@ -36,12 +37,12 @@ namespace Application.Features.Location
                     var state = await _stateRepositoryAsync.GetByIdAsync(query.Id);
                     if (state == null)
                         //throw new ApiException($"district not found.");
-                        return new Response<GetStateViewModel>(getstateViewModel, message: $"state not found.", success: false);
+                        return new Response<GetStateViewModel>(getstateViewModel, responsestatus: ResponseStatus.fail.ToString(), message: $"state not found.");
 
                     getstateViewModel.StateName = state.Name;
                     getstateViewModel.Created = state.Created;
                     getstateViewModel.LastModified = state.LastModified;
-                    return new Response<GetStateViewModel>(getstateViewModel, message: $"state retrieval successful", success: true);
+                    return new Response<GetStateViewModel>(getstateViewModel, responsestatus: ResponseStatus.success.ToString(), message: $"state retrieval successful");
                 }
                 catch (Exception ex)
                 {

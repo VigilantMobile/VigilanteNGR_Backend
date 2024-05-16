@@ -42,6 +42,7 @@ namespace Application.Features.AppTroopers.SecurityTips
 
     public class CustomerPreciseLocation
     {
+        public string CountryName { get; set; }
         public string StateName { get; set; }
         public string LGAName { get; set; }
         public string DistrictName { get; set; }

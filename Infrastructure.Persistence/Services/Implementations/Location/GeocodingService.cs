@@ -69,21 +69,21 @@ namespace Infrastructure.Persistence.Services.Implementations.Location
                     customerPreciseLocation.DistrictName = address.address_components.Where(x => x.types[0] == "neighborhood").FirstOrDefault().long_name;
                     customerPreciseLocation.FormattedAddress = address.formatted_address;
 
-                    return new Response<CustomerPreciseLocation>(customerPreciseLocation, $"Coordinates successfully reversed.", success: true);
+                    return new Response<CustomerPreciseLocation>(customerPreciseLocation, $"Coordinates successfully reversed.");
 
                 }
 
                 else
                 {
                     var errorResponse = JsonConvert.DeserializeObject<ReverseGeocodingErrorResponse>(requestResponse.Content.ToString());
-                    return new Response<CustomerPreciseLocation>(null, $"{errorResponse.error_message}", success:false);
+                    return new Response<CustomerPreciseLocation>(null, $"{errorResponse.error_message}");
                 }
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return new Response<CustomerPreciseLocation>(null, $"An error occurred while reversing coordinates: e{ex.Message}", success: false);
+                return new Response<CustomerPreciseLocation>(null, $"An error occurred while reversing coordinates: e{ex.Message}");
             }
         }
     }

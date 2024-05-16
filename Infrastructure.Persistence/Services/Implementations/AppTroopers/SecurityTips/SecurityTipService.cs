@@ -325,7 +325,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
             { 
                 var customerLiveLocation = await _geocodingService.GetCustomerLiveAddresses(coordinates);
 
-                if (customerLiveLocation.Succeeded == false)
+                if (customerLiveLocation.status == ResponseStatus.fail.ToString())
                 {
                     getSecurityTipsListResponse.Success = false;
                     getSecurityTipsListResponse.Message = customerLiveLocation.Message;

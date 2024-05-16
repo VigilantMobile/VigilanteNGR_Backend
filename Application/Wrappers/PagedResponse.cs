@@ -11,7 +11,7 @@
             this.PageSize = pageSize;
             this.Data = data;
             this.Message = null;
-            this.Succeeded = true;
+            this.status = null;
             this.Errors = null;
         }
     }

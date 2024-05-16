@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using Application.Interfaces.Repositories.AppTroopers.Panic;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using Domain.Entities.AppTroopers.Panic;
 using MediatR;
 using System.ComponentModel.DataAnnotations;
@@ -39,7 +40,7 @@ namespace Application.Features.UserProfile
                     await _trustedPersonRepository.DeleteAsync(trustedPerson);
 
                     //return new Response<Product>(product.Id);
-                    return new Response<TrustedPerson>(null, $"Trusted contact was successfully deleted.", success: true);
+                    return new Response<TrustedPerson>(null, responsestatus: ResponseStatus.success.ToString(), $"Trusted contact was successfully deleted.");
                 }
             }
         }

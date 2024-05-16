@@ -1,4 +1,5 @@
 ﻿using Application.Features.Location;
+using Application.Features.Location.LiveLocation.Queries;
 using Application.Features.Location.State;
 using Application.Features.Products.Commands.DeleteProductById;
 using Application.Features.Products.Commands.UpdateProduct;
@@ -82,7 +83,14 @@ namespace VGWebAPI.Controllers.v1
             return Ok(await Mediator.Send(new GetAllStatesQuery() { PageSize = filter.PageSize, PageNumber = filter.PageNumber }));
         }
 
-        //
+        //Live Location
+        [AllowAnonymous]
+        [HttpGet("getliveLocation/{coordinates}")]
+        public async Task<IActionResult> GetLocationFromCoordinates(string coordinates)
+        {
+            return Ok(await Mediator.Send(new GetLiveLocationFromCoordinatesQuery { Coordinates = coordinates }));
+
+        }
 
 
         #endregion State

@@ -4,7 +4,9 @@ using Application.Interfaces.Repositories.AppTroopers.Panic;
 using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Application.Interfaces.Repositories.Location;
 using Application.Services.Interfaces.AppTroopers.SecurityTips;
+using Application.Services.Interfaces.Location;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using Domain.Entities.Identity;
 using Domain.Settings;
 using Infrastructure.Persistence.Contexts;
@@ -15,6 +17,7 @@ using Infrastructure.Persistence.Repositories.SecurityTips;
 using Infrastructure.Persistence.Repository;
 using Infrastructure.Persistence.Services;
 using Infrastructure.Persistence.Services.Implementations.AppTroopers.SecurityTips;
+using Infrastructure.Persistence.Services.Implementations.Location;
 using Infrastructure.Shared.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -107,14 +110,14 @@ namespace Infrastructure.Persistence
                             context.HandleResponse();
                             context.Response.StatusCode = 401;
                             context.Response.ContentType = "application/json";
-                            var result = JsonConvert.SerializeObject(new Response<string>("You are not Authorized"));
+                            var result = JsonConvert.SerializeObject(new Response<string>(responsestatus: ResponseStatus.success.ToString(), "You are not Authorized"));
                             return context.Response.WriteAsync(result);
                         },
                         OnForbidden = context =>
                         {
                             context.Response.StatusCode = 403;
                             context.Response.ContentType = "application/json";
-                            var result = JsonConvert.SerializeObject(new Response<string>("You are not authorized to access this resource"));
+                            var result = JsonConvert.SerializeObject(new Response<string>(responsestatus: ResponseStatus.success.ToString(), "You are not authorized to access this resource"));
                             return context.Response.WriteAsync(result);
                         },
                     };
@@ -181,6 +184,8 @@ namespace Infrastructure.Persistence
                      b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName).UseNetTopologySuite()).EnableSensitiveDataLogging(true));
 
             services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+            //services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+
             #region Repositories
             services.AddScoped(typeof(IGenericRepositoryAsync<>), typeof(GenericRepositoryAsync<>));
             services.AddScoped<IProductRepositoryAsync, ProductRepositoryAsync>();
@@ -199,6 +204,7 @@ namespace Infrastructure.Persistence
             services.AddScoped<IStateRepositoryAsync, StateRepositoryAsync>();
             services.AddScoped<ILGARepositoryAsync, LGARepositoryAsync>();
             services.AddScoped<ITownRepositoryAsync, TownRepositoryAsync>();
+            //services.AddScoped<IGeoCodingService, GeocodingService>();
 
             //Panic
             services.AddTransient<ITrustedPersonRepositoryAsync, TrustedPersonRepositoryAsync>();

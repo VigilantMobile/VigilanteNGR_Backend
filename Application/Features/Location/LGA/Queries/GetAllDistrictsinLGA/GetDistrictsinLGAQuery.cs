@@ -1,6 +1,7 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace Application.Features.Location
                     var districtsinLGA = await lgaRepositoryAsync.GetDistrictsinLGAAsync(query.LGAId);
                     if (districtsinLGA == null)
                     {
-                        return new Response<GetAllDistrictsinLGAViewModel>(new GetAllDistrictsinLGAViewModel { }, message: $"No districts found in the specified LGA", success: false);
+                        return new Response<GetAllDistrictsinLGAViewModel>(new GetAllDistrictsinLGAViewModel { }, responsestatus: ResponseStatus.fail.ToString(), message: $"No districts found in the specified LGA");
                     }
 
                     foreach (var district in districtsinLGA)
@@ -52,7 +53,7 @@ namespace Application.Features.Location
                         Count = districts.Count
                     };
 
-                    return new Response<GetAllDistrictsinLGAViewModel>(getAllDistrictsViewModel, message: $"Successfully retrieved districts for the specified LGA.", success: true);
+                    return new Response<GetAllDistrictsinLGAViewModel>(getAllDistrictsViewModel, responsestatus: ResponseStatus.success.ToString(), message: $"Successfully retrieved districts for the specified LGA.");
                 }
                 catch (Exception ex)
                 {

@@ -43,7 +43,8 @@ namespace VGWebAPI
                     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
                     var dbInitializer = scope.ServiceProvider.GetService<IDbInitializer>();
 
-                    //Seed Roles
+                    // Seed Roles
+
                     if (!roleManager.Roles.Any())
                     {
                         await Infrastructure.Persistence.Seeds.DefaultRoles.SeedAsync(userManager, roleManager);

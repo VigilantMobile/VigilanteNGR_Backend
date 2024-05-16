@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Domain.Common.Enums;
+using System.Collections.Generic;
 
 namespace Application.Wrappers
 {
@@ -8,31 +9,38 @@ namespace Application.Wrappers
         {
         }
 
-        public Response(T data, string message = null)
+        public Response(T data, string responsestatus, string message = null)
         {
-            Succeeded = true;
+            status = responsestatus;
             Message = message;
             Data = data;
         }
 
-        public Response(string message)
+        public Response(string responsestatus, string message)
         {
-            Succeeded = false;
+            status = responsestatus;
             Message = message;
         }
 
-        public Response(string message, bool success = true)
-        {
-            Succeeded = success;
-            Message = message;
-        }
+        //public Response(string responsestatus, string message)
+        //{
+        //    status = responsestatus;
+        //    Message = message;
+        //}
 
-        public Response(T data, string message = null, bool success = false)
-        {
-            Succeeded = success;
-            Message = message;
-            Data = data;
-        }
+        //public Response(T data, string responsestatus, string message = null)
+        //{
+        //    status = responsestatus;
+        //    Message = message;
+        //    Data = data;
+        //}
+
+        //public Response(T data, string responsestatus, string message = null)
+        //{
+        //    status = responsestatus;
+        //    Message = message;
+        //    Data = data;
+        //}
 
         //public Response(T data, int HttpStatusCode, string message = null, bool successStatus = false)
         //{
@@ -41,10 +49,15 @@ namespace Application.Wrappers
         //    Data = data;
         //}
 
-        public bool Succeeded { get; set; }
+        //public bool status { get; set; }
+        public string status { get; set; }
         public string Message { get; set; }
         public List<string> Errors { get; set; }
         public T Data { get; set; }
+
+        //For Jsend
+        //public string status { get; set; }
+
     }
 
     //List T Response 

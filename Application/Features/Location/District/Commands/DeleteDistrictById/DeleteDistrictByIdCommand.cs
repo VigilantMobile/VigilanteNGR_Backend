@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using Domain.Entities.LocationEntities;
 using MediatR;
 using System.Threading;
@@ -36,7 +37,7 @@ namespace Application.Features.Location
                 {
                     await _townRepositoryAsync.DeleteAsync(town);
 
-                    return new Response<Town>(town, $"Town {town.Name} successfully deleted", success: true);
+                    return new Response<Town>(town, responsestatus: ResponseStatus.success.ToString(), $"Town {town.Name} successfully deleted");
 
                 }
             }

@@ -3,6 +3,7 @@ using Application.DTOs.Account.RoleManagement;
 using Application.Enums;
 using Application.Interfaces;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using Domain.Entities.Identity;
 using Domain.Settings;
 using Infrastructure.Persistence.Contexts;
@@ -60,7 +61,7 @@ namespace Infrastructure.Persistence.Services
                 await _roleManager.CreateAsync(new IdentityRole(roleRequest.role.Trim()));
             }
 
-            return new Response<string>($"{roleRequest.role} role was created successfully");
+            return new Response<string>(responsestatus: ResponseStatus.success.ToString(), $"{roleRequest.role} role was created successfully");
         }
 
         public async Task<Response<string>> EditRole(string roleId, string name)
@@ -71,7 +72,7 @@ namespace Infrastructure.Persistence.Services
                 role.Name = name;
                 var result = await _roleManager.UpdateAsync(role);
                 if (result.Succeeded)
-                    return new Response<string>($"Role {role.Name} was edited successfully");
+                    return new Response<string>(responsestatus: ResponseStatus.success.ToString(), $"Role {role.Name} was edited successfully");
             }
             return null;
         }
@@ -81,7 +82,7 @@ namespace Infrastructure.Persistence.Services
         {
 
             var roles = await _roleManager.Roles.ToListAsync();
-            return new Response<List<IdentityRole>>(roles, message: $"{ roles.Count().ToString() } roles retrieved.");
+            return new Response<List<IdentityRole>>(roles, responsestatus: ResponseStatus.success.ToString(), message: $"{ roles.Count().ToString() } roles retrieved.");
         }
 
         public async Task<Response<IdentityRole>> GetRoleById(string roleId)
@@ -89,7 +90,7 @@ namespace Infrastructure.Persistence.Services
 
             var role = await _roleManager.FindByIdAsync(roleId);
 
-            return new Response<IdentityRole>(role, message: $"Role found.");
+            return new Response<IdentityRole>(role, responsestatus: ResponseStatus.success.ToString(), message: $"Role found.");
         }
 
 
@@ -135,7 +136,7 @@ namespace Infrastructure.Persistence.Services
         {
             List<CustomClaims> customClaims = await _context.CustomClaims.ToListAsync();
 
-            return new Response<List<CustomClaims>>($"Custom Claims successfully retrieved.");
+            return new Response<List<CustomClaims>>(responsestatus: ResponseStatus.success.ToString(), $"Custom Claims successfully retrieved.");
         }
 
         public async Task<Response<UserAndRolesResponse>> GetUserRoles(UserAndRolesRequest usersAndRolesRequest)
@@ -230,7 +231,7 @@ namespace Infrastructure.Persistence.Services
 
                 if (roletobeModified == null)
                 {
-                    return new Response<List<RolesAndClaimsResponse>>(rolesAndClaimsResponses, message: $"One or more of the roles supplied do not exist.", success: false);
+                    return new Response<List<RolesAndClaimsResponse>>(rolesAndClaimsResponses, responsestatus: ResponseStatus.fail.ToString(), message: $"One or more of the roles supplied do not exist.");
 
                 }
                 // no foreign claims are introduced.
@@ -238,7 +239,7 @@ namespace Infrastructure.Persistence.Services
 
                 if (claimsinClaimstoBeEditedDontThatExistInAllClaimsList.Any())
                 {
-                    return new Response<List<RolesAndClaimsResponse>>(rolesAndClaimsResponses, message: $"An invalid claim pair was detected.", success: false);
+                    return new Response<List<RolesAndClaimsResponse>>(rolesAndClaimsResponses, responsestatus: ResponseStatus.fail.ToString(), message: $"An invalid claim pair was detected.");
                 }
 
             }
@@ -283,7 +284,7 @@ namespace Infrastructure.Persistence.Services
 
             if (roletobeModified == null)
             {
-                return new Response<RolesAndClaimsResponse>(rolesAndClaimsResponses, message: $"Role not found", success: false);
+                return new Response<RolesAndClaimsResponse>(rolesAndClaimsResponses, responsestatus: ResponseStatus.fail.ToString(), message: $"Role not found");
 
             }
 
@@ -296,7 +297,7 @@ namespace Infrastructure.Persistence.Services
 
                 if (claimsinClaimstoBeEditedDontThatExistInAllClaimsList.Any())
                 {
-                    return new Response<RolesAndClaimsResponse>(rolesAndClaimsResponses, message: $"An invalid claim pair was detected.", success: false);
+                    return new Response<RolesAndClaimsResponse>(rolesAndClaimsResponses, responsestatus: ResponseStatus.fail.ToString(), message: $"An invalid claim pair was detected.");
                 }
 
             }
