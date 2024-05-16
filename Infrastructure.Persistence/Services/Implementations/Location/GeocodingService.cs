@@ -16,9 +16,11 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Infrastructure.Persistence.Services.Implementations.Location
 {
@@ -52,7 +54,7 @@ namespace Infrastructure.Persistence.Services.Implementations.Location
                 string latitude = Convert.ToDouble(Coordinates.Split(",")[0]).ToString();
                 string longitude = Convert.ToDouble(Coordinates.Split(",")[1]).ToString();
 
-                requestResponse = await _utilities.MakeHttpRequest(null, _aPIURLs.GoogleGeocodingBaseURL, $"{_aPIURLs.ReverseGeocodingUrlSuffix}?latlng={latitude},{longitude}&key={_appConfig.GocodingApiKey}", HttpMethod.Get, null);
+                requestResponse = await _utilities.MakeHttpRequest(null, _aPIURLs.GoogleMapsAPIBaseURL, $"{_aPIURLs.ReverseGeocodingUrlSuffix}?latlng={latitude},{longitude}&key={_appConfig.GeocodingApiKey}", HttpMethod.Get, null);
 
                 if (requestResponse.StatusCode == System.Net.HttpStatusCode.OK)
                 {
@@ -67,21 +69,21 @@ namespace Infrastructure.Persistence.Services.Implementations.Location
                     customerPreciseLocation.DistrictName = address.address_components.Where(x => x.types[0] == "neighborhood").FirstOrDefault().long_name;
                     customerPreciseLocation.FormattedAddress = address.formatted_address;
 
-                    return new Response<CustomerPreciseLocation>(customerPreciseLocation, $"Coordinates successfully reversed.", successStatus: true);
+                    return new Response<CustomerPreciseLocation>(customerPreciseLocation, $"Coordinates successfully reversed.");
 
                 }
 
                 else
                 {
                     var errorResponse = JsonConvert.DeserializeObject<ReverseGeocodingErrorResponse>(requestResponse.Content.ToString());
-                    return new Response<CustomerPreciseLocation>(null, $"{errorResponse.error_message}", successStatus:false);
+                    return new Response<CustomerPreciseLocation>(null, $"{errorResponse.error_message}");
                 }
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return new Response<CustomerPreciseLocation>(null, $"An error occurred while reversing coordinates: e{ex.Message}", successStatus: false);
+                return new Response<CustomerPreciseLocation>(null, $"An error occurred while reversing coordinates: e{ex.Message}");
             }
         }
     }

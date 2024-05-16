@@ -33,7 +33,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
             public async Task<Response<GetSecurityTipsListResponse>> Handle(GetUserCreatedSecurityTipsByIdQuery query, CancellationToken cancellationToken)
             {
                 var validFilter = _mapper.Map<GetSecurityTipsListQueryParameter>(query);
-                var SecurityTipsForUser = await _securityTipService.GetSecurityTipsForUser(query.UserId, validFilter.PageNumber, validFilter.PageSize);
+                var SecurityTipsForUser = await _securityTipService.GetSecurityTipsPostedByUser(query.UserId, validFilter.PageNumber, validFilter.PageSize);
                 if (SecurityTipsForUser == null) throw new ApiException($"No security tips found for the specified User.");
                 return new Response<GetSecurityTipsListResponse>(SecurityTipsForUser, $"Security tip retrieval for {SecurityTipsForUser.SecurityTipsList.First().BroadcasterFullLocation} user successful");
             }

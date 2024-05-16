@@ -2,6 +2,7 @@
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.SecurityTips;
@@ -37,7 +38,7 @@ namespace Application.Features.Location
                     var lgasInState = await stateRepositoryAsync.GetLGAsinStateAsync(query.StateId);
                     if (lgasInState == null)
                     {
-                        return new Response<GetAllLGAsinStateViewModel>(new GetAllLGAsinStateViewModel { }, message: $"No lgas found in the specified State.", successStatus: false);
+                        return new Response<GetAllLGAsinStateViewModel>(new GetAllLGAsinStateViewModel { }, responsestatus: ResponseStatus.fail.ToString(), message: $"No lgas found in the specified State.");
                     }
 
                     foreach (var lga in lgasInState)
@@ -59,7 +60,7 @@ namespace Application.Features.Location
                         Count = lgas.Count
                     };
 
-                    return new Response<GetAllLGAsinStateViewModel>(getAllDistrictsViewModel, message: $"Successfully retrieved LGAs for the specified state.", successStatus: true);
+                    return new Response<GetAllLGAsinStateViewModel>(getAllDistrictsViewModel, responsestatus: ResponseStatus.success.ToString(), message: $"Successfully retrieved LGAs for the specified state.");
                 }
                 catch (Exception ex)
                 {

@@ -10,6 +10,7 @@ namespace Application.Features.AppTroopers.SecurityTips
 {
     public class CreateSecurityTipResponse
     {
+        public bool Succeeded { get; set; }
         public string SecurityTipStatus { get; set; }
         public bool IsDispatched { get; set; }
         public bool IsCreated { get; set; }
@@ -41,6 +42,7 @@ namespace Application.Features.AppTroopers.SecurityTips
 
     public class CustomerPreciseLocation
     {
+        public string CountryName { get; set; }
         public string StateName { get; set; }
         public string LGAName { get; set; }
         public string DistrictName { get; set; }
@@ -64,7 +66,6 @@ namespace Application.Features.AppTroopers.SecurityTips
         //Broadcaster
         public string BroadcasterTownId { get; set; }
         public string BroadcasterFullLocation { get; set; }
-
     }
 
     public class BroadcasterandTipLocations
@@ -76,6 +77,43 @@ namespace Application.Features.AppTroopers.SecurityTips
 
     public class GetSecurityTipsListResponse
     {
-       public List<GetSecurityTipResponse> SecurityTipsList { get; set; }
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public List<GetSecurityTipResponse> SecurityTipsList { get; set; }
+    }
+
+    //Live Location
+
+    public class GetLiveLocationSecurityTipResponse
+    {
+        public bool Success { get; set; }
+        public string  Message { get; set; }
+        public List<GetSecurityTipResponse> SecurityTipsList { get; set; }
+    }
+
+    public class GetSecurityTipsForUserTownLGAandStateResponse
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public List<GetSecurityTipResponse> SecurityTipsListforUserTown { get; set; }
+        public List<GetSecurityTipResponse> SecurityTipsListforUserLGA { get; set; }
+        public List<GetSecurityTipResponse> SecurityTipsListforUserState { get; set; }
+    }
+
+    public class LiveLocationSecurityTipResponse
+    {
+        public string Id { get; set; }
+        public string Subject { get; set; }
+        public string Body { get; set; }
+        public string TipStatus { get; set; }
+        public string BroadcasterName { get; set; }
+        public string SecurityTipCategory { get; set; }
+        public string AlertLevel { get; set; }
+        public string BroadcastLevel { get; set; }
+        public bool IsBroadcasted { get; set; }
+        public string BroadcastLevelId { get; set; }
+        public string BroadcastLocationId { get; set; }
+        public string BroadcastLocation { get; set; }
+        public string BroadcasterTownId { get; set; }
     }
 }

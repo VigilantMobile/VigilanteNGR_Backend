@@ -352,7 +352,7 @@ namespace Infrastructure.Persistence.Contexts
             .WithOne(g => g.Comment).HasForeignKey(s => s.CommentId).OnDelete(DeleteBehavior.Restrict);
 
             //Wallet
-            builder.Entity<ApplicationUser>().HasOne(e => e.Wallet).WithOne(e => e.Customer);
+            builder.Entity<ApplicationUser>().HasOne(e => e.Wallet).WithOne(e => e.Customer).OnDelete(DeleteBehavior.Cascade);
 
 
             builder.Entity<ApplicationUser>().HasMany(s => s.Comments)

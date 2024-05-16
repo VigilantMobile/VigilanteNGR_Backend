@@ -9,6 +9,7 @@ using Application.Features.Products.Commands.DeleteProductById;
 using Application.Features.Products.Commands.UpdateProduct;
 using Application.Features.Products.Queries.GetAllProducts;
 using Application.Features.Products.Queries.GetProductById;
+using Application.Features.UserProfile;
 using Application.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,10 +26,29 @@ namespace VGWebAPI.Controllers.v1
 
         #region Customers 
 
-        [HttpGet("get-customer-profile")]
+        //[HttpGet("get-customer-profile")]
+        [HttpGet]
         public async Task<IActionResult> GetCustomerProfileAsync(string CustomerId)
         {
             return Ok(await Mediator.Send(new GetCustomerProfileQuery { CustomerId = CustomerId }));
+        }
+
+        [HttpPost("TrustedContacts/add")]
+        public async Task<IActionResult> CreateCustomerTrustedContactsAsync([FromBody] CreateCustomerTrustedContactViewModel createCustomerTrustedContactsRequest)
+        {
+            return Ok(await Mediator.Send(new CreateTrustedContactsCommand { createCustomerTrustedContactsRequest = createCustomerTrustedContactsRequest }));
+        }
+
+        [HttpPost("TrustedContacts/edit")]
+        public async Task<IActionResult> UpdateCustomerTrustedContactAsync([FromBody] UpdateTrustedPersonCommand updateTrustedPersonCommand)
+        {
+            return Ok(await Mediator.Send(updateTrustedPersonCommand));
+        }
+
+        [HttpDelete("TrustedContacts/{id}")]
+        public async Task<IActionResult> DeleteCustomerTrustedContactAsync(string id)
+        {
+            return Ok(await Mediator.Send(new DeleteTrustedPersonByIdCommand { TrustedPersonId = id}));
         }
 
         #endregion Customers

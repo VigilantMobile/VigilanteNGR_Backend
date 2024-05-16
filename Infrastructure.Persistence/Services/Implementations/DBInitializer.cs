@@ -112,11 +112,11 @@ namespace Infrastructure.Persistence.Services
                             string StatesMultiploygonsJSON = File.ReadAllText(Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"JSONDocs" + Path.DirectorySeparatorChar + "ngstatesboundaries.json"));
 
                             //save JSON string for state
-                            //var SatesJSONDemographic = new DemographicEntitiesCoordinatesJSON
-                            //{
-                            //    DemographicType = "State",
-                            //    JsonString = StatesMultiploygonsJSON
-                            //};
+                            var SatesJSONDemographic = new DemographicEntitiesCoordinatesJSON
+                            {
+                                DemographicType = "State",
+                                JsonString = StatesMultiploygonsJSON
+                            };
                             //context.demographicEntitiesCoordinatesJSONs.Add(SatesJSONDemographic);
 
                             List<StatesMultiPolygons> statesMultipolygons = JsonConvert.DeserializeObject<List<StatesMultiPolygons>>(StatesMultiploygonsJSON);
@@ -147,6 +147,8 @@ namespace Infrastructure.Persistence.Services
 
                                 stateNamesandIdsList.Add(nameIdPair);
                             }
+
+                            context.SaveChanges();
                         }
 
                         #endregion seed states
@@ -168,12 +170,12 @@ namespace Infrastructure.Persistence.Services
                             string lgaPolygonsJSON = File.ReadAllText(Path.Combine(System.IO.Directory.GetCurrentDirectory(), @"JSONDocs" + Path.DirectorySeparatorChar + "towns_in_nigeria.json"));
 
                             //save JSON string for lga
-                            //var lgaJSONDemographic = new DemographicEntitiesCoordinatesJSON
-                            //{
-                            //    DemographicType = "LGA",
-                            //    JsonString = lgaPolygonsJSON
-                            //};
-                            //context.demographicEntitiesCoordinatesJSONs.Add(lgaJSONDemographic);
+                            var lgaJSONDemographic = new DemographicEntitiesCoordinatesJSON
+                            {
+                                DemographicType = "LGA",
+                                JsonString = lgaPolygonsJSON
+                            };
+                            context.demographicEntitiesCoordinatesJSONs.Add(lgaJSONDemographic);
 
 
                             LGAPolygons lgasPolygons = JsonConvert.DeserializeObject<LGAPolygons>(lgaPolygonsJSON);
@@ -265,17 +267,19 @@ namespace Infrastructure.Persistence.Services
                                     context.LGAs.Add(lgaEntity);
                                 }
                             }
+
+                            context.SaveChanges();
                         }
                         #endregion seed LGAs
 
                         #region
-                        //Seed default towns
+                        ////Seed default towns
                         if (!(context.Towns.Any()))
                         {
                             IList<Town> newAlertLevels = new List<Town>() {
-                            new Town() { Id = Guid.NewGuid(), Name = "Victoria Island", LGAId = Guid.Parse("EAE874F6-B4C2-4C78-A138-4AAA5514C6BB"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
-                            new Town() { Id = Guid.NewGuid(), Name = "Ikoyi", LGAId = Guid.Parse("EAE874F6-B4C2-4C78-A138-4AAA5514C6BB"), CreatedBy = "Antman", Created = DateTime.UtcNow.AddHours(1)},
-                            new Town() { Id = Guid.NewGuid(), Name = "Ajah", LGAId = Guid.Parse("EAE874F6-B4C2-4C78-A138-4AAA5514C6BB"), CreatedBy = "Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new Town() { Id = Guid.NewGuid(), Name = "Victoria Island", LGAId = Guid.Parse("9776D0E5-CE88-4686-8CD2-FEE0EFC18186"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new Town() { Id = Guid.NewGuid(), Name = "Ikoyi", LGAId = Guid.Parse("9776D0E5-CE88-4686-8CD2-FEE0EFC18186"), CreatedBy = "Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new Town() { Id = Guid.NewGuid(), Name = "Ajah", LGAId = Guid.Parse("9776D0E5-CE88-4686-8CD2-FEE0EFC18186"), CreatedBy = "Antman", Created = DateTime.UtcNow.AddHours(1)},
                             };
 
                             context.Towns.AddRange(newAlertLevels);
@@ -317,6 +321,8 @@ namespace Infrastructure.Persistence.Services
                             };
 
                             context.AlertLevels.AddRange(newAlertLevels);
+                            context.SaveChanges();
+
                         }
 
                         #endregion seed alert levels
@@ -334,6 +340,8 @@ namespace Infrastructure.Persistence.Services
                         };
 
                             context.BroadcastLevels.AddRange(broadcastLevels);
+                            context.SaveChanges();
+
                         }
                         #endregion seed broadcast levels
 
@@ -371,11 +379,13 @@ namespace Infrastructure.Persistence.Services
                         // VGNGA
                            new BroadcasterType() { Id = Guid.NewGuid(),  Name = "Official VGNGA", Description = "Official VGNGA",  Broadcaster = BroadcasterTypeEnum.OfficialVGNGA, Created = DateTime.UtcNow.AddHours(1)},
 
-                        };
+                            };
                             context.BroadcasterTypes.AddRange(broadcasterTypes);
+                            context.SaveChanges();
+
                         }
 
-                      
+
 
                         #endregion seed broadcaster types
 
@@ -396,6 +406,7 @@ namespace Infrastructure.Persistence.Services
                             };
 
                             context.SourceCategories.AddRange(newSourceCategories);
+                            context.SaveChanges();
                         }
 
                         #endregion seed default source categories 
@@ -405,14 +416,15 @@ namespace Infrastructure.Persistence.Services
                         if (!(context.Sources.Any()))
                         {
                             IList<Source> sources = new List<Source>() {
-                            new Source() { Id = Guid.NewGuid(), SourceName = "The Guardian", Description = "The Guardian", SourceCategoryId=Guid.Parse("E531B1FB-4558-490E-9C91-E4DDBD4D2BD7"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
-                            new Source() { Id = Guid.NewGuid(), SourceName = "Instagram", Description = "Instagram", SourceCategoryId=Guid.Parse("229B6F03-C70D-408E-8CB3-5781037E870B"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
-                            new Source() { Id = Guid.NewGuid(), SourceName = "Cool FM", Description = "Cool FM", SourceCategoryId=Guid.Parse("16E4779B-5EB6-49D1-A914-A0BCFA172F0E"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
-                            new Source() { Id = Guid.NewGuid(), SourceName = "Vigilant User", Description = "Vigilant NG User", SourceCategoryId=Guid.Parse("0AFEA415-9211-4F49-B62E-E58DBC5AEAB7"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)}
+                            new Source() { Id = Guid.NewGuid(), SourceName = "The Guardian", Description = "The Guardian", SourceCategoryId=Guid.Parse("96E31BDE-FAEC-4684-A4C8-592B594AC1B6"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new Source() { Id = Guid.NewGuid(), SourceName = "Instagram", Description = "Instagram", SourceCategoryId=Guid.Parse("56E968A2-D8B3-4244-ABC4-A08D810E6886"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new Source() { Id = Guid.NewGuid(), SourceName = "Cool FM", Description = "Cool FM", SourceCategoryId=Guid.Parse("7ABAC364-8F4F-4E23-94A9-0DF658A9D358"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                            new Source() { Id = Guid.NewGuid(), SourceName = "Vigilant User", Description = "Vigilant NG User", SourceCategoryId=Guid.Parse("831C8180-B1A2-46C9-AD9E-0F2AFE2D07FD"), CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)}
 
                             };
 
                             context.Sources.AddRange(sources);
+                            context.SaveChanges();
                         }
 
                         #endregion seed sources
@@ -434,6 +446,8 @@ namespace Infrastructure.Persistence.Services
                             };
 
                             context.SecurityTipCategories.AddRange(newTipCategories);
+                            context.SaveChanges();
+
                         }
 
                         #endregion seed tip categories 
@@ -449,6 +463,8 @@ namespace Infrastructure.Persistence.Services
                             };
 
                             context.Subscriptions.AddRange(sources);
+                            context.SaveChanges();
+
                         }
                         #endregion subscription plans
 

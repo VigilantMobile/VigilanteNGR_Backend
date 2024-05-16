@@ -16,10 +16,15 @@ namespace Application.Services.Interfaces.AppTroopers.SecurityTips
         Task<CreateSecurityTipResponse> CreateSecurityTipAsync(CreateSecurityTipCommand securityTipRequest);
         Task<GetSecurityTipResponse> GetSecurityTip(string SecurityTipId);
         Task<BroadcasterandTipLocations> GetBroadcasterandTipLocations(string BroadcastLevelId, string BroadcastLocationId, string BroadcasterTownId);
-        Task<GetSecurityTipsListResponse> GetSecurityTipsForUser(string Userid, int pageNumber, int pageSize);
+        Task<GetSecurityTipsListResponse> GetSecurityTipsPostedByUser(string Userid, int pageNumber, int pageSize);
         Task<GetSecurityTipsListResponse> GetSecurityTipsForState(string StateId, int pageNumber, int pageSize);
         Task<GetSecurityTipsListResponse> GetSecurityTipsForLGA(string LGAId, int pageNumber, int PageSize);
-        Task<GetSecurityTipsListResponse> GetSecurityTipsForDistrict(string DistrictId, int pageNumber, int PageSize);
+        Task<GetSecurityTipsListResponse> GetSecurityTipsForTown(string DistrictId, int pageNumber, int PageSize);
+        Task<GetLiveLocationSecurityTipResponse> GetSecurityTipsForUserLiveLocation(string Userid, string BroadcastLevel, string coordinates, int pageNumber, int pageSize);
+
+        Task<GetSecurityTipsForUserTownLGAandStateResponse> GetSecurityTipsForUserLocations(string Userid, int pageNumber, int pageSize);
+
+
 
         //Task<GetSecurityTipsListResponse> GetSecurityTipsForUserLiveLocation(string UserId, string coordinates, int pageNumber, int PageSize);
 

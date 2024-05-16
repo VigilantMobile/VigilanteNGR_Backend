@@ -27,10 +27,10 @@ namespace Application.Features.AppTroopers.SecurityTips.GetAllSecurityTipCategor
 
         public async Task<PagedResponse<IEnumerable<GetAllSecurityTipCategoriesViewModel>>> Handle(GetAllSecurityTipCategoriesQuery request, CancellationToken cancellationToken)
         {
-            var validFilter = _mapper.Map<GetAllSecurityTipCategoriesParameter>(request);
-            var securityTipCategories = await _securityTipCategoryRepository.GetPagedReponseAsync(validFilter.PageNumber, validFilter.PageSize);
+            //var validFilter = _mapper.Map<GetAllSecurityTipCategoriesQueryParameter>(request);
+            var securityTipCategories = await _securityTipCategoryRepository.GetPagedReponseAsync(request.PageNumber, request.PageSize);
             var securityTipCategoryViewModel = _mapper.Map<IEnumerable<GetAllSecurityTipCategoriesViewModel>>(securityTipCategories);
-            return new PagedResponse<IEnumerable<GetAllSecurityTipCategoriesViewModel>>(securityTipCategoryViewModel, validFilter.PageNumber, validFilter.PageSize);
+            return new PagedResponse<IEnumerable<GetAllSecurityTipCategoriesViewModel>>(securityTipCategoryViewModel, request.PageNumber, request.PageSize);
         }
     }
 }

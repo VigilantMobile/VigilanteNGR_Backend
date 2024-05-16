@@ -3,7 +3,10 @@ using Application.Interfaces.Repositories;
 using Application.Interfaces.Repositories.AppTroopers.Panic;
 using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Application.Interfaces.Repositories.Location;
+using Application.Services.Interfaces.AppTroopers.SecurityTips;
+using Application.Services.Interfaces.Location;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using Domain.Entities.Identity;
 using Domain.Settings;
 using Infrastructure.Persistence.Contexts;
@@ -13,7 +16,10 @@ using Infrastructure.Persistence.Repositories.Panic;
 using Infrastructure.Persistence.Repositories.SecurityTips;
 using Infrastructure.Persistence.Repository;
 using Infrastructure.Persistence.Services;
+using Infrastructure.Persistence.Services.Implementations.AppTroopers.SecurityTips;
+using Infrastructure.Persistence.Services.Implementations.Location;
 using Infrastructure.Shared.Services;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +29,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System;
+using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence
 {
@@ -89,26 +97,27 @@ namespace Infrastructure.Persistence
                     };
                     o.Events = new JwtBearerEvents()
                     {
-                        OnAuthenticationFailed = c =>
-                        {
-                            c.NoResult();
-                            c.Response.StatusCode = 500;
-                            c.Response.ContentType = "text/plain";
-                            return c.Response.WriteAsync(c.Exception.ToString());
-                        },
+                        //OnAuthenticationFailed = c =>
+                        //{
+                        //    c.NoResult();
+                        //    c.Response.StatusCode = 500;
+                        //    c.Response.ContentType = "text/plain";
+                        //    c.Response.WriteAsync(c.Exception.ToString());
+                        //    return Task.CompletedTask;
+                        //},
                         OnChallenge = context =>
                         {
                             context.HandleResponse();
                             context.Response.StatusCode = 401;
                             context.Response.ContentType = "application/json";
-                            var result = JsonConvert.SerializeObject(new Response<string>("You are not Authorized"));
+                            var result = JsonConvert.SerializeObject(new Response<string>(responsestatus: ResponseStatus.success.ToString(), "You are not Authorized"));
                             return context.Response.WriteAsync(result);
                         },
                         OnForbidden = context =>
                         {
                             context.Response.StatusCode = 403;
                             context.Response.ContentType = "application/json";
-                            var result = JsonConvert.SerializeObject(new Response<string>("You are not authorized to access this resource"));
+                            var result = JsonConvert.SerializeObject(new Response<string>(responsestatus: ResponseStatus.success.ToString(), "You are not authorized to access this resource"));
                             return context.Response.WriteAsync(result);
                         },
                     };
@@ -174,18 +183,28 @@ namespace Infrastructure.Persistence
                    configuration.GetConnectionString("DefaultConnection"),
                      b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName).UseNetTopologySuite()).EnableSensitiveDataLogging(true));
 
+            services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+            //services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+
             #region Repositories
-            services.AddTransient(typeof(IGenericRepositoryAsync<>), typeof(GenericRepositoryAsync<>));
-            services.AddTransient<IProductRepositoryAsync, ProductRepositoryAsync>();
+            services.AddScoped(typeof(IGenericRepositoryAsync<>), typeof(GenericRepositoryAsync<>));
+            services.AddScoped<IProductRepositoryAsync, ProductRepositoryAsync>();
             //User Profile
 
             //App Troopers
-            services.AddTransient<ISecurityTipCategoryRepositoryAsync, SecurityTipCategoryRepositoryAsync>();
+            //Security Tips
+
+            services.AddScoped<ISecurityTipCategoryRepositoryAsync, SecurityTipCategoryRepositoryAsync>();
+            services.AddScoped<ISecurityTipRepositoryAsync, SecurityTipRepositoryAsync>();
+            services.AddScoped<IEscalatedTipsRepositoryAsync, EscalatedTipsRepositoryAsync>();
+            services.AddScoped<IAlertLevelRepositoryAsync, AlertLevelRepositoryAsync>();
+            services.AddScoped<IBroadcastLevelRespositoryAsync, BroadcastLevelRepositoryAsync>();
 
             //Location
-            services.AddTransient<ITownRepositoryAsync, TownRepositoryAsync>();
-            services.AddTransient<ILGARepositoryAsync, LGARepositoryAsync>();
-            services.AddTransient<IStateRepositoryAsync, StateRepositoryAsync>();
+            services.AddScoped<IStateRepositoryAsync, StateRepositoryAsync>();
+            services.AddScoped<ILGARepositoryAsync, LGARepositoryAsync>();
+            services.AddScoped<ITownRepositoryAsync, TownRepositoryAsync>();
+            //services.AddScoped<IGeoCodingService, GeocodingService>();
 
             //Panic
             services.AddTransient<ITrustedPersonRepositoryAsync, TrustedPersonRepositoryAsync>();

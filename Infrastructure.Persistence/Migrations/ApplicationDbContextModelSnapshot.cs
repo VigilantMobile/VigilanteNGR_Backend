@@ -1235,6 +1235,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<bool>("CurrentPromoUsed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("CustomerProfileUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
@@ -2163,7 +2166,8 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Identity.ApplicationUser", "Customer")
                         .WithOne("Wallet")
-                        .HasForeignKey("Domain.Entities.AppTroopers.Subscription.Wallet", "ApplicationUserId");
+                        .HasForeignKey("Domain.Entities.AppTroopers.Subscription.Wallet", "ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Customer");
                 });

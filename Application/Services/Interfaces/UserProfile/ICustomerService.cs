@@ -1,4 +1,4 @@
-﻿using Application.Features.UserProfile.Customer.Queries.GetCustomerProfile;
+﻿using Application.Features.UserProfile;
 using Application.Wrappers;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.Panic;

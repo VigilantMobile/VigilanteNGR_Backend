@@ -4,6 +4,7 @@ using Application.Enums;
 using Application.Exceptions;
 using Application.Interfaces;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using Domain.Entities.AppTroopers.Subscription;
 using Domain.Entities.Identity;
 using Domain.Settings;
@@ -49,6 +50,8 @@ namespace Infrastructure.Persistence.Services
         //private readonly IMailgunEmailService _mailgunEmailService;
         private readonly ILogger _logger;
         private readonly IMemoryCache _memoryCache;
+        private readonly AppConfig _appConfig;
+
 
 
 
@@ -65,7 +68,8 @@ namespace Infrastructure.Persistence.Services
             IHttpContextAccessor accessor,
             IMemoryCache memoryCache,
         //IMailgunEmailService mailgunEmailService,
-        ILogger logger)
+        ILogger logger,
+        IOptions<AppConfig> appConfig)
         {
             _context = context;
             _userManager = userManager;
@@ -80,7 +84,8 @@ namespace Infrastructure.Persistence.Services
             _accessor = accessor;
             //_mailgunEmailService = mailgunEmailService;
             _logger = logger;
-            _memoryCache= memoryCache;
+            _memoryCache = memoryCache;
+            _appConfig = appConfig.Value;
         }
 
         public ClaimsPrincipal User => _accessor.HttpContext.User;
@@ -98,6 +103,7 @@ namespace Infrastructure.Persistence.Services
                 if (user == null)
                 {
                     throw new ApiException($"No Accounts Registered with {request.Username}.");
+
                 }
 
                 if (!user.isActive)
@@ -146,7 +152,9 @@ namespace Infrastructure.Persistence.Services
                 response.RefreshToken = refreshToken.Token;
                 response.RefreshTokenExpiration = refreshToken.Expires;
 
-                return new Response<AuthenticationResponse>(response, $"Authenticated {user.UserName}");
+                //return new Response<AuthenticationResponse>(response, $"Authenticated {user.UserName}");
+                return new Response<AuthenticationResponse>(response, responsestatus: ResponseStatus.success.ToString(), message: $"Authenticated {user.UserName}");
+
             }
             catch (Exception ex)
             {
@@ -163,8 +171,8 @@ namespace Infrastructure.Persistence.Services
                 var userWithSameUserName = await _userManager.FindByNameAsync(request.PhoneNumber);
                 if (userWithSameUserName != null)
                 {
-                    RegisterResponse response = new RegisterResponse { Message = "Account already exists.", UserAlreadyExists = true };
-                    return new Response<RegisterResponse>(response, message: $"Phone number is already registered, proceed to login. Thanks.", successStatus: false);
+                    RegisterResponse response = new RegisterResponse { Message = "Account already exists."};
+                    return new Response<RegisterResponse>(response, responsestatus:ResponseStatus.success.ToString(), message: $"Phone number is already registered, proceed to login. Thanks.");
                     //throw new ApiException($"User already exists.");
                 }
 
@@ -179,7 +187,7 @@ namespace Infrastructure.Persistence.Services
                     EmailConfirmed = false,      // set email and phone confirmed automatically after configuring twilio sendgrid for Otps
                     PhoneNumberConfirmed = false,
                     isActive = true,
-                    SubscriptionId = Guid.Parse("47C3F904-DD6F-43C4-B9B1-645A4D99155C")
+                    SubscriptionId = Guid.Parse("5F767D57-A64C-4B6F-96A9-CE81EF8A9F66")
 
                 };
 
@@ -206,7 +214,7 @@ namespace Infrastructure.Persistence.Services
                         _context.SaveChanges();
 
 
-                        var verificationUri = await SendVerificationEmail(user, origin);
+                        var verificationUri = await GetVerificationUri(user, _appConfig.AppOrigin);
                         //TODO: Attach Email Service here and configure it via appsettings
                         //await _emailService.SendAsync(new Application.DTOs.Email.EmailRequest() 
                         //{ 
@@ -260,8 +268,9 @@ namespace Infrastructure.Persistence.Services
                             }
                         });
 
-                        RegisterResponse response = new RegisterResponse { Message = "Account Created Successfully.", UserAlreadyExists = false };
-                        return new Response<RegisterResponse>(response, message: $"Your account has been created successfuly. ", successStatus: true);
+                        RegisterResponse response = new RegisterResponse { Message = "Account Created Successfully." };
+                        //return new Response<RegisterResponse>(response, message: $"Your account has been created successfuly. ", success: true);
+                        return new Response<RegisterResponse>(response, responsestatus: ResponseStatus.success.ToString(), message: $"Your account has been created successfuly.");
                     }
                     else
                     {
@@ -275,8 +284,8 @@ namespace Infrastructure.Persistence.Services
                 }
                 else
                 {
-                    RegisterResponse response = new RegisterResponse { Message = "Account already exists.", UserAlreadyExists = true };
-                    return new Response<RegisterResponse>(response, message: $"Email is already registered, Kindly login with the associated details. Thanks.", successStatus: false);
+                    RegisterResponse response = new RegisterResponse { Message = "Account already exists." };
+                    return new Response<RegisterResponse>(response, responsestatus: ResponseStatus.success.ToString(), message: $"Email is already registered, Kindly login with the associated details. Thanks.");
 
                     //throw new ApiException($"Email {request.Email } is already registered.");
                 }
@@ -345,7 +354,7 @@ namespace Infrastructure.Persistence.Services
                     }
                 });
                
-                return new Response<string>($"Resent OTP for Phone Number: {user.UserName}", success:true);
+                return new Response<string>(responsestatus: ResponseStatus.success.ToString(), $"Resent OTP for Phone Number: {user.UserName}");
             }
             catch (Exception ex)
             {
@@ -376,9 +385,7 @@ namespace Infrastructure.Persistence.Services
                 {
                     throw new ApiException($"Account {request.PhoneNumber} is presently disabled. Please contact support@vigilantng.com for assistance.");
                 }
-
        
-
                 //very credentials
                 string value = string.Empty;
                 _memoryCache.TryGetValue($"+{request.PhoneNumber}", out value);
@@ -414,7 +421,7 @@ namespace Infrastructure.Persistence.Services
                 response.RefreshToken = refreshToken.Token;
                 response.RefreshTokenExpiration = refreshToken.Expires;
 
-                return new Response<AuthenticationResponse>(response, $"Verification successful. Welcome to Vigilant, {user.FirstName}");
+                return new Response<AuthenticationResponse>(response, $"{user.FirstName}, thank you for verifying your phone number. Welcome to the Vigilant community.");
             }
             catch (Exception ex)
             {
@@ -449,7 +456,7 @@ namespace Infrastructure.Persistence.Services
 
                 if (result.Succeeded)
                 {
-                    return new Response<UpdateProfileResponse>(response, message: $"User profile successfully updated.", successStatus: true);
+                    return new Response<UpdateProfileResponse>(response, responsestatus: ResponseStatus.success.ToString(), message: $"User profile successfully updated.");
                 }
                 else
                 {
@@ -475,7 +482,7 @@ namespace Infrastructure.Persistence.Services
 
                     StaffRegistrationResponse response = new StaffRegistrationResponse { Message = "Account already exists.", UserAlreadyExists = true };
 
-                    return new Response<StaffRegistrationResponse>(response, message: $"User is already registered, Kindly login with the associated details. Thanks.", successStatus: false);
+                    return new Response<StaffRegistrationResponse>(response, responsestatus: ResponseStatus.success.ToString(), message: $"User is already registered, Kindly login with the associated details. Thanks.");
                 }
 
                 string defaultPassword = _randomNumberGenerator.GenerateRandomNumber(6, Mode.AlphaNumeric);
@@ -509,7 +516,7 @@ namespace Infrastructure.Persistence.Services
                             await _userManager.AddToRoleAsync(user, role.Name);
 
                         }
-                        var verificationUri = await SendVerificationEmail(user, origin);
+                        var verificationUri = await GetVerificationUri(user, origin);
 
 
                         //TODO: Attach Email Service here and configure it via appsettings
@@ -524,7 +531,7 @@ namespace Infrastructure.Persistence.Services
                         });
 
                         StaffRegistrationResponse response = new StaffRegistrationResponse { Message = "Staff account created.", VerificationUrl = verificationUri, UserAlreadyExists = false };
-                        return new Response<StaffRegistrationResponse>(response, message: $"Staff account was registered successfully. {verificationUri}");
+                        return new Response<StaffRegistrationResponse>(response, responsestatus: ResponseStatus.success.ToString(), message: $"Staff account was registered successfully. {verificationUri}");
 
                     }
                     else
@@ -540,7 +547,7 @@ namespace Infrastructure.Persistence.Services
                 {
                     StaffRegistrationResponse response = new StaffRegistrationResponse { Message = "Account already exists.", UserAlreadyExists = true };
 
-                    return new Response<StaffRegistrationResponse>(response, message: $"User is already registered, Kindly login with the associated details. Thanks.", successStatus: false);
+                    return new Response<StaffRegistrationResponse>(response, responsestatus: ResponseStatus.fail.ToString(), message: $"User is already registered, Kindly login with the associated details. Thanks.");
                 }
             }
             catch (Exception ex)
@@ -604,12 +611,12 @@ namespace Infrastructure.Persistence.Services
             return BitConverter.ToString(randomBytes).Replace("-", "");
         }
 
-        private async Task<string> SendVerificationEmail(ApplicationUser user, string origin)
+        private async Task<string> GetVerificationUri(ApplicationUser user, string origin)
         {
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var route = "api/account/confirm-email/";
-            var _enpointUri = new Uri(string.Concat($"{origin}/", route));
+            var _enpointUri = new Uri(string.Concat($"{origin}/", route), UriKind.RelativeOrAbsolute);
             var verificationUri = QueryHelpers.AddQueryString(_enpointUri.ToString(), "userId", user.Id);
             verificationUri = QueryHelpers.AddQueryString(verificationUri, "code", code);
             //Email Service Call Here
@@ -626,7 +633,7 @@ namespace Infrastructure.Persistence.Services
                 var result = await _userManager.ConfirmEmailAsync(user, code);
                 if (result.Succeeded)
                 {
-                    return new Response<string>(user.Id, message: $"Account Confirmed for {user.Email}. You can now use the /api/Account/authenticate endpoint.");
+                    return new Response<string>(user.Id, message: $"{user.FirstName}, Thank you for confirming your email address, {user.Email}.");
                 }
                 else
                 {
