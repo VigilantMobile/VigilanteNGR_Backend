@@ -40,7 +40,7 @@ namespace Application.Features.UserProfile
                     await _trustedPersonRepository.DeleteAsync(trustedPerson);
 
                     //return new Response<Product>(product.Id);
-                    return new Response<TrustedPerson>(null, responsestatus: ResponseStatus.success.ToString(), $"Trusted contact was successfully deleted.");
+                    return new Response<TrustedPerson>(null, responsestatus: APIResponseStatus.success.ToString(), $"Trusted contact was successfully deleted.");
                 }
             }
         }

@@ -66,7 +66,7 @@ namespace Application.Features.UserProfile
 
                     await _trustedPersonRepository.UpdateAsync(trustedPerson);
 
-                    return new Response<TrustedPerson>(trustedPerson, responsestatus: ResponseStatus.success.ToString(), $"Trusted contact successfully updated");
+                    return new Response<TrustedPerson>(trustedPerson, responsestatus: APIResponseStatus.success.ToString(), $"Trusted contact successfully updated");
                 }
             }
         }

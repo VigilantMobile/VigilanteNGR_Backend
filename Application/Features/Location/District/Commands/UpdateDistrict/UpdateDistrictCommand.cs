@@ -49,7 +49,7 @@ namespace Application.Features.Location
                         town.LastModified = DateTime.UtcNow.AddHours(1);
                         await _townRepositoryAsync.UpdateAsync(town);
 
-                        return new Response<Town>(town, responsestatus: ResponseStatus.success.ToString(), $"District successfully updated");
+                        return new Response<Town>(town, responsestatus: APIResponseStatus.success.ToString(), $"District successfully updated");
                     }
                }
                 catch (Exception ex)

@@ -34,7 +34,7 @@ namespace Application.Features.Location
                     getlgaViewModel.Created = lga.Created;
                     getlgaViewModel.LastModified = lga.LastModified;
                     getlgaViewModel.State = lga.State.Name;
-                    return new Response<GetLGAViewModel>(getlgaViewModel, responsestatus: ResponseStatus.success.ToString(), message: $"lga retrieval successful");
+                    return new Response<GetLGAViewModel>(getlgaViewModel, responsestatus: APIResponseStatus.success.ToString(), message: $"lga retrieval successful");
                 }
                 catch (Exception ex)
                 {

@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces.Repositories.Location
 {
-    public interface IStateRepositoryAsync : IGenericRepositoryAsync<State>
+    public interface ICountryRepositoryAsync : IGenericRepositoryAsync<Country>
     {
         //Task<bool> IsUniqueLGAinState(int StateId, string LGAName);
-        Task<State> GetStateWithCountryAsync(int StateId);
-        Task<List<LGA>> GetLGAsinStateAsync(string StateId);
+        //Task<LGA> GetStateWithCountryAsync(int LGAid);
+        Task<List<State>> GetStatesinCountryAsync(string CountryId);
     }
 }

@@ -22,7 +22,14 @@ namespace Domain.Entities.LocationEntities
 
         public string NPFLGAAuthorityAddress { get; set; }
         public string NPFPhone { get; set; }
-        public bool isCapital { get; set; }
+        public string GoogleMapsPlaceId { get; set; }
+        public string GoogleMapsShortName { get; set; }
+        public string GoogleMapsLongName { get; set; }
+        public string GoogleMapsLocationType { get; set; }
+        public string GoogleMapsGeometryInfo { get; set; }
+        public string GoogleMapsFormattedAddress { get; set; }
+
+        public bool isStateCapital { get; set; }
 
         //Customers
         //public virtual ICollection<ApplicationUser> Customers { get; set; }

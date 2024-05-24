@@ -4,6 +4,7 @@ using Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240520211311_country-model")]
+    partial class countrymodel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1397,22 +1400,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GoogleMapsFormattedAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsGeometryInfo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsLocationType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsLongName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("GoogleMapsPlaceId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsShortName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModified")
@@ -1423,6 +1411,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ShortName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1445,22 +1436,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GoogleMapsFormattedAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsGeometryInfo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsLocationType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsLongName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("GoogleMapsPlaceId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsShortName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModified")
@@ -1551,22 +1527,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GoogleMapsFormattedAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsGeometryInfo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsLocationType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsLongName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("GoogleMapsPlaceId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsShortName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModified")
@@ -1611,22 +1572,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GoogleMapsFormattedAddress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsGeometryInfo")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsLocationType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsLongName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("GoogleMapsPlaceId")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsShortName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("LGAId")

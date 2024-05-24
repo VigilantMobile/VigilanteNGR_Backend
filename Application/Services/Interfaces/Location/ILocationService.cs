@@ -12,9 +12,8 @@ using System.Threading.Tasks;
 
 namespace Application.Services.Interfaces.Location
 {
-    public interface IGeoCodingService : IAutoDependencyService
+    public interface ILocationService : IAutoDependencyService
     {
-        Task<Response<CustomerPreciseLocation>> GetCustomerLiveAddresses(string Coordinates);
-        Task<Response<ReverseGeocodingResponse>> GetReverseGeocodingResponse(string Coordinates);
+        Task<Response<string>> SaveCustomerLocationInfo(string Coordinates);
     }
 }

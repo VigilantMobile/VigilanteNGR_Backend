@@ -29,7 +29,7 @@ namespace WebApi.Middlewares
             {
                 var response = context.Response;
                 response.ContentType = "application/json";
-                var responseModel = new Response<string>() { status = ResponseStatus.error.ToString(), Message = error?.Message };
+                var responseModel = new Response<string>() { status = APIResponseStatus.error.ToString(), Message = error?.Message };
 
                 switch (error)
                 {

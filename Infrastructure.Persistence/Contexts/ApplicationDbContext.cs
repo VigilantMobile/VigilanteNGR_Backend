@@ -55,6 +55,7 @@ namespace Infrastructure.Persistence.Contexts
         // staff
 
         //Location
+        public DbSet<Country> Countries { get; set; }
         public DbSet<State> States { get; set; }
         public DbSet<LGA> LGAs { get; set; }
         public DbSet<Town> Towns { get; set; }

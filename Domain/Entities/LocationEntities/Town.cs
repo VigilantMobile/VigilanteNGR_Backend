@@ -22,6 +22,13 @@ namespace Domain.Entities.LocationEntities
         public virtual LGA LGA { get; set; }
         public string NPFTownAuthorityAddress { get; set; }
         public string NPFPhone { get; set; }
+        public string GoogleMapsPlaceId { get; set; }
+        public string GoogleMapsShortName { get; set; }
+        public string GoogleMapsLongName { get; set; }
+        public string GoogleMapsLocationType { get; set; }
+        public string GoogleMapsGeometryInfo { get; set; }
+        public string GoogleMapsFormattedAddress { get; set; }
+
 
         //Customers
         public virtual ICollection<ApplicationUser> TownResidents { get; set; }

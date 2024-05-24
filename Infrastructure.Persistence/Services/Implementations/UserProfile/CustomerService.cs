@@ -159,7 +159,6 @@ namespace Infrastructure.Persistence.Services
             }
         }
 
-
         public async Task<List<CustomerTrustedContactViewModel>> GetCustomerTrustedContactsAsync(string CustomerId)
         {
             try

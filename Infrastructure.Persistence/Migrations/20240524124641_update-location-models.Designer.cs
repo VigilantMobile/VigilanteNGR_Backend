@@ -4,6 +4,7 @@ using Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240524124641_update-location-models")]
+    partial class updatelocationmodels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1397,9 +1400,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GoogleMapsFormattedAddress")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("GoogleMapsGeometryInfo")
                         .HasColumnType("nvarchar(max)");
 
@@ -1443,9 +1443,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsFormattedAddress")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GoogleMapsGeometryInfo")
@@ -1551,9 +1548,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GoogleMapsFormattedAddress")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("GoogleMapsGeometryInfo")
                         .HasColumnType("nvarchar(max)");
 
@@ -1609,9 +1603,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GoogleMapsFormattedAddress")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GoogleMapsGeometryInfo")

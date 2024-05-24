@@ -112,7 +112,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                 }
                 else //Live Location Post
                 {
-                    if (customerLiveLocation.Data?.DistrictName == IncidentLocation.TownName) //Check for 90% Match...   //customer live location is in state
+                    if (customerLiveLocation.Data?.TownOrDistrict == IncidentLocation.TownName) //Check for 90% Match...   //customer live location is in state
                     {
                         canPostTip = true;
                     }

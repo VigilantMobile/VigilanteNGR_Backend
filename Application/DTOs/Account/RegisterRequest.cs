@@ -5,8 +5,10 @@ namespace Application.DTOs.Account
 {
     public class CustomerRegisterRequest
     {
+        [Required]
         public string FirstName { get; set; }
 
+        [Required]
         public string MiddleName { get; set; }
 
         [Required]
@@ -25,10 +27,16 @@ namespace Application.DTOs.Account
         public string ConfirmPassword { get; set; }
 
 
-        [Required]
+        //[Required]
         public string TownId { get; set; }
 
-        public string SettlementId { get; set; }
+        [RegularExpression("^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?),\\s*[-+]?(180(\\.0+)?|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)$", ErrorMessage = "Enter valid Latitude and Longitude, seperated by a comma: (e.g. 43.478685,-80.523607)")]
+        //[RegularExpression("^-?[0-9]{1,3}(?:\\.[0-9]{1,10})?$", ErrorMessage = "Enter valid Latitude and Longitude, seperated by a comma: (e.g. 43.478685,-80.523607")]
+
+        [Required]
+        public string locationCoordinates { get; set; }
+
+        //public string SettlementId { get; set; }
     }
 
     public class StaffRegisterRequest

@@ -110,14 +110,14 @@ namespace Infrastructure.Persistence
                             context.HandleResponse();
                             context.Response.StatusCode = 401;
                             context.Response.ContentType = "application/json";
-                            var result = JsonConvert.SerializeObject(new Response<string>(responsestatus: ResponseStatus.success.ToString(), "You are not Authorized"));
+                            var result = JsonConvert.SerializeObject(new Response<string>(responsestatus: APIResponseStatus.success.ToString(), "You are not Authorized"));
                             return context.Response.WriteAsync(result);
                         },
                         OnForbidden = context =>
                         {
                             context.Response.StatusCode = 403;
                             context.Response.ContentType = "application/json";
-                            var result = JsonConvert.SerializeObject(new Response<string>(responsestatus: ResponseStatus.success.ToString(), "You are not authorized to access this resource"));
+                            var result = JsonConvert.SerializeObject(new Response<string>(responsestatus: APIResponseStatus.success.ToString(), "You are not authorized to access this resource"));
                             return context.Response.WriteAsync(result);
                         },
                     };
@@ -201,6 +201,7 @@ namespace Infrastructure.Persistence
             services.AddScoped<IBroadcastLevelRespositoryAsync, BroadcastLevelRepositoryAsync>();
 
             //Location
+            services.AddScoped<ICountryRepositoryAsync, CountryRepositoryAsync>();
             services.AddScoped<IStateRepositoryAsync, StateRepositoryAsync>();
             services.AddScoped<ILGARepositoryAsync, LGARepositoryAsync>();
             services.AddScoped<ITownRepositoryAsync, TownRepositoryAsync>();

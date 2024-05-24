@@ -29,14 +29,14 @@ namespace Application.Features.Location
                     var district = await _townRepositoryAsync.GetTownWithLGAAsync(query.Id);
                     if (district == null)
                         //throw new ApiException($"district not found.");
-                        return new Response<GetDistrictViewModel>(getAllDistrictsViewModel, responsestatus: ResponseStatus.fail.ToString(), message: $"District not found.");
+                        return new Response<GetDistrictViewModel>(getAllDistrictsViewModel, responsestatus: APIResponseStatus.fail.ToString(), message: $"District not found.");
 
 
                     getAllDistrictsViewModel.DistrictName = district.Name;
                     getAllDistrictsViewModel.Created = district.Created;
                     getAllDistrictsViewModel.LastModified = district.LastModified;
                     getAllDistrictsViewModel.LGA = district.LGA.Name;
-                    return new Response<GetDistrictViewModel>(getAllDistrictsViewModel, responsestatus: ResponseStatus.success.ToString(), message: $"District retrieval successful");
+                    return new Response<GetDistrictViewModel>(getAllDistrictsViewModel, responsestatus: APIResponseStatus.success.ToString(), message: $"District retrieval successful");
                 }
                 catch (Exception ex)
                 {
