@@ -6,13 +6,11 @@ namespace Application.DTOs.Account
     public class CustomerRegisterRequest
     {
         [Required]
-        public string FirstName { get; set; }
+        public string FullName { get; set; }
+        //public string MiddleName { get; set; }
 
-        [Required]
-        public string MiddleName { get; set; }
-
-        [Required]
-        public string LastName { get; set; }
+        //[Required]
+        //public string LastName { get; set; }
 
         [EmailAddress]
         public string Email { get; set; }
@@ -26,7 +24,6 @@ namespace Application.DTOs.Account
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
 
-
         //[Required]
         public string TownId { get; set; }
 
@@ -35,6 +32,9 @@ namespace Application.DTOs.Account
 
         [Required]
         public string locationCoordinates { get; set; }
+
+        [Required]
+        public string Address { get; set; }
 
         //public string SettlementId { get; set; }
     }

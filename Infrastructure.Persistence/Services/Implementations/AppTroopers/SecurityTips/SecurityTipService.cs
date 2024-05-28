@@ -429,13 +429,13 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
             {
                 var customerLocations = await _customerService.GetCustomerProfileAsync(Userid);
 
-                var townTips = await _securityTipRepositoryAsync.GetSecurityTipDataForTown(customerLocations.CustomerLocation.CustomerTown.DistrictId, pageNumber, pageSize);
+                var townTips = await _securityTipRepositoryAsync.GetSecurityTipDataForTown(customerLocations.CustomerLocation.City.CityId, pageNumber, pageSize);
                 getSecurityTipsForUserTownLGAandStateResponse.SecurityTipsListforUserTown = townTips.SecurityTipsList;
 
-                var lgaTips = await _securityTipRepositoryAsync.GetSecurityTipDataForLGA(customerLocations.CustomerLocation.CustomerTown.DistrictId, pageNumber, pageSize);
+                var lgaTips = await _securityTipRepositoryAsync.GetSecurityTipDataForLGA(customerLocations.CustomerLocation.City.CityId, pageNumber, pageSize);
                 getSecurityTipsForUserTownLGAandStateResponse.SecurityTipsListforUserLGA = lgaTips.SecurityTipsList;
 
-                var stateTips = await _securityTipRepositoryAsync.GetSecurityTipDataForState(customerLocations.CustomerLocation.CustomerTown.DistrictId, pageNumber, pageSize);
+                var stateTips = await _securityTipRepositoryAsync.GetSecurityTipDataForState(customerLocations.CustomerLocation.City.CityId, pageNumber, pageSize);
                 getSecurityTipsForUserTownLGAandStateResponse.SecurityTipsListforUserState = stateTips.SecurityTipsList;
 
                 return getSecurityTipsForUserTownLGAandStateResponse;

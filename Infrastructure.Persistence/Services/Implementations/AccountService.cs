@@ -185,14 +185,40 @@ namespace Infrastructure.Persistence.Services
                 if (customerLocation != null)
                 {
                     string cityId = customerLocation.Data;
+                    string firstName = "";
+                    string lastName = "";
+                    string middleNames = "";
+                    //Get Customer Names
+                    var names = request.FullName.Split(' ');
+
+                    if (names.Length == 1) 
+                    { 
+                        firstName = names[0];
+                    }
+                    else if (names.Length == 2)
+                    {
+                        firstName = names[0];
+                        lastName = names[1];
+                    }
+                    else if (names.Length > 2) {
+                        firstName = names[0];
+                        lastName = names[names.Length-1];
+
+                        for(int i = 1; i<names.Length-1; i++)
+                        {
+                            middleNames = middleNames+=$"{names[i]} ";
+                        }
+                        middleNames = middleNames.Trim();
+                    }
 
                     var user = new ApplicationUser
                     {
                         Email = request.Email,
-                        FirstName = request.FirstName,
-                        LastName = request.LastName,
+                        FirstName = firstName,
+                        LastName = lastName,
                         UserName = request.PhoneNumber,
                         PhoneNumber = request.PhoneNumber,
+                        AddressLine1 = request.Address,
                         TownId = Guid.Parse(cityId),
                         EmailConfirmed = false,      // set email and phone confirmed automatically after configuring twilio sendgrid for Otps
                         PhoneNumberConfirmed = false,

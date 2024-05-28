@@ -80,7 +80,8 @@ namespace Infrastructure.Persistence.Services
                                    join town in _context.Towns on customer.TownId equals town.Id
                                    join lga in _context.LGAs on town.LGAId equals lga.Id
                                    join state in _context.States on lga.StateId equals state.Id
-                                   join subscriptionPlan in _context.Subscriptions on customer.SubscriptionId equals subscriptionPlan.Id
+                                   join country in _context.Countries on state.CountryId equals country.Id
+                                         join subscriptionPlan in _context.Subscriptions on customer.SubscriptionId equals subscriptionPlan.Id
 
                                          where customer.Id == CustomerId
                                    select new CustomerProfileViewModel()
@@ -90,22 +91,28 @@ namespace Infrastructure.Persistence.Services
                                        CustomerPhone = customer.PhoneNumber,
                                        CustomerLocation = new CustomerLocationViewModel
                                        {
-                                           CustomerState = new CustomerStateViewModel
+                                           Address = customer.AddressLine1,
+                                           City = new CustomerCityViewModel
+                                           {
+                                               CityId = town.Id.ToString(),
+                                               CityName = town.Name
+                                           },
+                                           District = new CustomerDistrictViewModel
+                                           {
+
+                                               DistrictId = lga.Id.ToString(),
+                                               DistrictName = lga.Name,
+                                           },
+                                           State = new CustomerStateViewModel
                                            {
                                                StateId = state.Id.ToString(),
                                                StateName = state.Name
                                            },
-                                           CustomerLGA = new CustomerLGAViewModel
+                                           Country = new CustomerCountryViewModel
                                            {
-
-                                               LGAId = lga.Id.ToString(),
-                                               LGAName = lga.Name,
+                                               CountryId = country.Id.ToString(),
+                                               CountryName = country.Name
                                            },
-                                           CustomerTown = new CustomerDistrictViewModel
-                                           {
-                                               DistrictId = town.Id.ToString(),
-                                               DistrictName = town.Name
-                                           },                            
                                        },
                                        SubscriptionPlan = new CustomerSubscriptionPlan
                                        {

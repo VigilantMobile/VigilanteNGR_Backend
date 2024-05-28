@@ -27,7 +27,7 @@ namespace VGWebAPI.Controllers.v1
         #region Customers 
 
         //[HttpGet("get-customer-profile")]
-        [HttpGet]
+        [HttpGet("{CustomerId}")]
         public async Task<IActionResult> GetCustomerProfileAsync(string CustomerId)
         {
             return Ok(await Mediator.Send(new GetCustomerProfileQuery { CustomerId = CustomerId }));
