@@ -103,11 +103,20 @@ namespace Infrastructure.Persistence.Services
 
                 //var user = await _userManager.FindByEmailAsync(request.Username);
                 //var userName = await _context.Users.Where(x => x.UserName == request.Username).FirstOrDefaultAsync();
-                var user = await _userManager.FindByNameAsync(request.Username);
+                ApplicationUser user;
+
+                if (request.Username.Contains('@'))
+                {
+                    user = await _userManager.FindByEmailAsync(request.Username);
+                }
+                else
+                {
+                    user = await _userManager.FindByNameAsync(request.Username);
+                }
+
                 if (user == null)
                 {
                     throw new ApiException($"No Accounts Registered with {request.Username}.");
-
                 }
 
                 if (!user.isActive)
@@ -223,6 +232,7 @@ namespace Infrastructure.Persistence.Services
                         EmailConfirmed = false,      // set email and phone confirmed automatically after configuring twilio sendgrid for Otps
                         PhoneNumberConfirmed = false,
                         isActive = true,
+                         
                         SubscriptionId = Guid.Parse("5F767D57-A64C-4B6F-96A9-CE81EF8A9F66")
 
                     };
@@ -321,7 +331,7 @@ namespace Infrastructure.Persistence.Services
                     else
                     {
                         RegisterResponse response = new RegisterResponse { Message = "Account already exists." };
-                        return new Response<RegisterResponse>(response, responsestatus: APIResponseStatus.success.ToString(), message: $"Email is already registered, Kindly login with the associated details. Thanks.");
+                        return new Response<RegisterResponse>(response, responsestatus: APIResponseStatus.fail.ToString(), message: $"Email is already registered, Kindly login with the associated details. Thanks.");
 
                         //throw new ApiException($"Email {request.Email } is already registered.");
                     }
@@ -462,7 +472,7 @@ namespace Infrastructure.Persistence.Services
                 response.RefreshToken = refreshToken.Token;
                 response.RefreshTokenExpiration = refreshToken.Expires;
 
-                return new Response<AuthenticationResponse>(response, $"{user.FirstName}, thank you for verifying your phone number. Welcome to the Vigilant community.");
+                return new Response<AuthenticationResponse>(response, responsestatus: APIResponseStatus.success.ToString(), $"{user.FirstName}, thank you for verifying your phone number. Welcome to the Vigilant community.");
             }
             catch (Exception ex)
             {

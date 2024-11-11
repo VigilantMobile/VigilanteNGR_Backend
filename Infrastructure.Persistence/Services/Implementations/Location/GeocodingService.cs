@@ -83,7 +83,8 @@ namespace Infrastructure.Persistence.Services.Implementations.Location
 
                     //customerPreciseLocation.Country = reverseGeocodingResponse.results.First().address_components.Where(x => x.types[0] == "country").FirstOrDefault().long_name;
 
-                    var address = reverseGeocodingResponse.results.First();
+                    //var address = reverseGeocodingResponse.results.First();
+                    var address = reverseGeocodingResponse.results[7];
 
                     customerPreciseLocation.Country = address.address_components.Where(x => x.types[0] == "country").FirstOrDefault().long_name;
                     customerPreciseLocation.StateOrProvinceOrRegion = address.address_components.Where(x => x.types[0] == "administrative_area_level_1").FirstOrDefault().long_name;

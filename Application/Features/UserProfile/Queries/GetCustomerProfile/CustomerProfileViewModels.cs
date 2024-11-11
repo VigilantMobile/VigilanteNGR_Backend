@@ -60,22 +60,29 @@ namespace Application.Features.UserProfile
     {
         public string CountryId { get; set; }
         public string CountryName { get; set; }
+        public string GoogleMapsPlaceId { get; set; }
+
     }
     public class CustomerStateViewModel
     {
         public string StateId { get; set; }
         public string StateName { get; set; }
+        public string GoogleMapsPlaceId { get; set; }
+
     }
 
     public class CustomerDistrictViewModel
     {
         public string DistrictId { get; set; }
         public string DistrictName { get; set; }
+        public string GoogleMapsPlaceId { get; set; }
+
     }
     public class CustomerCityViewModel
     {
         public string CityId { get; set; }
         public string CityName { get; set; }
+        public string GoogleMapsPlaceId { get; set; }
     }
 
     public class CustomerSubscriptionPlan

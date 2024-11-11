@@ -10,7 +10,7 @@ namespace Application.Features.Location.LiveLocation
     {
         public string CountryName { get; set; }
         public string StateName { get; set; }
-        public string LGAName { get; set; }
+        public string CountyName { get; set; }
         public string DistrictName { get; set; }
         public string FormattedAddress { get; set; }
     }
