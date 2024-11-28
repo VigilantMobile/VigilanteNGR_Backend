@@ -148,6 +148,8 @@ namespace Infrastructure.Persistence.Services
                 response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
                 response.Email = user.Email;
                 response.UserName = user.UserName;
+                response.FirstName = user.FirstName;
+                response.LastName = user.LastName;
 
                 var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
                 response.Roles = rolesList.ToList();
