@@ -63,14 +63,16 @@ namespace Infrastructure.Shared.Services
 
                 //
 
-                RestClientOptions opts = new RestClientOptions();
-                opts.RemoteCertificateValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
-                opts.BaseUrl = new Uri($"{_mailSettings.MailgunBaseUri}");
+                // Create the RestClientOptions and set the Authenticator.
+                var options = new RestClientOptions("https://api.mailgun.net")
+                {
+                    Authenticator = new HttpBasicAuthenticator("api", _mailSettings.MailgunAPIKey)
+                };
 
-                using (RestClient client = new RestClient(opts))
+                // Create the RestClient using the options.
+                using (var client = new RestClient(options))
                 {
                     var request = new RestRequest();
-                    client.Authenticator = new HttpBasicAuthenticator("api", _mailSettings.MailgunAPIKey);
                     request.AddParameter("domain", _mailSettings.MailgunEmailDomain, ParameterType.UrlSegment);
                     request.Resource = $"{_mailSettings.MailgunEmailDomain}/messages";
                     request.AddParameter("from", $"VGNGA Support <mailgun@{_mailSettings.MailgunEmailDomain}>");
@@ -80,6 +82,7 @@ namespace Infrastructure.Shared.Services
                     request.Method = Method.Post;
                     return await client.ExecuteAsync(request);
                 }
+
             }
             catch (System.Exception ex)
             {
