@@ -28,15 +28,46 @@ namespace Application.Features.UserProfile
         public List<CustomerTrustedContactViewModel> customerTrustedContacts { get; set; }
     }
 
+    //public class AcceptCustomerTrustedContactInvitationViewModel
+    //{
+    //    public string CustomerId { get; set; }
+
+    //    [Required, MinLength(1)]
+    //    public List<string> InviterIds { get; set; }
+    //}
+
+    public class AcceptCustomerTrustedContactInvitationViewModel
+    {
+        [Required]
+        public string CustomerId { get; set; }
+
+        [Required]
+        public string InviterId { get; set; }
+    }
+
+    public class RejectCustomerTrustedContactInvitationViewModel
+    {
+        [Required]
+        public string CustomerId { get; set; }
+
+        [Required]
+        public string InviterId { get; set; }
+    }
+
+    public class UpdateCustomerProfilePicViewModel
+    {
+        public string CustomerId { get; set; }
+
+        [Required]
+        public string customerProfilePicUrl { get; set; }
+    }
 
     public class CustomerTrustedContactViewModel
     {
         [Required]
         public string FullName { get; set; }
-        [Required]
-        public string TownId { get; set; }
-        [Required]
 
+        [Required]
         public string FullAddress { get; set; }
         [Required]
         public string PhoneNumber { get; set; }
@@ -45,6 +76,8 @@ namespace Application.Features.UserProfile
         public string EmailAddress { get; set; }
         [Required]
         public string Gender { get; set; }
+        public string ProfilePicUrl { get; set; }
+        public string InvitationStatus { get; set; }
     }
 
     public class CustomerLocationViewModel
@@ -61,7 +94,6 @@ namespace Application.Features.UserProfile
         public string CountryId { get; set; }
         public string CountryName { get; set; }
         public string GoogleMapsPlaceId { get; set; }
-
     }
     public class CustomerStateViewModel
     {
@@ -70,7 +102,6 @@ namespace Application.Features.UserProfile
         public string GoogleMapsPlaceId { get; set; }
 
     }
-
     public class CustomerDistrictViewModel
     {
         public string DistrictId { get; set; }

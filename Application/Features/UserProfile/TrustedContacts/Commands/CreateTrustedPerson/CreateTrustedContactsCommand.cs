@@ -34,7 +34,7 @@ namespace Application.Features.UserProfile
 
         public async Task<DataListResponse<List<CustomerTrustedContactViewModel>>>Handle(CreateTrustedContactsCommand request, CancellationToken cancellationToken)
         {
-            string OwnerId = _userAccessor.GetUserId();
+            string InviterId = _userAccessor.GetUserId();
             //foreach (var trustedContact in request.createCustomerTrustedContactsRequest.customerTrustedContacts)
             //{
             //    var contact = _mapper.Map<TrustedPerson>(trustedContact);

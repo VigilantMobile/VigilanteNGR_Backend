@@ -275,7 +275,7 @@ namespace Infrastructure.Persistence.Contexts
 
             //Trusted
             builder.Entity<TrustedPerson>().HasOne(s => s.Owner)
-                   .WithMany(g => g.TrustedPeople).HasForeignKey(s => s.OwnerId).OnDelete(DeleteBehavior.Restrict);
+                   .WithMany(g => g.TrustedPeople).HasForeignKey(s => s.InviterId).OnDelete(DeleteBehavior.Restrict);
 
             //missing items--------------------------------------------------------------------------------------------------------------------
             //Location

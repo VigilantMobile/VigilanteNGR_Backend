@@ -38,6 +38,8 @@ using Application.Interfaces.Repositories.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.Panic;
 using Application.Features.UserProfile;
 using Infrastructure.Persistence.Migrations;
+using Microsoft.AspNetCore.Routing;
+using System.ComponentModel.DataAnnotations;
 
 namespace Infrastructure.Persistence.Services
 {
@@ -48,15 +50,16 @@ namespace Infrastructure.Persistence.Services
         private readonly ILogger _logger;
         ITrustedPersonRepositoryAsync _trustedPersonRepositoryAsync;
         private readonly IUtilities _utilities;
-
-        public CustomerService( ApplicationDbContext context, UserManager<ApplicationUser> userManager, ITrustedPersonRepositoryAsync trustedPersonRepositoryAsync,
-        ILogger logger, IUtilities utilities)
+        private readonly IEmailService _emailService;
+        public CustomerService( ApplicationDbContext context, UserManager<ApplicationUser> userManager, ITrustedPersonRepositoryAsync trustedPersonRepositoryAsync, 
+        ILogger logger, IEmailService emailService, IUtilities utilities)
         {
             _context = context;
             _logger = logger;
             _userManager = userManager;
             _trustedPersonRepositoryAsync = trustedPersonRepositoryAsync;
             _utilities = utilities;
+            _emailService = emailService;
         }
 
         public async Task<CustomerProfileViewModel> GetCustomerProfileAsync(string CustomerId)
@@ -95,23 +98,27 @@ namespace Infrastructure.Persistence.Services
                                            City = new CustomerCityViewModel
                                            {
                                                CityId = town.Id.ToString(),
-                                               CityName = town.Name
+                                               CityName = town.Name,
+                                               GoogleMapsPlaceId = town.GoogleMapsPlaceId
                                            },
                                            District = new CustomerDistrictViewModel
                                            {
 
                                                DistrictId = lga.Id.ToString(),
                                                DistrictName = lga.Name,
+                                               GoogleMapsPlaceId = lga.GoogleMapsPlaceId
                                            },
                                            State = new CustomerStateViewModel
                                            {
                                                StateId = state.Id.ToString(),
-                                               StateName = state.Name
+                                               StateName = state.Name,
+                                               GoogleMapsPlaceId = state.GoogleMapsPlaceId
                                            },
                                            Country = new CustomerCountryViewModel
                                            {
                                                CountryId = country.Id.ToString(),
-                                               CountryName = country.Name
+                                               CountryName = country.Name,
+                                               GoogleMapsPlaceId = country.GoogleMapsPlaceId
                                            },
                                        },
                                        SubscriptionPlan = new CustomerSubscriptionPlan
@@ -138,20 +145,38 @@ namespace Infrastructure.Persistence.Services
         {
             try
             {
+                var inviter = await _userManager.FindByIdAsync(createCustomerTrustedContactsRequest.CustomerId);
+
                 foreach (var contact in createCustomerTrustedContactsRequest.customerTrustedContacts)
                 {
                     TrustedPerson trustedPerson = new TrustedPerson
                     {
                         Id = Guid.NewGuid(),
-                        OwnerId = createCustomerTrustedContactsRequest.CustomerId,
+                        InviterId = createCustomerTrustedContactsRequest.CustomerId,
                         EmailAddress = contact.EmailAddress,
                         FullName = contact.FullName,
                         FullAddress = contact.FullAddress,
-                        Gender = contact.Gender,
                         PhoneNumber = contact.PhoneNumber,
-                        TownId = Guid.Parse(contact.TownId)
+                        Status = TrustedContactStatus.Pending,
+                        Created = DateTime.UtcNow.AddHours(1),
+                        CreatedBy = "Admin", 
+                        Owner = inviter
                     };
                     await _context.TrustedPeople.AddAsync(trustedPerson);
+
+                    //send invitation email
+                    var vglntAboutUrl = new Uri("http://vigilantng-001-site1.itempurl.com");
+                    await _emailService.SendAsync(new Application.DTOs.Email.EmailRequest()
+                    {
+                        From = "info@vigilanteng.com",
+                        To = contact.EmailAddress,
+                        Username = contact.FullName,
+                        BodyParagraph1 = $"Welcome to the Vigilant NG community. User {inviter.FirstName} {inviter.LastName} invited you to their circle. To learn more about Vigilant, visit the link below.",
+                        ButtonLabel = "Learn more!",
+                        ButtonUrl = $"{vglntAboutUrl.ToString}",
+                        BodyParagraph2 = $"Need further assistance? Email us at info@vigilant.com",
+                        Subject = $"{inviter.FirstName} invited you to join the Vigilant community. "
+                    }); 
                 }
 
                 await _context.SaveChangesAsync();
@@ -171,13 +196,16 @@ namespace Infrastructure.Persistence.Services
             try
             {
                 var trustedContacts = await (from contact in _context.TrustedPeople
-                                       join customer in _context.Users on contact.OwnerId equals customer.Id
+                                       join customer in _context.Users on contact.InviterId equals customer.Id
                                        where customer.Id == CustomerId
+                                       join contactProfile in _context.Users on contact.PhoneNumber equals contactProfile.PhoneNumber
                                        select new CustomerTrustedContactViewModel()
                                        {
                                            EmailAddress = contact.EmailAddress,
                                            FullName = contact.FullName,
                                            PhoneNumber = contact.PhoneNumber,
+                                           InvitationStatus = contact.Status.ToString(),
+                                           ProfilePicUrl = contact.Status != TrustedContactStatus.Accepted ? null :  contactProfile.CustomerProfileUrl
                                        }).ToListAsync();
 
                 return trustedContacts;
@@ -186,6 +214,144 @@ namespace Infrastructure.Persistence.Services
             {
                 _logger.LogError($"An error occurred while retrieving customer tusted contacts: {ex.Message}, {ex}");
                 return null;
+            }
+        }
+
+        // For multiple inviter IDs.
+        //public async Task<bool> AcceptCircleInvitation(AcceptCustomerTrustedContactInvitationViewModel model)
+        //{
+        //    try
+        //    {
+        //        // Retrieve all pending invitations for the customer from the specified inviter IDs.
+        //        var invitations = await _context.TrustedPeople
+        //            .Where(x => x.TrustedUserId == model.CustomerId &&
+        //                        model.InviterIds.Contains(x.InviterId) &&
+        //                        x.Status == TrustedContactStatus.Pending)
+        //            .ToListAsync();
+
+        //        if (invitations == null || !invitations.Any())
+        //        {
+        //            throw new ApiException("Trusted contact invitation(s) not found.");
+        //        }
+
+        //        // Process each invitation.
+        //        foreach (var invitation in invitations)
+        //        {
+        //            // Optionally verify the inviter exists.
+        //            var inviter = await _userManager.FindByIdAsync(invitation.InviterId);
+        //            if (inviter == null)
+        //            {
+        //                throw new ApiException($"Inviter with ID {invitation.InviterId} not found.");
+        //            }
+
+        //            // Update the invitation status.
+        //            invitation.Status = TrustedContactStatus.Accepted;
+        //            // Optionally update a timestamp field if available.
+        //            // invitation.Updated = DateTime.UtcNow;
+        //        }
+
+        //        // Save all changes at once.
+        //        await _context.SaveChangesAsync();
+        //        return true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError($"An error occurred while accepting trusted contacts: {ex.Message}", ex);
+        //        throw;
+        //    }
+        //}
+
+        public async Task<bool> AcceptCircleInvitation(AcceptCustomerTrustedContactInvitationViewModel model)
+        {
+            try
+            {
+                // Retrieve the pending invitation for this customer from the specific inviter.
+                var invitation = await _context.TrustedPeople
+                    .FirstOrDefaultAsync(x => x.TrustedUserId == model.CustomerId &&
+                                              x.InviterId == model.InviterId &&
+                                              x.Status == TrustedContactStatus.Pending);
+
+                if (invitation == null)
+                {
+                    throw new ApiException("Trusted contact invitation not found.");
+                }
+
+                // Optionally verify that the inviter exists.
+                var inviter = await _userManager.FindByIdAsync(model.InviterId);
+                if (inviter == null)
+                {
+                    throw new ApiException($"Inviter with ID {model.InviterId} not found.");
+                }
+
+                // Update the invitation status to Accepted.
+                invitation.Status = TrustedContactStatus.Accepted;
+                // Optionally, update a timestamp if you have one (e.g., invitation.Updated = DateTime.UtcNow;)
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error while accepting trusted contact invitation: {ex.Message}", ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> RejectCircleInvitation(RejectCustomerTrustedContactInvitationViewModel model)
+        {
+            try
+            {
+                // Retrieve the pending invitation for this customer from the specific inviter.
+                var invitation = await _context.TrustedPeople
+                    .FirstOrDefaultAsync(x => x.TrustedUserId == model.CustomerId &&
+                                              x.InviterId == model.InviterId &&
+                                              x.Status == TrustedContactStatus.Pending);
+
+                if (invitation == null)
+                {
+                    throw new ApiException("Trusted contact invitation not found.");
+                }
+
+                // Optionally verify that the inviter exists.
+                var inviter = await _userManager.FindByIdAsync(model.InviterId);
+                if (inviter == null)
+                {
+                    throw new ApiException($"Inviter with ID {model.InviterId} not found.");
+                }
+
+                // Update the invitation status to Rejected.
+                invitation.Status = TrustedContactStatus.Rejected;
+                // Optionally, update a timestamp if you have one (e.g., invitation.Updated = DateTime.UtcNow;)
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error while rejecting trusted contact invitation: {ex.Message}", ex);
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateCustomerProfilePicUrl(string customerProfilePicUrl, string CustomerId)
+        {
+            try
+            {
+                var customer = await _userManager.FindByIdAsync(CustomerId);
+                if (customer == null)
+                {
+                    throw new ApiException($"Customer with ID {CustomerId} not found.");
+                }
+
+                customer.CustomerProfileUrl = customerProfilePicUrl;
+                await _userManager.UpdateAsync(customer);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while updating customer profile picture URL: {ex.Message}, {ex}");
+                throw;
             }
         }
     }

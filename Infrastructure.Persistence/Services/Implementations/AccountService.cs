@@ -28,6 +28,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
@@ -53,9 +54,6 @@ namespace Infrastructure.Persistence.Services
         private readonly ILogger _logger;
         private readonly IMemoryCache _memoryCache;
         private readonly AppConfig _appConfig;
-
-
-
 
         public AccountService(UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
@@ -146,10 +144,12 @@ namespace Infrastructure.Persistence.Services
                 AuthenticationResponse response = new AuthenticationResponse();
                 response.Id = user.Id;
                 response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+                response.JWTokenExpiration = jwtSecurityToken.ValidTo;
                 response.Email = user.Email;
                 response.UserName = user.UserName;
                 response.FirstName = user.FirstName;
                 response.LastName = user.LastName;
+                response.profilePhotoUrl = user.CustomerProfileUrl;
 
                 var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
                 response.Roles = rolesList.ToList();
@@ -304,17 +304,26 @@ namespace Infrastructure.Persistence.Services
                             await _smsService.SendSMSAsync(new SMSRequest()
                             {
                                 messages = new List<SMSMessage>()
-                            {
-                                new SMSMessage
                                 {
-                                    channel="sms",
-                                    content=$"Welcome to the Vigilant community, Your verification code is {OTP}. Your code expires in 6 minutes. Do not share this code with anyone.",
-                                    data_coding = "text",
-                                    originator = "Vigilant",
-                                    recipients = new List<string>(){ request.PhoneNumber }
+                                    new SMSMessage
+                                    {
+                                        channel="sms",
+                                        content=$"Welcome to the Vigilant community, Your verification code is {OTP}. Your code expires in 6 minutes. Do not share this code with anyone.",
+                                        data_coding = "text",
+                                        originator = "Vigilant",
+                                        recipients = new List<string>(){ request.PhoneNumber }
+                                    }
                                 }
-                            }
                             });
+
+                            //update user's id in Trusted Contacts table
+                            var invitee = await _context.TrustedPeople.Where(x => x.PhoneNumber == request.PhoneNumber).FirstOrDefaultAsync();
+                            if (invitee != null)
+                            {
+                                invitee.TrustedUserId = user.Id;
+                                _context.Update(invitee);
+                                _context.SaveChanges();
+                            }
 
                             RegisterResponse response = new RegisterResponse { Message = "Account Created Successfully." };
                             //return new Response<RegisterResponse>(response, message: $"Your account has been created successfuly. ", success: true);
@@ -337,6 +346,8 @@ namespace Infrastructure.Persistence.Services
 
                         //throw new ApiException($"Email {request.Email } is already registered.");
                     }
+
+
                 }
                 else
                 {
@@ -457,6 +468,7 @@ namespace Infrastructure.Persistence.Services
                 response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
                 response.Email = user.Email;
                 response.UserName = user.UserName;
+                response.profilePhotoUrl = user.CustomerProfileUrl;
 
                 var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
                 response.Roles = rolesList.ToList();
@@ -644,7 +656,7 @@ namespace Infrastructure.Persistence.Services
                     issuer: _jwtSettings.Issuer,
                     audience: _jwtSettings.Audience,
                     claims: claims,
-                    expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
+                    expires: DateTime.UtcNow.AddHours(1).AddMinutes(_jwtSettings.DurationInMinutes),
                     signingCredentials: signingCredentials);
                 return jwtSecurityToken;
             }
@@ -706,11 +718,41 @@ namespace Infrastructure.Persistence.Services
             return new RefreshToken
             {
                 Token = RandomTokenString(),
-                Expires = DateTime.UtcNow.AddDays(7),
-                Created = DateTime.UtcNow,
+                Expires = DateTime.UtcNow.AddHours(1).AddDays(60),
+                Created = DateTime.UtcNow.AddHours(1),
                 CreatedByIp = ipAddress == null ? null : ipAddress
             };
         }
+
+        //public async Task ForgotPassword(ForgotPasswordRequest model, string origin)
+        //{
+        //    try
+        //    {
+        //        var account = await _userManager.FindByEmailAsync(model.Email);
+
+        //        // always return ok response to prevent email enumeration
+        //        if (account == null) return;
+
+        //        var code = await _userManager.GeneratePasswordResetTokenAsync(account);
+        //        var route = "api/account/reset-password/";
+        //        var _enpointUri = new Uri(string.Concat($"{origin}/", route));
+        //        var emailRequest = new EmailRequest()
+        //        {
+        //            Body = $"You reset token is - {code}",
+        //            BodyParagraph1 = $"You reset token is - {code}",
+        //            To = model.Email,
+        //            Subject = "Reset Password",
+        //            ButtonLabel = "Reset Now"
+                     
+        //        };
+        //        await _emailService.SendAsync(emailRequest);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex.Message, ex);
+        //        throw new ApiException(ex.Message);
+        //    }
+        //}
 
         public async Task ForgotPassword(ForgotPasswordRequest model, string origin)
         {
@@ -722,14 +764,34 @@ namespace Infrastructure.Persistence.Services
                 if (account == null) return;
 
                 var code = await _userManager.GeneratePasswordResetTokenAsync(account);
-                var route = "api/account/reset-password/";
-                var _enpointUri = new Uri(string.Concat($"{origin}/", route));
+                //var route = "api/account/reset-password/";
+                //var _enpointUri = new Uri(string.Concat($"{origin}/", route));
+                
+                // 1. Find the user by email.        
+
+                // 2. Generate the password reset token.
+                var resetToken = await _userManager.GeneratePasswordResetTokenAsync(account);
+
+                // 3. Build a password reset link (for example, a link to your frontend).
+                // In a real app, you’d send this link by email.
+                var route = $"ResetPassword.html?email={Uri.EscapeDataString(account.Email)}&token={Uri.EscapeDataString(resetToken)}";
+                var resetLink = new Uri(string.Concat(origin, "/", route));
+
                 var emailRequest = new EmailRequest()
                 {
-                    Body = $"You reset token is - {code}",
+                    From = "info@vigilant.com",
                     To = model.Email,
+                    Username = account.FirstName,
                     Subject = "Reset Password",
+                    BodyParagraph1 = $"Click the link below to reset your password. For your safety, this link will expire in 24 hours.",
+                    ButtonLabel = "Reset Now",
+                    ButtonUrl = resetLink.ToString(),
+                    BodyParagraph2 = $"Need further assistance, email us at info@vigilant.com",
+
                 };
+
+                //Store email body in db (Cache 
+
                 await _emailService.SendAsync(emailRequest);
             }
             catch (Exception ex)
@@ -752,7 +814,7 @@ namespace Infrastructure.Persistence.Services
                 }
                 else
                 {
-                    throw new ApiException($"Error occured while reseting the password.");
+                    throw new ApiException($"Error occured while reseting the password: Reason: {result.Errors.First().Description}. Reset link expired, please initiaite a new request.");
                 }
             }
             catch (Exception ex)
@@ -803,6 +865,7 @@ namespace Infrastructure.Persistence.Services
                 authenticationModel.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
                 authenticationModel.Email = user.Email;
                 authenticationModel.UserName = user.UserName;
+                authenticationModel.profilePhotoUrl = user.CustomerProfileUrl;
                 var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
                 authenticationModel.Roles = rolesList.ToList();
                 authenticationModel.RefreshToken = newRefreshToken.Token;
