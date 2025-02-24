@@ -15,5 +15,6 @@ namespace Application.Services.Interfaces.Location
     public interface IGeoCodingService : IAutoDependencyService
     {
         Task<Response<CustomerPreciseLocation>> GetCustomerLiveAddresses(string Coordinates);
+        Task<Response<ReverseGeocodingResponse>> GetReverseGeocodingResponse(string Coordinates);
     }
 }

@@ -42,10 +42,10 @@ namespace Application.Features.AppTroopers.SecurityTips
 
     public class CustomerPreciseLocation
     {
-        public string CountryName { get; set; }
-        public string StateName { get; set; }
-        public string LGAName { get; set; }
-        public string DistrictName { get; set; }
+        public string Country { get; set; }
+        public string StateOrProvinceOrRegion { get; set; }
+        public string CountryOrDistrictOrLGA { get; set; }
+        public string TownOrDistrict { get; set; }
         public string FormattedAddress { get; set; }
     }
 

@@ -39,13 +39,14 @@ namespace Application.Features.Location
                     var location = await _geoCodingService.GetCustomerLiveAddresses(query.Coordinates);
                     if (location == null)
                         //throw new ApiException($"district not found.");
-                        return new Response<LiveLocationViewModel>(liveLocation, responsestatus: ResponseStatus.fail.ToString(), message: $"state not found.");
+                        return new Response<LiveLocationViewModel>(liveLocation, responsestatus: APIResponseStatus.fail.ToString(), message: $"live location not found.");
 
-                    liveLocation.CountryName = location.Data.CountryName;
-                    liveLocation.StateName = location.Data.StateName;
-                    liveLocation.LGAName = location.Data.LGAName;
-                    liveLocation.DistrictName = location.Data.DistrictName;
-                    return new Response<LiveLocationViewModel>(liveLocation, responsestatus: ResponseStatus.success.ToString(), message: $"state retrieval successful");
+                    liveLocation.CountryName = location.Data.Country;
+                    liveLocation.StateName = location.Data.StateOrProvinceOrRegion;
+                    liveLocation.CountyName = location.Data.CountryOrDistrictOrLGA;
+                    liveLocation.DistrictName = location.Data.TownOrDistrict;
+                    liveLocation.FormattedAddress = location.Data.FormattedAddress;
+                    return new Response<LiveLocationViewModel>(liveLocation, responsestatus: APIResponseStatus.success.ToString(), message: $"{location.Message}");
                 }
                 catch (Exception ex)
                 {

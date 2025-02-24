@@ -15,5 +15,10 @@ namespace Application.Services.Interfaces.UserProfile
         Task<CustomerProfileViewModel> GetCustomerProfileAsync(string CustomerId);
         Task<List<CustomerTrustedContactViewModel>> GetCustomerTrustedContactsAsync(string CustomerId);
         Task<List<CustomerTrustedContactViewModel>> CreateCustomerTrustedContactsAsync(CreateCustomerTrustedContactViewModel customerTrustedContacts);
+        Task<bool> UpdateCustomerProfilePicUrl(string customerProfilePicUrl, string CustomerId);
+        Task<bool> RejectCircleInvitation(RejectCustomerTrustedContactInvitationViewModel model);
+        Task<bool> AcceptCircleInvitation(AcceptCustomerTrustedContactInvitationViewModel model);
+
+
     }
 }

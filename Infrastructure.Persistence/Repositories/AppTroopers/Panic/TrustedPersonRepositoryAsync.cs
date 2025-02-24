@@ -22,7 +22,7 @@ namespace Infrastructure.Persistence.Repositories.Panic
 
         public async Task<TrustedPerson> IsOwnedByOwner(string Id, string ContactOwnerId)
         {
-            return await _trustedPerson.Where(x => x.Id == Guid.Parse(Id) && x.OwnerId == ContactOwnerId).FirstOrDefaultAsync();
+            return await _trustedPerson.Where(x => x.Id == Guid.Parse(Id) && x.InviterId == ContactOwnerId).FirstOrDefaultAsync();
         }
     }
 }

@@ -36,5 +36,10 @@ namespace Infrastructure.Persistence.Repositories.Location
             return await
             _lga.Where(x => x.StateId == Guid.Parse(StateId)).ToListAsync();
         }
+
+        public Task<State> GetStateWithCountryAsync(int StateId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

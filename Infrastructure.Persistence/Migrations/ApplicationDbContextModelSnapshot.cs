@@ -18,10 +18,10 @@ namespace Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("ProductVersion", "7.0.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("ApplicationUserLGA", b =>
                 {
@@ -89,7 +89,7 @@ namespace Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AffectedColumns")
                         .HasColumnType("nvarchar(max)");
@@ -498,8 +498,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Gender")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("InviterId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -507,18 +507,21 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("TownId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TrustedUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("InviterId");
+
+                    b.HasIndex("TrustedUserId");
 
                     b.ToTable("TrustedPeople");
                 });
@@ -558,41 +561,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("AlertLevels");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcasterType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Broadcaster")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("BroadcasterTypes");
-                });
-
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -626,6 +594,41 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BroadcastLevels");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcasterType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Broadcaster")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BroadcasterTypes");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Comment", b =>
@@ -1385,6 +1388,51 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("CustomClaims", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Entities.LocationEntities.Country", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsFormattedAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsGeometryInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsLocationType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsLongName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsPlaceId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsShortName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Countries");
+                });
+
             modelBuilder.Entity("Domain.Entities.LocationEntities.LGA", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1398,6 +1446,24 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsFormattedAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsGeometryInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsLocationType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsLongName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsPlaceId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsShortName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModified")
@@ -1419,7 +1485,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<Guid>("StateId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("isCapital")
+                    b.Property<bool>("isStateCapital")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
@@ -1479,10 +1545,31 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<Geometry>("Boundary")
                         .HasColumnType("geography");
 
+                    b.Property<Guid>("CountryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsFormattedAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsGeometryInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsLocationType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsLongName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsPlaceId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsShortName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("LastModified")
@@ -1525,6 +1612,24 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsFormattedAddress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsGeometryInfo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsLocationType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsLongName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsPlaceId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GoogleMapsShortName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("LGAId")
@@ -1650,7 +1755,7 @@ namespace Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -1675,7 +1780,7 @@ namespace Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -1986,10 +2091,16 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("Domain.Entities.Identity.ApplicationUser", "Owner")
                         .WithMany("TrustedPeople")
-                        .HasForeignKey("OwnerId")
+                        .HasForeignKey("InviterId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "TrustedUser")
+                        .WithMany("TrustedContactsReceived")
+                        .HasForeignKey("TrustedUserId");
+
                     b.Navigation("Owner");
+
+                    b.Navigation("TrustedUser");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Comment", b =>
@@ -2332,11 +2443,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("SecurityTips");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcasterType", b =>
-                {
-                    b.Navigation("SecurityTips");
-                });
-
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", b =>
                 {
                     b.Navigation("Customers");
@@ -2344,6 +2450,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("EscalatedTips");
 
                     b.Navigation("VGNGAAdminApprovedSecurityTips");
+                });
+
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.BroadcasterType", b =>
+                {
+                    b.Navigation("SecurityTips");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Comment", b =>
@@ -2413,6 +2524,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("OperatorIniatedCurfews");
 
                     b.Navigation("SecretaryDepartments");
+
+                    b.Navigation("TrustedContactsReceived");
 
                     b.Navigation("TrustedPeople");
 

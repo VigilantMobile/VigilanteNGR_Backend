@@ -27,7 +27,7 @@ namespace VGWebAPI.Controllers.v1
         #region Customers 
 
         //[HttpGet("get-customer-profile")]
-        [HttpGet]
+        [HttpGet("{CustomerId}")]
         public async Task<IActionResult> GetCustomerProfileAsync(string CustomerId)
         {
             return Ok(await Mediator.Send(new GetCustomerProfileQuery { CustomerId = CustomerId }));
@@ -51,7 +51,11 @@ namespace VGWebAPI.Controllers.v1
             return Ok(await Mediator.Send(new DeleteTrustedPersonByIdCommand { TrustedPersonId = id}));
         }
 
+        [HttpPost("update-photo-url")]
+        public async Task<IActionResult> UpdateCustomerProfilePicUrlAsync([FromBody] UpdateCustomerProfileUrlCommand updateCustomerProfileUrlCommand)
+        {
+            return Ok(await Mediator.Send(updateCustomerProfileUrlCommand));
+        }
         #endregion Customers
-
     }
 }

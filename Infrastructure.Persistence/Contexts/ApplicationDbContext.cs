@@ -55,6 +55,7 @@ namespace Infrastructure.Persistence.Contexts
         // staff
 
         //Location
+        public DbSet<Country> Countries { get; set; }
         public DbSet<State> States { get; set; }
         public DbSet<LGA> LGAs { get; set; }
         public DbSet<Town> Towns { get; set; }
@@ -274,7 +275,7 @@ namespace Infrastructure.Persistence.Contexts
 
             //Trusted
             builder.Entity<TrustedPerson>().HasOne(s => s.Owner)
-                   .WithMany(g => g.TrustedPeople).HasForeignKey(s => s.OwnerId).OnDelete(DeleteBehavior.Restrict);
+                   .WithMany(g => g.TrustedPeople).HasForeignKey(s => s.InviterId).OnDelete(DeleteBehavior.Restrict);
 
             //missing items--------------------------------------------------------------------------------------------------------------------
             //Location

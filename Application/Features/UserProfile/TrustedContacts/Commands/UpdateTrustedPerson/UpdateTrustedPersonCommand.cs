@@ -23,8 +23,6 @@ namespace Application.Features.UserProfile
         [Required]
         public string FullName { get; set; }
         [Required]
-        public string TownId { get; set; }
-        [Required]
         public string FullAddress { get; set; }
         [Required]
         public string PhoneNumber { get; set; }
@@ -46,10 +44,10 @@ namespace Application.Features.UserProfile
 
             public async Task<Response<TrustedPerson>> Handle(UpdateTrustedPersonCommand command, CancellationToken cancellationToken)
             {
-                string OwnerId = _userAccessor.GetUserId();
+                string InviterId = _userAccessor.GetUserId();
 
                 //var trustedPerson = await _trustedPersonRepository.GetByIdAsync(command.UserId);
-                var trustedPerson = await _trustedPersonRepository.IsOwnedByOwner(command.TrustedPersonId, OwnerId);
+                var trustedPerson = await _trustedPersonRepository.IsOwnedByOwner(command.TrustedPersonId, InviterId);
 
                 if (trustedPerson == null)
                 {
@@ -57,7 +55,6 @@ namespace Application.Features.UserProfile
                 }
                 else
                 {
-                    trustedPerson.TownId = Guid.Parse(command.TownId); 
                     trustedPerson.FullName = command.FullName;
                     trustedPerson.FullAddress = command.FullName;
                     trustedPerson.PhoneNumber = command.PhoneNumber;
@@ -66,7 +63,7 @@ namespace Application.Features.UserProfile
 
                     await _trustedPersonRepository.UpdateAsync(trustedPerson);
 
-                    return new Response<TrustedPerson>(trustedPerson, responsestatus: ResponseStatus.success.ToString(), $"Trusted contact successfully updated");
+                    return new Response<TrustedPerson>(trustedPerson, responsestatus: APIResponseStatus.success.ToString(), $"Trusted contact successfully updated");
                 }
             }
         }

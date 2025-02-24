@@ -8,18 +8,18 @@ namespace Infrastructure.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "CustomerProfileUrl",
-                table: "Users",
-                type: "nvarchar(max)",
-                nullable: true);
+            //migrationBuilder.AddColumn<string>(
+            //    name: "CustomerProfileUrl",
+            //    table: "Users",
+            //    type: "nvarchar(max)",
+            //    nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "CustomerProfileUrl",
-                table: "Users");
+            //migrationBuilder.DropColumn(
+            //    name: "CustomerProfileUrl",
+            //    table: "Users");
         }
     }
 }

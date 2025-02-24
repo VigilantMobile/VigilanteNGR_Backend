@@ -33,7 +33,7 @@ namespace Infrastructure.Persistence.Services.Implementations.Location
         private readonly APIURLs _aPIURLs;
         private readonly AppConfig _appConfig;
 
-        public GeocodingService (ILogger logger, IConfiguration configuration,
+        public GeocodingService(ILogger logger, IConfiguration configuration,
             IUtilities utilities, IOptions<APIURLs> apiURLs, IOptions<AppConfig> appConfig)
         {
             _logger = logger;
@@ -54,19 +54,42 @@ namespace Infrastructure.Persistence.Services.Implementations.Location
                 string latitude = Convert.ToDouble(Coordinates.Split(",")[0]).ToString();
                 string longitude = Convert.ToDouble(Coordinates.Split(",")[1]).ToString();
 
-                requestResponse = await _utilities.MakeHttpRequest(null, _aPIURLs.GoogleMapsAPIBaseURL, $"{_aPIURLs.ReverseGeocodingUrlSuffix}?latlng={latitude},{longitude}&key={_appConfig.GeocodingApiKey}", HttpMethod.Get, null);
+                //requestResponse = await _utilities.MakeHttpRequest(null, _aPIURLs.GoogleMapsAPIBaseURL, $"{_aPIURLs.ReverseGeocodingUrlSuffix}?latlng={latitude},{longitude}&key={_appConfig.GeocodingApiKey}", HttpMethod.Get, null);
 
-                if (requestResponse.StatusCode == System.Net.HttpStatusCode.OK)
+
+                //if (requestResponse.StatusCode == System.Net.HttpStatusCode.OK)
+                //{
+                //    reverseGeocodingResponse = JsonConvert.DeserializeObject<ReverseGeocodingResponse>(requestResponse.Content.ToString());
+
+                //    //customerPreciseLocation.Country = reverseGeocodingResponse.results.First().address_components.Where(x => x.types[0] == "country").FirstOrDefault().long_name;
+
+                //    var address = reverseGeocodingResponse.results.First();
+
+                //    customerPreciseLocation.Country = address.address_components.Where(x => x.types[0] == "country").FirstOrDefault().long_name;
+                //    customerPreciseLocation.StateOrProvinceOrRegion = address.address_components.Where(x => x.types[0] == "administrative_area_level_1").FirstOrDefault().long_name;
+                //    customerPreciseLocation.CountryOrDistrictOrLGA = address.address_components.Where(x => x.types[0] == "administrative_area_level_2").FirstOrDefault().long_name;
+                //    customerPreciseLocation.TownOrDistrict = address.address_components.Where(x => x.types[0] == "administrative_area_level_3").FirstOrDefault().long_name;
+                //    customerPreciseLocation.FormattedAddress = address.formatted_address;
+
+                //    return new Response<CustomerPreciseLocation>(customerPreciseLocation, $"Coordinates successfully reversed.");
+
+                //}
+
+                var reverseGeocodingRequestResponse = GetReverseGeocodingResponse(Coordinates).Result;
+                reverseGeocodingResponse = reverseGeocodingRequestResponse.Data;
+
+                if (reverseGeocodingResponse != null)
                 {
-                    reverseGeocodingResponse = JsonConvert.DeserializeObject<ReverseGeocodingResponse>(requestResponse.Content.ToString());
 
                     //customerPreciseLocation.Country = reverseGeocodingResponse.results.First().address_components.Where(x => x.types[0] == "country").FirstOrDefault().long_name;
 
-                    var address = reverseGeocodingResponse.results.First();
+                    //var address = reverseGeocodingResponse.results.First();
+                    var address = reverseGeocodingResponse.results[7];
 
-                    customerPreciseLocation.StateName = address.address_components.Where(x => x.types[0] == "administrative_area_level_1").FirstOrDefault().long_name;
-                    customerPreciseLocation.LGAName = address.address_components.Where(x => x.types[0] == "administrative_area_level_2").FirstOrDefault().long_name;
-                    customerPreciseLocation.DistrictName = address.address_components.Where(x => x.types[0] == "neighborhood").FirstOrDefault().long_name;
+                    customerPreciseLocation.Country = address.address_components.Where(x => x.types[0] == "country").FirstOrDefault().long_name;
+                    customerPreciseLocation.StateOrProvinceOrRegion = address.address_components.Where(x => x.types[0] == "administrative_area_level_1").FirstOrDefault().long_name;
+                    customerPreciseLocation.CountryOrDistrictOrLGA = address.address_components.Where(x => x.types[0] == "administrative_area_level_2").FirstOrDefault().long_name;
+                    customerPreciseLocation.TownOrDistrict = address.address_components.Where(x => x.types[0] == "administrative_area_level_3").FirstOrDefault().long_name;
                     customerPreciseLocation.FormattedAddress = address.formatted_address;
 
                     return new Response<CustomerPreciseLocation>(customerPreciseLocation, $"Coordinates successfully reversed.");
@@ -75,8 +98,8 @@ namespace Infrastructure.Persistence.Services.Implementations.Location
 
                 else
                 {
-                    var errorResponse = JsonConvert.DeserializeObject<ReverseGeocodingErrorResponse>(requestResponse.Content.ToString());
-                    return new Response<CustomerPreciseLocation>(null, $"{errorResponse.error_message}");
+                    //var errorResponse = JsonConvert.DeserializeObject<ReverseGeocodingErrorResponse>(requestResponse.Content.ToString());
+                    return new Response<CustomerPreciseLocation>(null, $"{reverseGeocodingRequestResponse.Message}");
                 }
 
             }
@@ -84,6 +107,37 @@ namespace Infrastructure.Persistence.Services.Implementations.Location
             {
                 _logger.LogError(ex.Message);
                 return new Response<CustomerPreciseLocation>(null, $"An error occurred while reversing coordinates: e{ex.Message}");
+            }
+        }
+
+        public async Task<Response<ReverseGeocodingResponse>> GetReverseGeocodingResponse(string Coordinates)
+        {
+            ReverseGeocodingResponse reverseGeocodingResponse = new ReverseGeocodingResponse();
+            RestResponse requestResponse = new RestResponse();
+            try
+            {
+                string latitude = Convert.ToDouble(Coordinates.Split(",")[0]).ToString();
+                string longitude = Convert.ToDouble(Coordinates.Split(",")[1]).ToString();
+
+                requestResponse = await _utilities.MakeHttpRequest(null, _aPIURLs.GoogleMapsAPIBaseURL, $"{_aPIURLs.ReverseGeocodingUrlSuffix}?latlng={latitude},{longitude}&key={_appConfig.GeocodingApiKey}", HttpMethod.Get, null);
+
+                if (requestResponse.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    reverseGeocodingResponse = JsonConvert.DeserializeObject<ReverseGeocodingResponse>(requestResponse.Content.ToString());
+
+                    return new Response<ReverseGeocodingResponse>(reverseGeocodingResponse, $"Coordinates successfully reversed.");
+                }
+
+                else
+                {
+                    var errorResponse = JsonConvert.DeserializeObject<ReverseGeocodingErrorResponse>(requestResponse.Content.ToString());
+                    return new Response<ReverseGeocodingResponse>(null, $"{errorResponse.error_message}");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response<ReverseGeocodingResponse>(null, $"An error occurred while retrieving info for coordinates: e{ex.Message}");
             }
         }
     }

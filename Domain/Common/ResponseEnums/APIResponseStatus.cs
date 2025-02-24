@@ -1,6 +1,6 @@
 ﻿namespace Domain.Common.Enums
 {
-    public enum ResponseStatus
+    public enum APIResponseStatus
     {
         success,
         fail,

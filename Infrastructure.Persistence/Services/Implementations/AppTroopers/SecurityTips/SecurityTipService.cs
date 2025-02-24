@@ -325,7 +325,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
             { 
                 var customerLiveLocation = await _geocodingService.GetCustomerLiveAddresses(coordinates);
 
-                if (customerLiveLocation.status == ResponseStatus.fail.ToString())
+                if (customerLiveLocation.status == APIResponseStatus.fail.ToString())
                 {
                     getSecurityTipsListResponse.Success = false;
                     getSecurityTipsListResponse.Message = customerLiveLocation.Message;
@@ -347,7 +347,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                 if (myStatus == BroadcastLevelEnum.Town)
                 {
                     // get live location town
-                    string townName = customerLiveLocation.Data?.DistrictName;
+                    string townName = customerLiveLocation.Data?.TownOrDistrict;
 
                     var town = await _context.Towns.Where(x => x.Name == townName).FirstOrDefaultAsync();
                     if (town == null)
@@ -364,7 +364,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
 
                 else if (myStatus == BroadcastLevelEnum.LGA)
                 {
-                    string lgaName = customerLiveLocation.Data?.LGAName;
+                    string lgaName = customerLiveLocation.Data?.CountryOrDistrictOrLGA;
 
                     var lga = await _context.LGAs.Where(x => x.Name == lgaName).FirstOrDefaultAsync();
                     if (lga == null)
@@ -388,7 +388,7 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
                 else if (myStatus == BroadcastLevelEnum.State)
                 {
 
-                    string stateName = customerLiveLocation.Data?.StateName;
+                    string stateName = customerLiveLocation.Data?.StateOrProvinceOrRegion;
 
                     var state = await _context.States.Where(x => x.Name == stateName).FirstOrDefaultAsync();
                     if (state == null)
@@ -429,13 +429,13 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
             {
                 var customerLocations = await _customerService.GetCustomerProfileAsync(Userid);
 
-                var townTips = await _securityTipRepositoryAsync.GetSecurityTipDataForTown(customerLocations.CustomerLocation.CustomerTown.DistrictId, pageNumber, pageSize);
+                var townTips = await _securityTipRepositoryAsync.GetSecurityTipDataForTown(customerLocations.CustomerLocation.City.CityId, pageNumber, pageSize);
                 getSecurityTipsForUserTownLGAandStateResponse.SecurityTipsListforUserTown = townTips.SecurityTipsList;
 
-                var lgaTips = await _securityTipRepositoryAsync.GetSecurityTipDataForLGA(customerLocations.CustomerLocation.CustomerTown.DistrictId, pageNumber, pageSize);
+                var lgaTips = await _securityTipRepositoryAsync.GetSecurityTipDataForLGA(customerLocations.CustomerLocation.City.CityId, pageNumber, pageSize);
                 getSecurityTipsForUserTownLGAandStateResponse.SecurityTipsListforUserLGA = lgaTips.SecurityTipsList;
 
-                var stateTips = await _securityTipRepositoryAsync.GetSecurityTipDataForState(customerLocations.CustomerLocation.CustomerTown.DistrictId, pageNumber, pageSize);
+                var stateTips = await _securityTipRepositoryAsync.GetSecurityTipDataForState(customerLocations.CustomerLocation.City.CityId, pageNumber, pageSize);
                 getSecurityTipsForUserTownLGAandStateResponse.SecurityTipsListforUserState = stateTips.SecurityTipsList;
 
                 return getSecurityTipsForUserTownLGAandStateResponse;

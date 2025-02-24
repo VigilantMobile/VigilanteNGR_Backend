@@ -8,31 +8,31 @@ namespace Infrastructure.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Wallets_Users_ApplicationUserId",
-                table: "Wallets");
+            //migrationBuilder.DropForeignKey(
+            //    name: "FK_Wallets_Users_ApplicationUserId",
+            //    table: "Wallets");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Wallets_Users_ApplicationUserId",
-                table: "Wallets",
-                column: "ApplicationUserId",
-                principalTable: "Users",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+            //migrationBuilder.AddForeignKey(
+            //    name: "FK_Wallets_Users_ApplicationUserId",
+            //    table: "Wallets",
+            //    column: "ApplicationUserId",
+            //    principalTable: "Users",
+            //    principalColumn: "Id",
+            //    onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Wallets_Users_ApplicationUserId",
-                table: "Wallets");
+            //migrationBuilder.DropForeignKey(
+            //    name: "FK_Wallets_Users_ApplicationUserId",
+            //    table: "Wallets");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Wallets_Users_ApplicationUserId",
-                table: "Wallets",
-                column: "ApplicationUserId",
-                principalTable: "Users",
-                principalColumn: "Id");
+            //migrationBuilder.AddForeignKey(
+            //    name: "FK_Wallets_Users_ApplicationUserId",
+            //    table: "Wallets",
+            //    column: "ApplicationUserId",
+            //    principalTable: "Users",
+            //    principalColumn: "Id");
         }
     }
 }

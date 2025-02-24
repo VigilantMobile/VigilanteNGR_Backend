@@ -9,19 +9,19 @@ namespace Infrastructure.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<Guid>(
-                name: "TownId",
-                table: "TrustedPeople",
-                type: "uniqueidentifier",
-                nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+            //migrationBuilder.AddColumn<Guid>(
+            //    name: "TownId",
+            //    table: "TrustedPeople",
+            //    type: "uniqueidentifier",
+            //    nullable: false,
+            //    defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "TownId",
-                table: "TrustedPeople");
+        //    migrationBuilder.DropColumn(
+        //        name: "TownId",
+        //        table: "TrustedPeople");
         }
     }
 }

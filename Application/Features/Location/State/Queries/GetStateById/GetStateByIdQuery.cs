@@ -37,12 +37,12 @@ namespace Application.Features.Location
                     var state = await _stateRepositoryAsync.GetByIdAsync(query.Id);
                     if (state == null)
                         //throw new ApiException($"district not found.");
-                        return new Response<GetStateViewModel>(getstateViewModel, responsestatus: ResponseStatus.fail.ToString(), message: $"state not found.");
+                        return new Response<GetStateViewModel>(getstateViewModel, responsestatus: APIResponseStatus.fail.ToString(), message: $"state not found.");
 
                     getstateViewModel.StateName = state.Name;
                     getstateViewModel.Created = state.Created;
                     getstateViewModel.LastModified = state.LastModified;
-                    return new Response<GetStateViewModel>(getstateViewModel, responsestatus: ResponseStatus.success.ToString(), message: $"state retrieval successful");
+                    return new Response<GetStateViewModel>(getstateViewModel, responsestatus: APIResponseStatus.success.ToString(), message: $"state retrieval successful");
                 }
                 catch (Exception ex)
                 {

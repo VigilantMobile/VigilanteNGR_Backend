@@ -37,7 +37,7 @@ namespace Application.Features.Location
                 {
                     await _townRepositoryAsync.DeleteAsync(town);
 
-                    return new Response<Town>(town, responsestatus: ResponseStatus.success.ToString(), $"Town {town.Name} successfully deleted");
+                    return new Response<Town>(town, responsestatus: APIResponseStatus.success.ToString(), $"Town {town.Name} successfully deleted");
 
                 }
             }

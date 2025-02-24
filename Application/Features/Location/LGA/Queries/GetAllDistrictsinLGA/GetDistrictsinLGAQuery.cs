@@ -31,7 +31,7 @@ namespace Application.Features.Location
                     var districtsinLGA = await lgaRepositoryAsync.GetDistrictsinLGAAsync(query.LGAId);
                     if (districtsinLGA == null)
                     {
-                        return new Response<GetAllDistrictsinLGAViewModel>(new GetAllDistrictsinLGAViewModel { }, responsestatus: ResponseStatus.fail.ToString(), message: $"No districts found in the specified LGA");
+                        return new Response<GetAllDistrictsinLGAViewModel>(new GetAllDistrictsinLGAViewModel { }, responsestatus: APIResponseStatus.fail.ToString(), message: $"No districts found in the specified LGA");
                     }
 
                     foreach (var district in districtsinLGA)
@@ -53,7 +53,7 @@ namespace Application.Features.Location
                         Count = districts.Count
                     };
 
-                    return new Response<GetAllDistrictsinLGAViewModel>(getAllDistrictsViewModel, responsestatus: ResponseStatus.success.ToString(), message: $"Successfully retrieved districts for the specified LGA.");
+                    return new Response<GetAllDistrictsinLGAViewModel>(getAllDistrictsViewModel, responsestatus: APIResponseStatus.success.ToString(), message: $"Successfully retrieved districts for the specified LGA.");
                 }
                 catch (Exception ex)
                 {

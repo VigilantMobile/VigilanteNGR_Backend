@@ -69,7 +69,7 @@ namespace VGWebAPI
             app.UseHealthChecks("/health");
 
             app.UseCors("AllOriginsPolicy");
-
+            app.UseStaticFiles();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

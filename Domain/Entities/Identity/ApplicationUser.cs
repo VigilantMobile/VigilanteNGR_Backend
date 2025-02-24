@@ -97,6 +97,8 @@ namespace Domain.Entities.Identity
         public virtual ICollection<Curfew> OperatorIniatedCurfews { get; set; }
         public virtual ICollection<TrustedPerson> TrustedPeople { get; set; }
 
+        public virtual ICollection<TrustedPerson> TrustedContactsReceived { get; set; } = new List<TrustedPerson>();
+
         //External Staff fields
         public ExternalStaffType ExternalStaffType { get; set; }
         public bool IsExternalSuperAdmin { get; set; }

@@ -32,6 +32,7 @@ namespace Infrastructure.Persistence.Helpers
             builder.RegisterType<SecurityTipEligibilityService>().As<ISecurityTipEligibilityService>().InstancePerLifetimeScope();
             builder.RegisterType<SecurityTipService>().As<ISecurityTipService>().InstancePerLifetimeScope();
             builder.RegisterType<GeocodingService>().As<IGeoCodingService>().InstancePerLifetimeScope();
+            builder.RegisterType<LocationService>().As<ILocationService>().InstancePerLifetimeScope();
             builder.RegisterType<Utilities>().As<IUtilities>().InstancePerLifetimeScope();
             
         }
