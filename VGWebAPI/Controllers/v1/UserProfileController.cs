@@ -51,6 +51,21 @@ namespace VGWebAPI.Controllers.v1
             return Ok(await Mediator.Send(new DeleteTrustedPersonByIdCommand { TrustedPersonId = id}));
         }
 
+
+        [HttpPost("TrustedContacts/acceptinvite")]
+        public async Task<IActionResult> AcceptTrustedContactInvitationAsync([FromBody] AcceptTrustedContactInvitationCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpPost("TrustedContacts/rejectinvite")]
+        public async Task<IActionResult> RejectTrustedContactInvitationAsync([FromBody] RejectTrustedContactInvitationCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return Ok(response);
+        }
+
         [HttpPost("update-photo-url")]
         public async Task<IActionResult> UpdateCustomerProfilePicUrlAsync([FromBody] UpdateCustomerProfileUrlCommand updateCustomerProfileUrlCommand)
         {

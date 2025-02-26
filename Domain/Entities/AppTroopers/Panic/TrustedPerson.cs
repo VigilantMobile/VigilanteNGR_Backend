@@ -25,5 +25,7 @@ namespace Domain.Entities.AppTroopers.Panic
         [Required]
         public string PhoneNumber { get; set; }
         public TrustedContactStatus Status { get; set; }
+        // New property: indicates whether the connection is active (true) or turned off/inactive (false)
+        public bool IsActive { get; set; } = true;
     }
 }

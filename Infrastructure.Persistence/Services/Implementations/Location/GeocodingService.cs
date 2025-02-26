@@ -4,10 +4,13 @@ using Application.Features.Location;
 using Application.Services.Interfaces.Location;
 using Application.Services.Interfaces.UserProfile;
 using Application.Wrappers;
+using Domain.Entities.LocationEntities;
 using Domain.Settings;
 using Geocoding;
 using Geocoding.Google;
+using Infrastructure.Persistence.Contexts;
 using Infrastructure.Shared.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -32,15 +35,17 @@ namespace Infrastructure.Persistence.Services.Implementations.Location
         private readonly IUtilities _utilities;
         private readonly APIURLs _aPIURLs;
         private readonly AppConfig _appConfig;
+        private readonly ApplicationDbContext _context;
 
         public GeocodingService(ILogger logger, IConfiguration configuration,
-            IUtilities utilities, IOptions<APIURLs> apiURLs, IOptions<AppConfig> appConfig)
+            IUtilities utilities, IOptions<APIURLs> apiURLs, IOptions<AppConfig> appConfig, ApplicationDbContext context)
         {
             _logger = logger;
             _configuration = configuration;
             _utilities = utilities;
             _aPIURLs = apiURLs.Value;
             _appConfig = appConfig.Value;
+            _context = context;
         }
 
         public async Task<Response<CustomerPreciseLocation>> GetCustomerLiveAddresses(string Coordinates)
@@ -139,6 +144,83 @@ namespace Infrastructure.Persistence.Services.Implementations.Location
                 _logger.LogError(ex.Message);
                 return new Response<ReverseGeocodingResponse>(null, $"An error occurred while retrieving info for coordinates: e{ex.Message}");
             }
+        }
+
+        public async Task<Guid> GetOrCreateTownIdAsync(string townName, string lgaName, string stateName, string countryName)
+        {
+            // Check if the town already exists
+            var existingTown = await _context.Towns.FirstOrDefaultAsync(t => t.Name == townName);
+            if (existingTown != null)
+            {
+                return existingTown.Id;
+            }
+
+            // Check if the LGA already exists
+            var existingLGA = await _context.LGAs.FirstOrDefaultAsync(l => l.Name == lgaName);
+            if (existingLGA == null)
+            {
+                // Check if the state already exists
+                var existingState = await _context.States.FirstOrDefaultAsync(s => s.Name == stateName);
+                if (existingState == null)
+                {
+                    // Check if the country already exists
+                    var existingCountry = await _context.Countries.FirstOrDefaultAsync(c => c.Name == countryName);
+                    if (existingCountry == null)
+                    {
+                        // Create the country
+                        var country = new Country
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = countryName,
+                            CreatedBy = "Admin",
+                            Created = DateTime.UtcNow.AddHours(1)
+                        };
+                        _context.Countries.Add(country);
+                        await _context.SaveChangesAsync();
+                        existingCountry = country;
+                    }
+
+                    // Create the state
+                    var state = new State
+                    {
+                        Id = Guid.NewGuid(),
+                        CountryId = existingCountry.Id,
+                        Name = stateName,
+                        CreatedBy = "Admin",
+                        Created = DateTime.UtcNow.AddHours(1)
+                    };
+                    _context.States.Add(state);
+                    await _context.SaveChangesAsync();
+                    existingState = state;
+                }
+
+                // Create the LGA
+                var lga = new LGA
+                {
+                    Id = Guid.NewGuid(),
+                    StateId = existingState.Id,
+                    Name = lgaName,
+                    CreatedBy = "Admin",
+                    Created = DateTime.UtcNow.AddHours(1)
+                };
+                _context.LGAs.Add(lga);
+                await _context.SaveChangesAsync();
+                existingLGA = lga;
+            }
+
+            // Create the town
+            var town = new Town
+            {
+                Id = Guid.NewGuid(),
+                LGAId = existingLGA.Id,
+                Name = townName,
+                CreatedBy = "Admin",
+                Created = DateTime.UtcNow.AddHours(1)
+            };
+            _context.Towns.Add(town);
+            await _context.SaveChangesAsync();
+
+            return town.Id;
         }
     }
 }

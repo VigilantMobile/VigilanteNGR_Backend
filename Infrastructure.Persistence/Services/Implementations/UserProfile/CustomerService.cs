@@ -40,6 +40,7 @@ using Application.Features.UserProfile;
 using Infrastructure.Persistence.Migrations;
 using Microsoft.AspNetCore.Routing;
 using System.ComponentModel.DataAnnotations;
+using Application.Services.Interfaces.Location;
 
 namespace Infrastructure.Persistence.Services
 {
@@ -48,11 +49,12 @@ namespace Infrastructure.Persistence.Services
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger _logger;
+        private readonly IGeoCodingService _geoCodingService;
         ITrustedPersonRepositoryAsync _trustedPersonRepositoryAsync;
         private readonly IUtilities _utilities;
         private readonly IEmailService _emailService;
-        public CustomerService( ApplicationDbContext context, UserManager<ApplicationUser> userManager, ITrustedPersonRepositoryAsync trustedPersonRepositoryAsync, 
-        ILogger logger, IEmailService emailService, IUtilities utilities)
+        public CustomerService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ITrustedPersonRepositoryAsync trustedPersonRepositoryAsync,
+        ILogger logger, IEmailService emailService, IUtilities utilities, IGeoCodingService geoCodingService)
         {
             _context = context;
             _logger = logger;
@@ -60,6 +62,7 @@ namespace Infrastructure.Persistence.Services
             _trustedPersonRepositoryAsync = trustedPersonRepositoryAsync;
             _utilities = utilities;
             _emailService = emailService;
+            _geoCodingService = geoCodingService;
         }
 
         public async Task<CustomerProfileViewModel> GetCustomerProfileAsync(string CustomerId)
@@ -80,53 +83,53 @@ namespace Infrastructure.Persistence.Services
                 //Get Location(s)
 
                 customerProfile = await (from customer in _context.Users
-                                   join town in _context.Towns on customer.TownId equals town.Id
-                                   join lga in _context.LGAs on town.LGAId equals lga.Id
-                                   join state in _context.States on lga.StateId equals state.Id
-                                   join country in _context.Countries on state.CountryId equals country.Id
+                                         join town in _context.Towns on customer.TownId equals town.Id
+                                         join lga in _context.LGAs on town.LGAId equals lga.Id
+                                         join state in _context.States on lga.StateId equals state.Id
+                                         join country in _context.Countries on state.CountryId equals country.Id
                                          join subscriptionPlan in _context.Subscriptions on customer.SubscriptionId equals subscriptionPlan.Id
 
                                          where customer.Id == CustomerId
-                                   select new CustomerProfileViewModel()
-                                   {
-                                       CustomerId = customer.Id,
-                                       CustomerName = customer.FirstName,
-                                       CustomerPhone = customer.PhoneNumber,
-                                       CustomerLocation = new CustomerLocationViewModel
-                                       {
-                                           Address = customer.AddressLine1,
-                                           City = new CustomerCityViewModel
-                                           {
-                                               CityId = town.Id.ToString(),
-                                               CityName = town.Name,
-                                               GoogleMapsPlaceId = town.GoogleMapsPlaceId
-                                           },
-                                           District = new CustomerDistrictViewModel
-                                           {
+                                         select new CustomerProfileViewModel()
+                                         {
+                                             CustomerId = customer.Id,
+                                             CustomerName = customer.FirstName,
+                                             CustomerPhone = customer.PhoneNumber,
+                                             CustomerLocation = new CustomerLocationViewModel
+                                             {
+                                                 Address = customer.AddressLine1,
+                                                 City = new CustomerCityViewModel
+                                                 {
+                                                     CityId = town.Id.ToString(),
+                                                     CityName = town.Name,
+                                                     GoogleMapsPlaceId = town.GoogleMapsPlaceId
+                                                 },
+                                                 District = new CustomerDistrictViewModel
+                                                 {
 
-                                               DistrictId = lga.Id.ToString(),
-                                               DistrictName = lga.Name,
-                                               GoogleMapsPlaceId = lga.GoogleMapsPlaceId
-                                           },
-                                           State = new CustomerStateViewModel
-                                           {
-                                               StateId = state.Id.ToString(),
-                                               StateName = state.Name,
-                                               GoogleMapsPlaceId = state.GoogleMapsPlaceId
-                                           },
-                                           Country = new CustomerCountryViewModel
-                                           {
-                                               CountryId = country.Id.ToString(),
-                                               CountryName = country.Name,
-                                               GoogleMapsPlaceId = country.GoogleMapsPlaceId
-                                           },
-                                       },
-                                       SubscriptionPlan = new CustomerSubscriptionPlan
-                                       {
-                                           SubscriptionPlanId = subscriptionPlan.Id.ToString(),
-                                           SubscriptionPlanName = subscriptionPlan.SubscriptionName
-                                       }
-                                   }).FirstOrDefaultAsync();
+                                                     DistrictId = lga.Id.ToString(),
+                                                     DistrictName = lga.Name,
+                                                     GoogleMapsPlaceId = lga.GoogleMapsPlaceId
+                                                 },
+                                                 State = new CustomerStateViewModel
+                                                 {
+                                                     StateId = state.Id.ToString(),
+                                                     StateName = state.Name,
+                                                     GoogleMapsPlaceId = state.GoogleMapsPlaceId
+                                                 },
+                                                 Country = new CustomerCountryViewModel
+                                                 {
+                                                     CountryId = country.Id.ToString(),
+                                                     CountryName = country.Name,
+                                                     GoogleMapsPlaceId = country.GoogleMapsPlaceId
+                                                 },
+                                             },
+                                             SubscriptionPlan = new CustomerSubscriptionPlan
+                                             {
+                                                 SubscriptionPlanId = subscriptionPlan.Id.ToString(),
+                                                 SubscriptionPlanName = subscriptionPlan.SubscriptionName
+                                             }
+                                         }).FirstOrDefaultAsync();
 
                 //Get Customer Trusted Contacts:
                 var trustedContacts = await GetCustomerTrustedContactsAsync(CustomerId);
@@ -159,7 +162,7 @@ namespace Infrastructure.Persistence.Services
                         PhoneNumber = contact.PhoneNumber,
                         Status = TrustedContactStatus.Pending,
                         Created = DateTime.UtcNow.AddHours(1),
-                        CreatedBy = "Admin", 
+                        CreatedBy = "Admin",
                         Owner = inviter
                     };
                     await _context.TrustedPeople.AddAsync(trustedPerson);
@@ -176,7 +179,7 @@ namespace Infrastructure.Persistence.Services
                         ButtonUrl = $"{vglntAboutUrl.ToString}",
                         BodyParagraph2 = $"Need further assistance? Email us at info@vigilant.com",
                         Subject = $"{inviter.FirstName} invited you to join the Vigilant community. "
-                    }); 
+                    });
                 }
 
                 await _context.SaveChangesAsync();
@@ -184,7 +187,7 @@ namespace Infrastructure.Persistence.Services
                 return createCustomerTrustedContactsRequest.customerTrustedContacts;
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"An error occurred while creating customer tusted contacts: {ex.Message}, {ex}");
                 throw ex;
@@ -196,21 +199,21 @@ namespace Infrastructure.Persistence.Services
             try
             {
                 var trustedContacts = await (from contact in _context.TrustedPeople
-                                       join customer in _context.Users on contact.InviterId equals customer.Id
-                                       where customer.Id == CustomerId
-                                       join contactProfile in _context.Users on contact.PhoneNumber equals contactProfile.PhoneNumber
-                                       select new CustomerTrustedContactViewModel()
-                                       {
-                                           EmailAddress = contact.EmailAddress,
-                                           FullName = contact.FullName,
-                                           PhoneNumber = contact.PhoneNumber,
-                                           InvitationStatus = contact.Status.ToString(),
-                                           ProfilePicUrl = contact.Status != TrustedContactStatus.Accepted ? null :  contactProfile.CustomerProfileUrl
-                                       }).ToListAsync();
+                                             join customer in _context.Users on contact.InviterId equals customer.Id
+                                             where customer.Id == CustomerId
+                                             join contactProfile in _context.Users on contact.PhoneNumber equals contactProfile.PhoneNumber
+                                             select new CustomerTrustedContactViewModel()
+                                             {
+                                                 EmailAddress = contact.EmailAddress,
+                                                 FullName = contact.FullName,
+                                                 PhoneNumber = contact.PhoneNumber,
+                                                 InvitationStatus = contact.Status.ToString(),
+                                                 ProfilePicUrl = contact.Status != TrustedContactStatus.Accepted ? null : contactProfile.CustomerProfileUrl
+                                             }).ToListAsync();
 
                 return trustedContacts;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError($"An error occurred while retrieving customer tusted contacts: {ex.Message}, {ex}");
                 return null;
@@ -333,6 +336,70 @@ namespace Infrastructure.Persistence.Services
             }
         }
 
+        // Circle Activation Deactivation
+        public async Task<bool> DeactivateFriendship(DeactivateFriendshipViewModel model)
+        {
+            try
+            {
+                // Retrieve the accepted friendship (active connection) where the customer is involved.
+                var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
+                    x.Status == TrustedContactStatus.Accepted &&
+                    x.IsActive &&
+                    ((x.InviterId == model.CustomerId && x.TrustedUserId == model.FriendId) ||
+                     (x.InviterId == model.FriendId && x.TrustedUserId == model.CustomerId))
+                );
+
+                if (connection == null)
+                {
+                    throw new ApiException("Active friendship not found.");
+                }
+
+                // Set the connection as inactive.
+                connection.IsActive = false;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error deactivating friendship: {ex.Message}", ex);
+                return false;
+            }
+        }
+        public async Task<bool> ReactivateFriendship(ReactivateFriendshipViewModel model)
+        {
+            try
+            {
+                // Retrieve the inactive friendship record where the connection is currently accepted but deactivated.
+                var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
+                    x.Status == TrustedContactStatus.Accepted &&
+                    !x.IsActive &&
+                    ((x.InviterId == model.CustomerId && x.TrustedUserId == model.FriendId) ||
+                     (x.InviterId == model.CustomerId && x.TrustedUserId == model.FriendId))
+                );
+
+                if (connection == null)
+                {
+                    throw new ApiException("No inactive friendship record found.");
+                }
+
+                // Update the record to indicate that a reactivation request is in progress.
+                // Setting Status to Pending will require the other party to approve reactivation.
+                connection.Status = TrustedContactStatus.Pending;
+                // Note: IsActive remains false until the other user accepts the reactivation.
+
+                await _context.SaveChangesAsync();
+                // Optionally, notify the other user that a reactivation request has been initiated.
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error reactivating friendship: {ex.Message}", ex);
+                return false;
+            }
+        }
+
+        // End Circle Activation/Deactivation
+
         public async Task<bool> UpdateCustomerProfilePicUrl(string customerProfilePicUrl, string CustomerId)
         {
             try
@@ -352,6 +419,47 @@ namespace Infrastructure.Persistence.Services
             {
                 _logger.LogError($"An error occurred while updating customer profile picture URL: {ex.Message}, {ex}");
                 throw;
+            }
+        }
+
+        public async Task<bool> UpdateCustomerProfileAsync(UpdateCustomerProfileViewModel model)
+        {
+            try
+            {
+                var customer = await _userManager.FindByIdAsync(model.CustomerId);
+                if (customer == null)
+                {
+                    throw new ApiException($"Customer with ID {model.CustomerId} not found.");
+                }
+
+                // Split full name into first and last names
+                var nameParts = model.FullName.Split(' ');
+                customer.FirstName = nameParts[0];
+                customer.LastName = nameParts.Length > 1 ? string.Join(' ', nameParts.Skip(1)) : string.Empty;
+
+                // Get detailed location information from coordinates
+                var customerDetailedLocation = await _geoCodingService.GetCustomerLiveAddresses(model.Coordinates);
+                if (customerDetailedLocation == null)
+                {
+                    throw new ApiException("Invalid coordinates provided.");
+                }
+
+                // Update customer address based on the location information
+                customer.AddressLine1 = customerDetailedLocation.Data.FormattedAddress;
+                customer.TownId = await _geoCodingService.GetOrCreateTownIdAsync(customerDetailedLocation.Data.TownOrDistrict, customerDetailedLocation.Data.CountryOrDistrictOrLGA, customerDetailedLocation.Data.StateOrProvinceOrRegion, customerDetailedLocation.Data.Country);
+
+                var result = await _userManager.UpdateAsync(customer);
+                if (!result.Succeeded)
+                {
+                    throw new ApiException("Failed to update customer profile.");
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while updating customer profile: {ex.Message}, {ex}");
+                return false;
             }
         }
     }

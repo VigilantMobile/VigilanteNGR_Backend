@@ -18,6 +18,10 @@ namespace Application.Services.Interfaces.UserProfile
         Task<bool> UpdateCustomerProfilePicUrl(string customerProfilePicUrl, string CustomerId);
         Task<bool> RejectCircleInvitation(RejectCustomerTrustedContactInvitationViewModel model);
         Task<bool> AcceptCircleInvitation(AcceptCustomerTrustedContactInvitationViewModel model);
+        Task<bool> DeactivateFriendship(DeactivateFriendshipViewModel model);
+        Task<bool> ReactivateFriendship(ReactivateFriendshipViewModel model);
+
+
 
 
     }

@@ -16,5 +16,7 @@ namespace Application.Services.Interfaces.Location
     {
         Task<Response<CustomerPreciseLocation>> GetCustomerLiveAddresses(string Coordinates);
         Task<Response<ReverseGeocodingResponse>> GetReverseGeocodingResponse(string Coordinates);
+        Task<Guid> GetOrCreateTownIdAsync(string townName, string lgaName, string stateName, string countryName);
+
     }
 }
