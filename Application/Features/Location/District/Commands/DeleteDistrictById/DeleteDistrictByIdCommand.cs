@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using Domain.Entities.LocationEntities;
 using MediatR;
 using System.Threading;
@@ -11,7 +12,7 @@ namespace Application.Features.Location
 {
     public class DeleteDistrictByIdCommand : IRequest<Response<Town>>
     {
-        public int Id { get; set; }
+        public string TownId { get; set; }
         public class DeleteDistrictByIdCommandHandler : IRequestHandler<DeleteDistrictByIdCommand, Response<Town>>
         {
             private readonly ITownRepositoryAsync _townRepositoryAsync;
@@ -26,7 +27,7 @@ namespace Application.Features.Location
             {
                 string UpdatedBy = _userAccessor.GetUserId();
 
-                var town = await _townRepositoryAsync.GetByIdAsync(command.Id);
+                var town = await _townRepositoryAsync.GetByIdAsync(command.TownId);
 
                 if (town == null)
                 {
@@ -36,7 +37,7 @@ namespace Application.Features.Location
                 {
                     await _townRepositoryAsync.DeleteAsync(town);
 
-                    return new Response<Town>(town, $"Town {town.Name} successfully deleted", successStatus: true);
+                    return new Response<Town>(town, responsestatus: APIResponseStatus.success.ToString(), $"Town {town.Name} successfully deleted");
 
                 }
             }

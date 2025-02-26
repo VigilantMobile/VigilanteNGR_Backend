@@ -10,6 +10,7 @@ namespace Application.Features.AppTroopers.SecurityTips
 {
     public class CreateSecurityTipResponse
     {
+        public bool Succeeded { get; set; }
         public string SecurityTipStatus { get; set; }
         public bool IsDispatched { get; set; }
         public bool IsCreated { get; set; }
@@ -41,15 +42,16 @@ namespace Application.Features.AppTroopers.SecurityTips
 
     public class CustomerPreciseLocation
     {
-        public string StateName { get; set; }
-        public string LGAName { get; set; }
-        public string DistrictName { get; set; }
+        public string Country { get; set; }
+        public string StateOrProvinceOrRegion { get; set; }
+        public string CountryOrDistrictOrLGA { get; set; }
+        public string TownOrDistrict { get; set; }
         public string FormattedAddress { get; set; }
     }
 
     public class GetSecurityTipResponse
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Subject { get; set; }
         public string Body { get; set; }
         public string TipStatus { get; set; }
@@ -58,27 +60,60 @@ namespace Application.Features.AppTroopers.SecurityTips
         public string AlertLevel { get; set; }
         public string BroadcastLevel { get; set; }
         public bool IsBroadcasted { get; set; }
-        public int BroadcastLevelId { get; set; }
-        public int BroadcastLocationId { get; set; }
+        public string BroadcastLevelId { get; set; }
+        public string BroadcastLocationId { get; set; }
         public string BroadcastLocation { get; set; }
         //Broadcaster
-        public int BroadcasterLocationLevelId { get; set; }
-        public int BroadcasterLocationId { get; set; }
-        public string BroadcasterLocationLevel { get; set; }
-        public string BroadcasterLocation { get; set; }
-
+        public string BroadcasterTownId { get; set; }
+        public string BroadcasterFullLocation { get; set; }
     }
 
     public class BroadcasterandTipLocations
     {
         public string BroadcastLocationLevel { get; set; }
         public string BroadcastLocation { get; set; }
-        public string BroadcasterLocationLevel { get; set; }
-        public string BroadcasterLocation { get; set; }
+        public string BroadcasterFullLocation { get; set; }
     }
 
     public class GetSecurityTipsListResponse
     {
-       public List<GetSecurityTipResponse> SecurityTipsList { get; set; }
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public List<GetSecurityTipResponse> SecurityTipsList { get; set; }
+    }
+
+    //Live Location
+
+    public class GetLiveLocationSecurityTipResponse
+    {
+        public bool Success { get; set; }
+        public string  Message { get; set; }
+        public List<GetSecurityTipResponse> SecurityTipsList { get; set; }
+    }
+
+    public class GetSecurityTipsForUserTownLGAandStateResponse
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public List<GetSecurityTipResponse> SecurityTipsListforUserTown { get; set; }
+        public List<GetSecurityTipResponse> SecurityTipsListforUserLGA { get; set; }
+        public List<GetSecurityTipResponse> SecurityTipsListforUserState { get; set; }
+    }
+
+    public class LiveLocationSecurityTipResponse
+    {
+        public string Id { get; set; }
+        public string Subject { get; set; }
+        public string Body { get; set; }
+        public string TipStatus { get; set; }
+        public string BroadcasterName { get; set; }
+        public string SecurityTipCategory { get; set; }
+        public string AlertLevel { get; set; }
+        public string BroadcastLevel { get; set; }
+        public bool IsBroadcasted { get; set; }
+        public string BroadcastLevelId { get; set; }
+        public string BroadcastLocationId { get; set; }
+        public string BroadcastLocation { get; set; }
+        public string BroadcasterTownId { get; set; }
     }
 }

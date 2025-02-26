@@ -41,6 +41,22 @@ namespace VGWebAPI.Controllers
 
         }
 
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOTPAsync(VerifyOTPRequest request)
+        {
+
+            var origin = Request.Headers["origin"].ToString();
+            return Ok(await _accountService.VerifyOTPandSignInAsync(request, origin));
+        }
+
+        [HttpPost("resend-otp")]
+        public async Task<IActionResult> ResendOTPAsync(ResendOTPRequest request)
+        {
+
+            var origin = Request.Headers["origin"].ToString();
+            return Ok(await _accountService.ResendOTPAsync(request, origin));
+        }
+
         [HttpPost("update-customer-profile")]
         public async Task<IActionResult> UpdateCustomerProfile(UpdateProfileRequest request)
         {
@@ -94,7 +110,6 @@ namespace VGWebAPI.Controllers
                 throw new ApiException(ex.Message.ToString());
             }
         }
-
 
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest model)

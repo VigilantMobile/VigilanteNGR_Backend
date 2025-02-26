@@ -5,16 +5,15 @@ namespace Application.DTOs.Account
 {
     public class CustomerRegisterRequest
     {
-        public string FirstName { get; set; }
-
-        public string MiddleName { get; set; }
-
         [Required]
-        public string LastName { get; set; }
+        public string FullName { get; set; }
+        //public string MiddleName { get; set; }
+
+        //[Required]
+        //public string LastName { get; set; }
 
         [EmailAddress]
         public string Email { get; set; }
-
 
         [RegularExpression(@"^([0-9]{11})$", ErrorMessage = "Invalid Mobile Number. Phone number must be 11 characters.")]
         public string PhoneNumber { get; set; }
@@ -25,15 +24,19 @@ namespace Application.DTOs.Account
         [Compare("Password")]
         public string ConfirmPassword { get; set; }
 
-        public int StateId { get; set; }
+        //[Required]
+        public string TownId { get; set; }
+
+        [RegularExpression("^[-+]?([1-8]?\\d(\\.\\d+)?|90(\\.0+)?),\\s*[-+]?(180(\\.0+)?|((1[0-7]\\d)|([1-9]?\\d))(\\.\\d+)?)$", ErrorMessage = "Enter valid Latitude and Longitude, seperated by a comma: (e.g. 43.478685,-80.523607)")]
+        //[RegularExpression("^-?[0-9]{1,3}(?:\\.[0-9]{1,10})?$", ErrorMessage = "Enter valid Latitude and Longitude, seperated by a comma: (e.g. 43.478685,-80.523607")]
 
         [Required]
-        public int LGAId { get; set; }
+        public string locationCoordinates { get; set; }
 
-        public int TownId { get; set; }
+        [Required]
+        public string Address { get; set; }
 
-        public int SettlementId { get; set; }
-
+        //public string SettlementId { get; set; }
     }
 
     public class StaffRegisterRequest

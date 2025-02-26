@@ -1,6 +1,7 @@
 ﻿using Application.Exceptions;
 using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using MediatR;
 using System;
 using System.Threading;
@@ -10,7 +11,7 @@ namespace Application.Features.Location
 {
     public class GetLGAByIdQuery : IRequest<Response<GetLGAViewModel>>
     {
-        public int Id { get; set; }
+        public string LGAId { get; set; }
         public class GetLGAByIdQueryHandler : IRequestHandler<GetLGAByIdQuery, Response<GetLGAViewModel>>
         {
             private readonly ILGARepositoryAsync _lgaRepositoryAsync;
@@ -25,7 +26,7 @@ namespace Application.Features.Location
                 {
                     GetLGAViewModel getlgaViewModel = new GetLGAViewModel();
 
-                    var lga = await _lgaRepositoryAsync.GetLGAWithStateAsync(query.Id);
+                    var lga = await _lgaRepositoryAsync.GetLGAWithStateAsync(query.LGAId);
                     if (lga == null)
                         throw new ApiException($"lga not found.");
 
@@ -33,7 +34,7 @@ namespace Application.Features.Location
                     getlgaViewModel.Created = lga.Created;
                     getlgaViewModel.LastModified = lga.LastModified;
                     getlgaViewModel.State = lga.State.Name;
-                    return new Response<GetLGAViewModel>(getlgaViewModel, message: $"lga retrieval successful", successStatus: true);
+                    return new Response<GetLGAViewModel>(getlgaViewModel, responsestatus: APIResponseStatus.success.ToString(), message: $"lga retrieval successful");
                 }
                 catch (Exception ex)
                 {

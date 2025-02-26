@@ -2,6 +2,7 @@
 using Application.Features.AppTroopers.SecurityTips.GetAllSecurityTipCategories;
 using Application.Features.AppTroopers.SecurityTips.Queries.GetAllSecurityTipCategories;
 using Application.Features.Location;
+using Application.Features.Location.State;
 using Application.Features.Products.Commands.CreateProduct;
 using Application.Features.Products.Queries.GetAllProducts;
 using AutoMapper;
@@ -28,11 +29,15 @@ namespace Application.Mappings
             CreateMap<GetDistrictsinLGAQuery, GetDistrictsinLGAParameter>();
             //State
             CreateMap<GetLGAsinStateQuery, GetLGAsinStateParameter>();
+            CreateMap<State, GetAllStatesViewModel>();
+            CreateMap<GetAllStatesQuery, GetAllStatesParameter>();
 
             //AppTroopers --------------------------------------------
             //Security Tip Category
             CreateMap<CreateSecurityTipCategoryCommand, SecurityTipCategory>();
             CreateMap<SecurityTipCategory, GetAllSecurityTipCategoriesViewModel>().ReverseMap();
+            //Alert Level
+            CreateMap<AlertLevel, GetAllAlertLevelsViewModel>().ReverseMap();
         }
     }
 }

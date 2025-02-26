@@ -1,6 +1,6 @@
 ﻿using Application.DTOs.Location;
 using Application.Features.AppTroopers.SecurityTips;
-using Application.Features.UserProfile.Customer.Queries.GetCustomerProfile;
+using Application.Features.UserProfile;
 using Application.Wrappers;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.Panic;
@@ -15,5 +15,8 @@ namespace Application.Services.Interfaces.Location
     public interface IGeoCodingService : IAutoDependencyService
     {
         Task<Response<CustomerPreciseLocation>> GetCustomerLiveAddresses(string Coordinates);
+        Task<Response<ReverseGeocodingResponse>> GetReverseGeocodingResponse(string Coordinates);
+        Task<Guid> GetOrCreateTownIdAsync(string townName, string lgaName, string stateName, string countryName);
+
     }
 }

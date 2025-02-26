@@ -3,16 +3,21 @@ using Application.DTOs.Email;
 using Application.Enums;
 using Application.Exceptions;
 using Application.Interfaces;
+using Application.Services.Interfaces.Location;
 using Application.Wrappers;
+using Domain.Common.Enums;
+using Domain.Entities.AppTroopers.Subscription;
 using Domain.Entities.Identity;
 using Domain.Settings;
 using Infrastructure.Persistence.Contexts;
 using Infrastructure.Persistence.Helpers;
 using Infrastructure.Shared.Services;
+using Infrastructure.Shared.Services.Notification.SMSHelperClasses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -20,29 +25,35 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Net.WebRequestMethods;
 
 namespace Infrastructure.Persistence.Services
 {
     public class AccountService : IAccountService
     {
         private readonly ApplicationDbContext _context;
-
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailService _emailService;
+        private readonly ILocationService _locationService;
+        private readonly ISMSService _smsService;
         private readonly JWTSettings _jwtSettings;
         private readonly VGNGAEmailSenders _emailSenderAddresses;
         private readonly IDateTimeService _dateTimeService;
         private readonly IRandomNumberGeneratorInterface _randomNumberGenerator;
         private IHttpContextAccessor _accessor;
-        private readonly IMandrillEmailService _mandrillEmailService;
+        //private readonly IMailgunEmailService _mailgunEmailService;
         private readonly ILogger _logger;
-
+        private readonly IMemoryCache _memoryCache;
+        private readonly AppConfig _appConfig;
 
         public AccountService(UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
@@ -51,11 +62,15 @@ namespace Infrastructure.Persistence.Services
             IDateTimeService dateTimeService,
             SignInManager<ApplicationUser> signInManager,
             IEmailService emailService,
+            ILocationService locationService,
+            ISMSService smsService,
             IRandomNumberGeneratorInterface randomNumberGenerator,
             ApplicationDbContext context,
             IHttpContextAccessor accessor,
-            IMandrillEmailService mandrillEmailService,
-            ILogger logger)
+            IMemoryCache memoryCache,
+        //IMailgunEmailService mailgunEmailService,
+        ILogger logger,
+        IOptions<AppConfig> appConfig)
         {
             _context = context;
             _userManager = userManager;
@@ -65,10 +80,14 @@ namespace Infrastructure.Persistence.Services
             _dateTimeService = dateTimeService;
             _signInManager = signInManager;
             this._emailService = emailService;
+            this._smsService = smsService;
             _randomNumberGenerator = randomNumberGenerator;
             _accessor = accessor;
-            _mandrillEmailService = mandrillEmailService;
+            //_mailgunEmailService = mailgunEmailService;
             _logger = logger;
+            _memoryCache = memoryCache;
+            _appConfig = appConfig.Value;
+            _locationService = locationService;
         }
 
         public ClaimsPrincipal User => _accessor.HttpContext.User;
@@ -81,31 +100,56 @@ namespace Infrastructure.Persistence.Services
                 //verify user
 
                 //var user = await _userManager.FindByEmailAsync(request.Username);
-                var user = await _context.Users.Where(x => x.UserName == request.Username).FirstOrDefaultAsync();
+                //var userName = await _context.Users.Where(x => x.UserName == request.Username).FirstOrDefaultAsync();
+                ApplicationUser user;
+
+                if (request.Username.Contains('@'))
+                {
+                    user = await _userManager.FindByEmailAsync(request.Username);
+                }
+                else
+                {
+                    user = await _userManager.FindByNameAsync(request.Username);
+                }
+
                 if (user == null)
                 {
                     throw new ApiException($"No Accounts Registered with {request.Username}.");
                 }
 
+                if (!user.isActive)
+                {
+                    throw new ApiException($"Account {request.Username} is presently disabled. Please contact support@vigilantng.com for assistance.");
+                }
+
+                if (!user.PhoneNumberConfirmed)
+                {
+                    throw new ApiException($"Account {request.Username} has not been verified.");
+                }
+
                 //very credentials
-                var result = await _signInManager.PasswordSignInAsync(user.UserName, request.Password, false, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(user, request.Password, false, lockoutOnFailure: false);
 
                 if (!result.Succeeded)
                 {
                     throw new ApiException($"Invalid Credentials for '{request.Username}'.");
                 }
 
-                if (!user.EmailConfirmed)
-                {
-                    throw new ApiException($"Account Not Confirmed for '{request.Username}'.");
-                }
+                //if (!user.EmailConfirmed)
+                //{
+                //    throw new ApiException($"Account Not Confirmed for '{request.Username}'.");
+                //}
 
                 JwtSecurityToken jwtSecurityToken = await GenerateJWToken(user);
                 AuthenticationResponse response = new AuthenticationResponse();
                 response.Id = user.Id;
                 response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+                response.JWTokenExpiration = jwtSecurityToken.ValidTo;
                 response.Email = user.Email;
                 response.UserName = user.UserName;
+                response.FirstName = user.FirstName;
+                response.LastName = user.LastName;
+                response.profilePhotoUrl = user.CustomerProfileUrl;
 
                 var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
                 response.Roles = rolesList.ToList();
@@ -123,7 +167,9 @@ namespace Infrastructure.Persistence.Services
                 response.RefreshToken = refreshToken.Token;
                 response.RefreshTokenExpiration = refreshToken.Expires;
 
-                return new Response<AuthenticationResponse>(response, $"Authenticated {user.UserName}");
+                //return new Response<AuthenticationResponse>(response, $"Authenticated {user.UserName}");
+                return new Response<AuthenticationResponse>(response, responsestatus: APIResponseStatus.success.ToString(), message: $"Authenticated {user.UserName}");
+
             }
             catch (Exception ex)
             {
@@ -140,77 +186,307 @@ namespace Infrastructure.Persistence.Services
                 var userWithSameUserName = await _userManager.FindByNameAsync(request.PhoneNumber);
                 if (userWithSameUserName != null)
                 {
-                    RegisterResponse response = new RegisterResponse { Message = "Account already exists.", UserAlreadyExists = true };
-                    return new Response<RegisterResponse>(response, message: $"Phone number is already registered, proceed to login. Thanks.", successStatus: false);
+                    RegisterResponse response = new RegisterResponse { Message = "Account already exists."};
+                    return new Response<RegisterResponse>(response, responsestatus:APIResponseStatus.fail.ToString(), message: $"Phone number is already registered, proceed to login. Thanks.");
                     //throw new ApiException($"User already exists.");
                 }
 
-                var user = new ApplicationUser
+                //Get cityId 
+                var customerLocation = await _locationService.SaveCustomerLocationInfo(request.locationCoordinates);
+                if (customerLocation != null)
                 {
-                    Email = request.Email,
-                    FirstName = request.FirstName,
-                    LastName = request.LastName,
-                    UserName = request.PhoneNumber,
-                    PhoneNumber = request.PhoneNumber,
-                    EmailConfirmed = false,      // set email and phone confirmed automatically after configuring twilio sendgrid for Otps
-                    PhoneNumberConfirmed = false
-                };
+                    string cityId = customerLocation.Data;
+                    string firstName = "";
+                    string lastName = "";
+                    string middleNames = "";
+                    //Get Customer Names
+                    var names = request.FullName.Split(' ');
 
-                var userWithSameEmail = await _userManager.FindByEmailAsync(request.Email);
-
-                if (userWithSameEmail == null)
-                {
-                    var result = await _userManager.CreateAsync(user, request.Password);
-
-                    if (result.Succeeded)
+                    if (names.Length == 1) 
+                    { 
+                        firstName = names[0];
+                    }
+                    else if (names.Length == 2)
                     {
-                        await _userManager.AddToRoleAsync(user, Roles.Customer.ToString());
+                        firstName = names[0];
+                        lastName = names[1];
+                    }
+                    else if (names.Length > 2) {
+                        firstName = names[0];
+                        lastName = names[names.Length-1];
 
-                        var verificationUri = await SendVerificationEmail(user, origin);
-                        //TODO: Attach Email Service here and configure it via appsettings
-                        //await _emailService.SendAsync(new Application.DTOs.Email.EmailRequest() 
-                        //{ 
-                        //    From = "info@vigilanteng.com", 
-                        //    To = user.Email,
-                        //    Username = user.FirstName,
-                        //    BodyParagraph1 = $"Thank you for joining Vigilante NG",
-                        //    BodyParagraph2 = $"Please confirm your account by visiting this URL {verificationUri}",
-                        //    Subject = "Confirm your Vigilante NG registration"
-                        //});
-
-                        //Store email body in db (Cache 
-                        _mandrillEmailService.SendAsync(new Application.DTOs.Email.EmailRequest()
+                        for(int i = 1; i<names.Length-1; i++)
                         {
-                            From = "info@vigilanteng.com",
-                            To = user.Email,
-                            Username = user.FirstName,
-                            BodyParagraph1 = $"Welcome to the Vigilante NG community. Please click the link below to confirm your account",
-                            ButtonLabel = "Confirm Account",
-                            ButtonUrl = $"{verificationUri}",
-                            BodyParagraph2 = $"Please confirm your account by visiting clicking the button below",
-                            Subject = "Confirm your Vigilante NG registration"
-                        });
+                            middleNames = middleNames+=$"{names[i]} ";
+                        }
+                        middleNames = middleNames.Trim();
+                    }
 
-                        RegisterResponse response = new RegisterResponse { Message = "Account Created Successfully.", UserAlreadyExists = false };
-                        return new Response<RegisterResponse>(response, message: $"Your account has been created successfuly. ", successStatus: true);
+                    var user = new ApplicationUser
+                    {
+                        Email = request.Email,
+                        FirstName = firstName,
+                        LastName = lastName,
+                        UserName = request.PhoneNumber,
+                        PhoneNumber = request.PhoneNumber,
+                        AddressLine1 = request.Address,
+                        TownId = Guid.Parse(cityId),
+                        EmailConfirmed = false,      // set email and phone confirmed automatically after configuring twilio sendgrid for Otps
+                        PhoneNumberConfirmed = false,
+                        isActive = true,
+                         
+                        SubscriptionId = Guid.Parse("5F767D57-A64C-4B6F-96A9-CE81EF8A9F66")
+
+                    };
+
+                    var userWithSameEmail = await _userManager.FindByEmailAsync(request.Email);
+
+                    if (userWithSameEmail == null)
+                    {
+                        var result = await _userManager.CreateAsync(user, request.Password);
+
+                        if (result.Succeeded)
+                        {
+                            await _userManager.AddToRoleAsync(user, Roles.Customer.ToString());
+
+                            //Create Customer Wallet
+                            Wallet wallet = new Wallet
+                            {
+                                Id = Guid.NewGuid(),
+                                ApplicationUserId = user.Id,
+                                WalletBalance = 0.00M,
+                                CreatedBy = user.Id,
+                            };
+
+                            _context.Wallets.Add(wallet);
+                            _context.SaveChanges();
+
+
+                            var verificationUri = await GetVerificationUri(user, _appConfig.AppOrigin);
+                            //TODO: Attach Email Service here and configure it via appsettings
+                            //await _emailService.SendAsync(new Application.DTOs.Email.EmailRequest() 
+                            //{ 
+                            //    From = "info@vigilanteng.com", 
+                            //    To = user.Email,
+                            //    Username = user.FirstName,
+                            //    BodyParagraph1 = $"Thank you for joining Vigilante NG",
+                            //    BodyParagraph2 = $"Please confirm your account by visiting this URL {verificationUri}",
+                            //    Subject = "Confirm your Vigilante NG registration"
+                            //});
+
+                            //Store email body in db (Cache 
+                            await _emailService.SendAsync(new Application.DTOs.Email.EmailRequest()
+                            {
+                                From = "info@vigilanteng.com",
+                                To = user.Email,
+                                Username = user.FirstName,
+                                BodyParagraph1 = $"Welcome to the Vigilant NG community. Please click the link below to verify your email address.",
+                                ButtonLabel = "Confirm Account",
+                                ButtonUrl = $"{verificationUri}",
+                                BodyParagraph2 = $"Please confirm your account by visiting clicking the button below",
+                                Subject = "Confirm your Vigilant NG registration"
+                            });
+
+                            //store otp in cache
+                            string OTP = _randomNumberGenerator.GenerateRandomNumber(6, Mode.Numeric);
+                            request.PhoneNumber = $"+{request.PhoneNumber}";
+                            var cacheExpiryOptions = new MemoryCacheEntryOptions
+                            {
+                                AbsoluteExpiration = DateTime.Now.AddMinutes(5),
+                                Priority = CacheItemPriority.Normal,
+                                SlidingExpiration = TimeSpan.FromMinutes(5),
+                                Size = 1024,
+                            };
+
+                            _memoryCache.Set(request.PhoneNumber, OTP, cacheExpiryOptions);
+
+                            //sms
+                            await _smsService.SendSMSAsync(new SMSRequest()
+                            {
+                                messages = new List<SMSMessage>()
+                                {
+                                    new SMSMessage
+                                    {
+                                        channel="sms",
+                                        content=$"Welcome to the Vigilant community, Your verification code is {OTP}. Your code expires in 6 minutes. Do not share this code with anyone.",
+                                        data_coding = "text",
+                                        originator = "Vigilant",
+                                        recipients = new List<string>(){ request.PhoneNumber }
+                                    }
+                                }
+                            });
+
+                            //update user's id in Trusted Contacts table
+                            var invitee = await _context.TrustedPeople.Where(x => x.PhoneNumber == request.PhoneNumber).FirstOrDefaultAsync();
+                            if (invitee != null)
+                            {
+                                invitee.TrustedUserId = user.Id;
+                                _context.Update(invitee);
+                                _context.SaveChanges();
+                            }
+
+                            RegisterResponse response = new RegisterResponse { Message = "Account Created Successfully." };
+                            //return new Response<RegisterResponse>(response, message: $"Your account has been created successfuly. ", success: true);
+                            return new Response<RegisterResponse>(response, responsestatus: APIResponseStatus.success.ToString(), message: $"Your account has been created successfuly.");
+                        }
+                        else
+                        {
+
+                            //throw new ApiException($"{result.Errors}"); (Original)
+
+                            // throw new ApiException($"{string.Join(", ", result.Errors.Select(x => "Code " + x.Code + " Description" + x.Description))}"); 
+
+                            throw new ApiException($"{string.Join(", ", result.Errors.Select(x => x.Description))}");
+                        }
                     }
                     else
                     {
+                        RegisterResponse response = new RegisterResponse { Message = "Account already exists." };
+                        return new Response<RegisterResponse>(response, responsestatus: APIResponseStatus.fail.ToString(), message: $"Email is already registered, Kindly login with the associated details. Thanks.");
 
-                        //throw new ApiException($"{result.Errors}"); (Original)
-
-                        // throw new ApiException($"{string.Join(", ", result.Errors.Select(x => "Code " + x.Code + " Description" + x.Description))}"); 
-
-                        throw new ApiException($"{string.Join(", ", result.Errors.Select(x => x.Description))}");
+                        //throw new ApiException($"Email {request.Email } is already registered.");
                     }
+
+
                 }
                 else
                 {
-                    RegisterResponse response = new RegisterResponse { Message = "Account already exists.", UserAlreadyExists = true };
-                    return new Response<RegisterResponse>(response, message: $"Email is already registered, Kindly login with the associated details. Thanks.", successStatus: false);
-
-                    //throw new ApiException($"Email {request.Email } is already registered.");
+                    return new Response<RegisterResponse>(new RegisterResponse { Message = "Invalid Location Info:" }, responsestatus: APIResponseStatus.fail.ToString(), message: $"Please verify location coordinates.");
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw new ApiException(ex.Message);
+            }
+        }
+
+        //Resend OTP
+        public async Task<Response<string>> ResendOTPAsync(ResendOTPRequest request, string ipAddress = null)
+        {
+            try
+            {
+                //verify user
+
+                //var user = await _userManager.FindByEmailAsync(request.Username);
+                //var userName = await _context.Users.Where(x => x.UserName == request.Username).FirstOrDefaultAsync();
+
+                var user = await _userManager.FindByNameAsync(request.PhoneNumber);
+
+                if (user == null)
+                {
+                    throw new ApiException($"Invalid Credentials for '{request.PhoneNumber}'.");
+                }
+
+                //very credentials
+                string value = string.Empty;
+                _memoryCache.TryGetValue($"+{request.PhoneNumber}", out value);
+
+                //Remove existing cache
+                if (!value.IsNullOrEmpty())
+                {
+                    _memoryCache.Remove(request.PhoneNumber);
+                }
+
+                //Create new cache entry
+
+                //store otp in cache
+                string OTP = _randomNumberGenerator.GenerateRandomNumber(6, Mode.Numeric);
+                request.PhoneNumber = $"+{request.PhoneNumber}";
+                var cacheExpiryOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpiration = DateTime.Now.AddMinutes(5),
+                    Priority = CacheItemPriority.Normal,
+                    SlidingExpiration = TimeSpan.FromMinutes(5),
+                    Size = 1024,
+                };
+                _memoryCache.Set(request.PhoneNumber, OTP, cacheExpiryOptions);
+
+                //sms
+                await _smsService.SendSMSAsync(new SMSRequest()
+                {
+                    messages = new List<SMSMessage>()
+                    {
+                        new SMSMessage
+                        {
+                            channel="sms",
+                            content=$"Welcome to the Vigilant community, Your verification code is {OTP}. Your code expires in 6 minutes. Do not share this code with anyone.",
+                            data_coding = "text",
+                            originator = "Vigilant",
+                            recipients = new List<string>(){ request.PhoneNumber }
+                        }
+                    }
+                });
+               
+                return new Response<string>(responsestatus: APIResponseStatus.success.ToString(), $"Resent OTP for Phone Number: {user.UserName}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw new ApiException(ex.Message);
+            }
+        }
+
+        //Verify OTP Async
+
+        public async Task<Response<AuthenticationResponse>> VerifyOTPandSignInAsync(VerifyOTPRequest request, string ipAddress = null)
+        {
+            try
+            {
+                //verify user
+
+                //var user = await _userManager.FindByEmailAsync(request.Username);
+                //var userName = await _context.Users.Where(x => x.UserName == request.Username).FirstOrDefaultAsync();
+
+                var user = await _userManager.FindByNameAsync(request.PhoneNumber);
+
+                if (user == null)
+                {
+                   throw new ApiException($"Invalid Credentials for '{ request.PhoneNumber }'.");
+                }
+
+                if (!user.isActive)
+                {
+                    throw new ApiException($"Account {request.PhoneNumber} is presently disabled. Please contact support@vigilantng.com for assistance.");
+                }
+       
+                //very credentials
+                string value = string.Empty;
+                _memoryCache.TryGetValue($"+{request.PhoneNumber}", out value);
+
+                if (!(value == request.OTP))
+                {
+                    throw new ApiException($"Invalid or Expired OTP.");
+                }
+
+                user.isActive = true;
+                user.PhoneNumberConfirmed= true;
+
+                JwtSecurityToken jwtSecurityToken = await GenerateJWToken(user);
+                AuthenticationResponse response = new AuthenticationResponse();
+                response.Id = user.Id;
+                response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+                response.Email = user.Email;
+                response.UserName = user.UserName;
+                response.profilePhotoUrl = user.CustomerProfileUrl;
+
+                var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+                response.Roles = rolesList.ToList();
+                response.IsVerified = user.EmailConfirmed;
+
+                //Generate Refresh Token
+                var refreshToken = GenerateRefreshToken(ipAddress);
+
+                user.RefreshToken = refreshToken.Token;
+                user.RefreshTokenExpiry = refreshToken.Expires;
+                user.RefreshToken = refreshToken.Token;
+                _context.Update(user);
+                _context.SaveChanges();
+
+                response.RefreshToken = refreshToken.Token;
+                response.RefreshTokenExpiration = refreshToken.Expires;
+
+                return new Response<AuthenticationResponse>(response, responsestatus: APIResponseStatus.success.ToString(), $"{user.FirstName}, thank you for verifying your phone number. Welcome to the Vigilant community.");
             }
             catch (Exception ex)
             {
@@ -236,7 +512,7 @@ namespace Infrastructure.Persistence.Services
                 existingUser.FirstName = request.FirstName;
                 existingUser.LastName = request.LastName;
                 existingUser.PhoneNumber = request.PhoneNumber;
-                existingUser.LocationLevelId = request.LocationLevelId;
+                existingUser.TownId = Guid.Parse(request.LocationLevelId);
                 existingUser.UserName = request.PhoneNumber;
 
                 var result = await _userManager.UpdateAsync(existingUser);
@@ -245,7 +521,7 @@ namespace Infrastructure.Persistence.Services
 
                 if (result.Succeeded)
                 {
-                    return new Response<UpdateProfileResponse>(response, message: $"User profile successfully updated.", successStatus: true);
+                    return new Response<UpdateProfileResponse>(response, responsestatus: APIResponseStatus.success.ToString(), message: $"User profile successfully updated.");
                 }
                 else
                 {
@@ -271,7 +547,7 @@ namespace Infrastructure.Persistence.Services
 
                     StaffRegistrationResponse response = new StaffRegistrationResponse { Message = "Account already exists.", UserAlreadyExists = true };
 
-                    return new Response<StaffRegistrationResponse>(response, message: $"User is already registered, Kindly login with the associated details. Thanks.", successStatus: false);
+                    return new Response<StaffRegistrationResponse>(response, responsestatus: APIResponseStatus.success.ToString(), message: $"User is already registered, Kindly login with the associated details. Thanks.");
                 }
 
                 string defaultPassword = _randomNumberGenerator.GenerateRandomNumber(6, Mode.AlphaNumeric);
@@ -285,7 +561,7 @@ namespace Infrastructure.Persistence.Services
                     PhoneNumber = request.PhoneNumber,
                     EmailConfirmed = false,
                     PhoneNumberConfirmed = false,
-                    PasswordHash = defaultPassword,
+                    PasswordHash = defaultPassword
                 };
 
                 var userWithSameEmail = await _userManager.FindByEmailAsync(request.Email);
@@ -305,7 +581,7 @@ namespace Infrastructure.Persistence.Services
                             await _userManager.AddToRoleAsync(user, role.Name);
 
                         }
-                        var verificationUri = await SendVerificationEmail(user, origin);
+                        var verificationUri = await GetVerificationUri(user, origin);
 
 
                         //TODO: Attach Email Service here and configure it via appsettings
@@ -320,7 +596,7 @@ namespace Infrastructure.Persistence.Services
                         });
 
                         StaffRegistrationResponse response = new StaffRegistrationResponse { Message = "Staff account created.", VerificationUrl = verificationUri, UserAlreadyExists = false };
-                        return new Response<StaffRegistrationResponse>(response, message: $"Staff account was registered successfully. {verificationUri}");
+                        return new Response<StaffRegistrationResponse>(response, responsestatus: APIResponseStatus.success.ToString(), message: $"Staff account was registered successfully. {verificationUri}");
 
                     }
                     else
@@ -336,7 +612,7 @@ namespace Infrastructure.Persistence.Services
                 {
                     StaffRegistrationResponse response = new StaffRegistrationResponse { Message = "Account already exists.", UserAlreadyExists = true };
 
-                    return new Response<StaffRegistrationResponse>(response, message: $"User is already registered, Kindly login with the associated details. Thanks.", successStatus: false);
+                    return new Response<StaffRegistrationResponse>(response, responsestatus: APIResponseStatus.fail.ToString(), message: $"User is already registered, Kindly login with the associated details. Thanks.");
                 }
             }
             catch (Exception ex)
@@ -380,7 +656,7 @@ namespace Infrastructure.Persistence.Services
                     issuer: _jwtSettings.Issuer,
                     audience: _jwtSettings.Audience,
                     claims: claims,
-                    expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
+                    expires: DateTime.UtcNow.AddHours(1).AddMinutes(_jwtSettings.DurationInMinutes),
                     signingCredentials: signingCredentials);
                 return jwtSecurityToken;
             }
@@ -400,12 +676,12 @@ namespace Infrastructure.Persistence.Services
             return BitConverter.ToString(randomBytes).Replace("-", "");
         }
 
-        private async Task<string> SendVerificationEmail(ApplicationUser user, string origin)
+        private async Task<string> GetVerificationUri(ApplicationUser user, string origin)
         {
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
             var route = "api/account/confirm-email/";
-            var _enpointUri = new Uri(string.Concat($"{origin}/", route));
+            var _enpointUri = new Uri(string.Concat($"{origin}/", route), UriKind.RelativeOrAbsolute);
             var verificationUri = QueryHelpers.AddQueryString(_enpointUri.ToString(), "userId", user.Id);
             verificationUri = QueryHelpers.AddQueryString(verificationUri, "code", code);
             //Email Service Call Here
@@ -422,7 +698,7 @@ namespace Infrastructure.Persistence.Services
                 var result = await _userManager.ConfirmEmailAsync(user, code);
                 if (result.Succeeded)
                 {
-                    return new Response<string>(user.Id, message: $"Account Confirmed for {user.Email}. You can now use the /api/Account/authenticate endpoint.");
+                    return new Response<string>(user.Id, message: $"{user.FirstName}, Thank you for confirming your email address, {user.Email}.");
                 }
                 else
                 {
@@ -442,11 +718,41 @@ namespace Infrastructure.Persistence.Services
             return new RefreshToken
             {
                 Token = RandomTokenString(),
-                Expires = DateTime.UtcNow.AddDays(7),
-                Created = DateTime.UtcNow,
+                Expires = DateTime.UtcNow.AddHours(1).AddDays(60),
+                Created = DateTime.UtcNow.AddHours(1),
                 CreatedByIp = ipAddress == null ? null : ipAddress
             };
         }
+
+        //public async Task ForgotPassword(ForgotPasswordRequest model, string origin)
+        //{
+        //    try
+        //    {
+        //        var account = await _userManager.FindByEmailAsync(model.Email);
+
+        //        // always return ok response to prevent email enumeration
+        //        if (account == null) return;
+
+        //        var code = await _userManager.GeneratePasswordResetTokenAsync(account);
+        //        var route = "api/account/reset-password/";
+        //        var _enpointUri = new Uri(string.Concat($"{origin}/", route));
+        //        var emailRequest = new EmailRequest()
+        //        {
+        //            Body = $"You reset token is - {code}",
+        //            BodyParagraph1 = $"You reset token is - {code}",
+        //            To = model.Email,
+        //            Subject = "Reset Password",
+        //            ButtonLabel = "Reset Now"
+                     
+        //        };
+        //        await _emailService.SendAsync(emailRequest);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex.Message, ex);
+        //        throw new ApiException(ex.Message);
+        //    }
+        //}
 
         public async Task ForgotPassword(ForgotPasswordRequest model, string origin)
         {
@@ -458,14 +764,34 @@ namespace Infrastructure.Persistence.Services
                 if (account == null) return;
 
                 var code = await _userManager.GeneratePasswordResetTokenAsync(account);
-                var route = "api/account/reset-password/";
-                var _enpointUri = new Uri(string.Concat($"{origin}/", route));
+                //var route = "api/account/reset-password/";
+                //var _enpointUri = new Uri(string.Concat($"{origin}/", route));
+                
+                // 1. Find the user by email.        
+
+                // 2. Generate the password reset token.
+                var resetToken = await _userManager.GeneratePasswordResetTokenAsync(account);
+
+                // 3. Build a password reset link (for example, a link to your frontend).
+                // In a real app, you’d send this link by email.
+                var route = $"ResetPassword.html?email={Uri.EscapeDataString(account.Email)}&token={Uri.EscapeDataString(resetToken)}";
+                var resetLink = new Uri(string.Concat(origin, "/", route));
+
                 var emailRequest = new EmailRequest()
                 {
-                    Body = $"You reset token is - {code}",
+                    From = "info@vigilant.com",
                     To = model.Email,
+                    Username = account.FirstName,
                     Subject = "Reset Password",
+                    BodyParagraph1 = $"Click the link below to reset your password. For your safety, this link will expire in 24 hours.",
+                    ButtonLabel = "Reset Now",
+                    ButtonUrl = resetLink.ToString(),
+                    BodyParagraph2 = $"Need further assistance, email us at info@vigilant.com",
+
                 };
+
+                //Store email body in db (Cache 
+
                 await _emailService.SendAsync(emailRequest);
             }
             catch (Exception ex)
@@ -488,7 +814,7 @@ namespace Infrastructure.Persistence.Services
                 }
                 else
                 {
-                    throw new ApiException($"Error occured while reseting the password.");
+                    throw new ApiException($"Error occured while reseting the password: Reason: {result.Errors.First().Description}. Reset link expired, please initiaite a new request.");
                 }
             }
             catch (Exception ex)
@@ -525,7 +851,6 @@ namespace Infrastructure.Persistence.Services
 
                 //Revoke Current Refresh Token
 
-
                 //Generate new Refresh Token and save to Database
                 var newRefreshToken = GenerateRefreshToken();
                 user.RefreshToken = newRefreshToken.Token;
@@ -540,6 +865,7 @@ namespace Infrastructure.Persistence.Services
                 authenticationModel.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
                 authenticationModel.Email = user.Email;
                 authenticationModel.UserName = user.UserName;
+                authenticationModel.profilePhotoUrl = user.CustomerProfileUrl;
                 var rolesList = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
                 authenticationModel.Roles = rolesList.ToList();
                 authenticationModel.RefreshToken = newRefreshToken.Token;

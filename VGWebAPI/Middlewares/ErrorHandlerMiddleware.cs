@@ -1,5 +1,6 @@
 ﻿using Application.Exceptions;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace WebApi.Middlewares
             {
                 var response = context.Response;
                 response.ContentType = "application/json";
-                var responseModel = new Response<string>() { Succeeded = false, Message = error?.Message };
+                var responseModel = new Response<string>() { status = APIResponseStatus.error.ToString(), Message = error?.Message };
 
                 switch (error)
                 {

@@ -11,7 +11,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.UpdateSecurityT
 {
     public class UpdateSecurityTipCategoryCommand : IRequest<Response<SecurityTipCategory>>
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string CategoryName { get; set; }
         public string Description { get; set; }
 

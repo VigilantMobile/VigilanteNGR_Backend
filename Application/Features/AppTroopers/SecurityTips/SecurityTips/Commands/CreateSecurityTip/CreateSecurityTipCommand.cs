@@ -4,6 +4,7 @@ using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Application.Services.Interfaces.AppTroopers.SecurityTips;
 using Application.Wrappers;
 using AutoMapper;
+using Domain.Common.Enums;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.SecurityTips;
 using MediatR;
@@ -17,12 +18,12 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
     {
         public string Subject { get; set; }
         public string BroadcasterId { get; set; }
-        public int CategoryId { get; set; }
+        public string CategoryId { get; set; }
         public int Casualties { get; set; }
-        public int AlertLevelId { get; set; }
-        public int BroadcastLevelId { get; set; } // 1,2,3 for state, lga and 
-        public int LocationId { get; set; }
-        public int SourceId { get; set; }
+        public string AlertLevelId { get; set; }
+        public string BroadcastLevelId { get; set; } // 1,2,3 for state, lga and 
+        public string LocationId { get; set; }
+        public string SourceId { get; set; }
         public string Body { get; set; }
         public string TipStatus { get; set; }
         public string coordinates { get; set; }
@@ -46,12 +47,12 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
       
             if (!createdTip.IsCreated)
             {
-                return new Response<CreateSecurityTipResponse>(null, createdTip.Message, successStatus: false);
+                return new Response<CreateSecurityTipResponse>(null, responsestatus: APIResponseStatus.fail.ToString(), createdTip.Message);
             }
 
             else
             {
-                return new Response<CreateSecurityTipResponse>(createdTip, createdTip.Message, successStatus: true);
+                return new Response<CreateSecurityTipResponse>(createdTip, responsestatus: APIResponseStatus.success.ToString(), createdTip.Message);
             }
         }
     }

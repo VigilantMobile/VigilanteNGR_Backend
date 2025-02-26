@@ -3,6 +3,7 @@ using Domain.Entities.AppTroopers.Curfew;
 using Domain.Entities.AppTroopers.Missing;
 using Domain.Entities.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.SecurityTips;
+using Domain.Entities.AppTroopers.Subscription;
 using Domain.Entities.CompanyEntities;
 using Domain.Entities.LocationEntities;
 using Microsoft.AspNetCore.Identity;
@@ -26,14 +27,27 @@ namespace Domain.Entities.Identity
         public string LastName { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
-        public int LocationId { get; set; }
+        public string CustomerProfileUrl { get; set; }
 
-        //CustomerLocationTier
 
-        [ForeignKey("LocationLevel")]
-        public int? LocationLevelId { get; set; }
-        public virtual BroadcastLevel LocationLevel { get; set; }
+        //CustomerLocation
+        //public int LocationId { get; set; }
+        //[ForeignKey("LocationLevel")]
+        //public int? LocationLevelId { get; set; }
+        //public virtual BroadcastLevel LocationLevel { get; set; }
 
+
+        [ForeignKey("Town")]
+        public Guid? TownId { get; set; }
+        public virtual Town CustomerTown { get; set; }
+
+        //Subscription
+
+        [ForeignKey("Subscription")]
+        public Guid? SubscriptionId { get; set; }
+        public virtual Subscription Subscription { get; set; }
+
+        public virtual Wallet Wallet { get; set; }
         //State
         //[ForeignKey("State")]
         //public int StateId { get; set; }
@@ -63,15 +77,16 @@ namespace Domain.Entities.Identity
         // VGNGA Staff Fields //
 
         [ForeignKey("Department")]
-        public int? DepartmentId { get; set; }
+        public Guid? DepartmentId { get; set; }
         public virtual Department Department { get; set; }
 
-        public string StaffId { get; set; }
-        public decimal Salary { get; set; }
-        public string SalaryCurrency { get; set; }
-        public bool IsAppSuperAdmin { get; set; }
-        public bool IsAppAdmin { get; set; }
-        public bool IsAppOperator { get; set; }
+        //public string StaffId { get; set; }
+        //public decimal Salary { get; set; }
+        //public string SalaryCurrency { get; set; }
+        //public bool IsAppSuperAdmin { get; set; }
+        //public bool IsAppAdmin { get; set; }
+        //public bool IsAppOperator { get; set; }
+
         public virtual ICollection<Department> SecretaryDepartments { get; set; }
         public virtual ICollection<Department> HODDepartments { get; set; }
         public virtual ICollection<State> InternalStaffStates { get; set; }
@@ -81,6 +96,8 @@ namespace Domain.Entities.Identity
         public virtual ICollection<Curfew> AdminAuthorizedCurfews { get; set; }
         public virtual ICollection<Curfew> OperatorIniatedCurfews { get; set; }
         public virtual ICollection<TrustedPerson> TrustedPeople { get; set; }
+
+        public virtual ICollection<TrustedPerson> TrustedContactsReceived { get; set; } = new List<TrustedPerson>();
 
         //External Staff fields
         public ExternalStaffType ExternalStaffType { get; set; }

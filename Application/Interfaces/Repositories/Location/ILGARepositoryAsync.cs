@@ -7,7 +7,7 @@ namespace Application.Interfaces.Repositories.Location
     public interface ILGARepositoryAsync : IGenericRepositoryAsync<LGA>
     {
         //Task<bool> IsUniqueLGAinState(int StateId, string LGAName);
-        Task<LGA> GetLGAWithStateAsync(int LGAid);
-        Task<List<Town>> GetDistrictsinLGAAsync(int LGAid);
+        Task<LGA> GetLGAWithStateAsync(string LGAid);
+        Task<List<Town>> GetDistrictsinLGAAsync(string LGAid);
     }
 }

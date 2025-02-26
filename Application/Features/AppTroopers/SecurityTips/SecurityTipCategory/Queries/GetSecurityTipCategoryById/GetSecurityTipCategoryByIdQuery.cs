@@ -12,7 +12,7 @@ namespace Application.Features.AppTroopers.SecurityTips.GetSecurityTipCategoryBy
 {
     public class GetSecurityTipCategoryByIdQuery : IRequest<Response<SecurityTipCategory>>
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public class GetSecurityTipCategoryByIdQueryHandler : IRequestHandler<GetSecurityTipCategoryByIdQuery, Response<SecurityTipCategory>>
         {
             private readonly ISecurityTipCategoryRepositoryAsync _securityTipCategoryRepository;

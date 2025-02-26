@@ -25,9 +25,9 @@ namespace VGWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplicationLayer();
-            services.AddIdentityInfrastructure(Configuration);
+            services.AddApplicationLayer();            
             services.AddPersistenceInfrastructure(Configuration);
+            services.AddIdentityInfrastructure(Configuration);
             services.AddSharedInfrastructure(Configuration);
             services.AddSwaggerExtension();
             services.AddApiVersioningExtension();
@@ -41,7 +41,6 @@ namespace VGWebAPI
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
-
 
             //services.AddSwaggerGen(c =>
             //{
@@ -70,7 +69,7 @@ namespace VGWebAPI
             app.UseHealthChecks("/health");
 
             app.UseCors("AllOriginsPolicy");
-
+            app.UseStaticFiles();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

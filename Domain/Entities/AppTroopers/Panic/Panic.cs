@@ -1,6 +1,7 @@
 ﻿using Domain.Common;
 using Domain.Common.Enums;
 using Domain.Entities.Identity;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -19,7 +20,7 @@ namespace Domain.Entities.AppTroopers.Panic
 
         [Required]
         [ForeignKey("Commute")]
-        public int CommuteId { get; set; }
+        public Guid CommuteId { get; set; }
         public virtual Commute Commute { get; set; }
     }
 }

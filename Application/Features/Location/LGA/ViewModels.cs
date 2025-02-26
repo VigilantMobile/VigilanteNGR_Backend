@@ -15,7 +15,7 @@ namespace Application.Features.Location
 
     public class GetAllDistrictsinLGAViewModel
     {
-        public int LGAId { get; set; }
+        public string LGAId { get; set; }
         public string LGA { get; set; }
         public int Count { get; set; }
 
@@ -24,7 +24,7 @@ namespace Application.Features.Location
 
     public class DistrictViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string DistrictName { get; set; }
         public DateTime Created { get; set; }
     }

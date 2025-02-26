@@ -2,6 +2,7 @@
 using Domain.Entities.AppTroopers.SecurityTips;
 using Domain.Entities.Identity;
 using NetTopologySuite.Geometries;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,9 +12,9 @@ namespace Domain.Entities.LocationEntities
     {
         [Required]
         public string Name { get; set; }
-
         public string NPFStateAuthorityPhone { get; set; }
         public string NPFStateAuthorityAddress { get; set; }
+        public Guid CountryId { get; set; }
 
         // Customer
         //public virtual ICollection<ApplicationUser> Customers { get; set; }
@@ -29,6 +30,12 @@ namespace Domain.Entities.LocationEntities
         //public virtual ICollection<ApplicationUser> OfficialVigilanteStateAdmins { get; set; }
 
         //
+        public string GoogleMapsPlaceId { get; set; }
+        public string GoogleMapsShortName { get; set; }
+        public string GoogleMapsLongName { get; set; }
+        public string GoogleMapsLocationType { get; set; }
+        public string GoogleMapsGeometryInfo { get; set; }
+        public string GoogleMapsFormattedAddress { get; set; }
         public virtual ICollection<LGA> LGAs { get; set; }
 
 

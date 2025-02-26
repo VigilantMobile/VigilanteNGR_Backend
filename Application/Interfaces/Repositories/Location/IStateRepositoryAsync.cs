@@ -12,7 +12,7 @@ namespace Application.Interfaces.Repositories.Location
     public interface IStateRepositoryAsync : IGenericRepositoryAsync<State>
     {
         //Task<bool> IsUniqueLGAinState(int StateId, string LGAName);
-        //Task<LGA> GetLGAWithStateAsync(int LGAid);
-        Task<List<LGA>> GetLGAsinStateAsync(int StateId);
+        Task<State> GetStateWithCountryAsync(int StateId);
+        Task<List<LGA>> GetLGAsinStateAsync(string StateId);
     }
 }

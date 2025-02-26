@@ -12,7 +12,7 @@ using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 
 namespace Infrastructure.Persistence.Repositories.SecurityTips
 {
-    public class EscalatedTipsRepositoryAsync : GenericRepositoryAsync<SecurityTip>, ISecurityTipRepositoryAsync
+    public class EscalatedTipsRepositoryAsync : GenericRepositoryAsync<EscalatedTip>, IEscalatedTipsRepositoryAsync
     {
         private readonly DbSet<EscalatedTip> _escalatedTips;
 

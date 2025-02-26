@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
 using AutoMapper;
+using Domain.Common.Enums;
 using Domain.Entities.LocationEntities;
 using MediatR;
 using System;
@@ -14,7 +15,7 @@ namespace Application.Features.Location
     public partial class CreateDistrictCommand : IRequest<Response<Town>>
     {
         public string Name { get; set; }
-        public int LGAId { get; set; }
+        public string LGAId { get; set; }
     }
     public class CreateDistrictCommandHandler : IRequestHandler<CreateDistrictCommand, Response<Town>>
     {
@@ -44,7 +45,7 @@ namespace Application.Features.Location
             town.Created = DateTime.UtcNow.AddHours(1);
             await _townRepositoryAsync.AddAsync(town, _userAccessor.GetUserId());
 
-            return new Response<Town>(town, message: $"District successfully created.", successStatus: true);
+            return new Response<Town>(town, responsestatus: APIResponseStatus.success.ToString(), message: $"District successfully created.");
         }
     }
 }

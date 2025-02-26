@@ -10,7 +10,7 @@ namespace Application.Features.Products.Commands.DeleteProductById
 {
     public class DeleteProductByIdCommand : IRequest<Response<Product>>
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public class DeleteProductByIdCommandHandler : IRequestHandler<DeleteProductByIdCommand, Response<Product>>
         {
             private readonly IProductRepositoryAsync _productRepository;

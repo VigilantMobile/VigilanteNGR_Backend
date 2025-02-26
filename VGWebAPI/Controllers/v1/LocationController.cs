@@ -1,4 +1,6 @@
 ﻿using Application.Features.Location;
+using Application.Features.Location.LiveLocation.Queries;
+using Application.Features.Location.State;
 using Application.Features.Products.Commands.DeleteProductById;
 using Application.Features.Products.Commands.UpdateProduct;
 using Microsoft.AspNetCore.Authorization;
@@ -10,20 +12,20 @@ using System.Threading.Tasks;
 namespace VGWebAPI.Controllers.v1
 {
     [ApiVersion("1.0")]
-    [Authorize(Roles = "SuperAdmin, Admin")]
+    [Authorize(Roles = "SuperAdmin, Admin, Customer")]
 
     public class LocationController : BaseApiController
     {
 
         #region Districts 
-        [HttpGet("get-all-districts")]
+        [HttpGet("districts")]
         public async Task<IActionResult> GetAllDistrictsAsync([FromQuery] GetAllDistrictsParameter filter)
         {
             return Ok(await Mediator.Send(new GetAllDistrictsQuery() { PageSize = filter.PageSize, PageNumber = filter.PageNumber }));
         }
 
         [HttpGet("district/{id}")]
-        public async Task<IActionResult> GetDistrictAsync(int id)
+        public async Task<IActionResult> GetDistrictAsync(string id)
         {
             return Ok(await Mediator.Send(new GetDistrictByIdQuery { Id = id }));
         }
@@ -37,7 +39,7 @@ namespace VGWebAPI.Controllers.v1
 
         [HttpPut("{id}")] 
         [Authorize]
-        public async Task<IActionResult> UpdateDistrict(int id, UpdateDistrictCommand command)
+        public async Task<IActionResult> UpdateDistrict(string id, UpdateDistrictCommand command)
         {
             if (id != command.Id)
             {
@@ -50,13 +52,13 @@ namespace VGWebAPI.Controllers.v1
 
         #region LGA
         [HttpGet("lga/{id}")]
-        public async Task<IActionResult> GetLGAAsync(int id)
+        public async Task<IActionResult> GetLGAAsync(string id)
         {
-            return Ok(await Mediator.Send(new GetLGAByIdQuery { Id = id }));
+            return Ok(await Mediator.Send(new GetLGAByIdQuery { LGAId = id }));
         }
 
         [HttpGet("lga/{id}/districts")]
-        public async Task<IActionResult> GetDistrictsinLGAAsync(int id, [FromQuery] GetDistrictsinLGAParameter filter)
+        public async Task<IActionResult> GetDistrictsinLGAAsync(string id, [FromQuery] GetDistrictsinLGAParameter filter)
         {
             return Ok(await Mediator.Send(new GetDistrictsinLGAQuery { LGAId = id }));
         }
@@ -64,16 +66,33 @@ namespace VGWebAPI.Controllers.v1
 
         #region State
         [HttpGet("state/{id}")]
-        public async Task<IActionResult> GetStateAsync(int id)
+        public async Task<IActionResult> GetStateAsync(string id)
         {
             return Ok(await Mediator.Send(new GetStateByIdQuery { Id = id }));
         }
 
         [HttpGet("state/{id}/lgas")]
-        public async Task<IActionResult> GetLGAsInStateAsync(int id, [FromQuery] GetLGAsinStateParameter filter)
+        public async Task<IActionResult> GetLGAsInStateAsync(string id, [FromQuery] GetLGAsinStateParameter filter)
         {
             return Ok(await Mediator.Send(new GetLGAsinStateQuery { StateId = id }));
         }
+
+        [HttpGet("states")]
+        public async Task<IActionResult> GetStates([FromQuery] GetAllDistrictsParameter filter)
+        {
+            return Ok(await Mediator.Send(new GetAllStatesQuery() { PageSize = filter.PageSize, PageNumber = filter.PageNumber }));
+        }
+
+        //Live Location
+        [AllowAnonymous]
+        [HttpGet("getliveLocation/{coordinates}")]
+        public async Task<IActionResult> GetLocationFromCoordinates(string coordinates)
+        {
+            return Ok(await Mediator.Send(new GetLiveLocationFromCoordinatesQuery { Coordinates = coordinates }));
+
+        }
+
+
         #endregion State
 
     }

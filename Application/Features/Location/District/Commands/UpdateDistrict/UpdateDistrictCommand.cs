@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using Domain.Entities.LocationEntities;
 using MediatR;
 using System;
@@ -12,9 +13,9 @@ namespace Application.Features.Location
 {
     public class UpdateDistrictCommand : IRequest<Response<Town>>
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
-        public int LGAId { get; set; }
+        public string LGAId { get; set; }
 
         public class UpdateDistrictCommandHandler : IRequestHandler<UpdateDistrictCommand, Response<Town>>
         {
@@ -43,12 +44,12 @@ namespace Application.Features.Location
                     else
                     {
                         town.Name = command.Name;
-                        town.LGAId = command.LGAId;
+                        town.LGAId = Guid.Parse(command.LGAId);
                         town.LastModifiedBy = ModifiedBy;
                         town.LastModified = DateTime.UtcNow.AddHours(1);
                         await _townRepositoryAsync.UpdateAsync(town);
 
-                        return new Response<Town>(town, $"District successfully updated", successStatus: true);
+                        return new Response<Town>(town, responsestatus: APIResponseStatus.success.ToString(), $"District successfully updated");
                     }
                }
                 catch (Exception ex)

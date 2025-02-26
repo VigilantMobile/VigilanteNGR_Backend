@@ -3,6 +3,7 @@ using Domain.Entities.AppTroopers.Panic;
 using Infrastructure.Persistence.Contexts;
 using Infrastructure.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,9 +20,9 @@ namespace Infrastructure.Persistence.Repositories.Panic
             _trustedPerson = dbContext.Set<TrustedPerson>();
         }
 
-        public async Task<TrustedPerson> IsOwnedByOwner(int Id, string ContactOwnerId)
+        public async Task<TrustedPerson> IsOwnedByOwner(string Id, string ContactOwnerId)
         {
-            return await _trustedPerson.Where(x => x.Id == Id && x.OwnerId == ContactOwnerId).FirstOrDefaultAsync();
+            return await _trustedPerson.Where(x => x.Id == Guid.Parse(Id) && x.InviterId == ContactOwnerId).FirstOrDefaultAsync();
         }
     }
 }

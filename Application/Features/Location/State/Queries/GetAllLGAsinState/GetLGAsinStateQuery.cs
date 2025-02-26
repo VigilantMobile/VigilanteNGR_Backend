@@ -2,6 +2,7 @@
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Repositories.Location;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using Domain.Entities;
 using Domain.Entities.AppTroopers.Panic;
 using Domain.Entities.AppTroopers.SecurityTips;
@@ -18,7 +19,7 @@ namespace Application.Features.Location
 {
     public class GetLGAsinStateQuery : IRequest<Response<GetAllLGAsinStateViewModel>>
     {
-        public int StateId { get; set; }
+        public string StateId { get; set; }
         public class GetLGAsinStateQueryHandler : IRequestHandler<GetLGAsinStateQuery, Response<GetAllLGAsinStateViewModel>>
         {
             private readonly IStateRepositoryAsync stateRepositoryAsync;
@@ -37,14 +38,14 @@ namespace Application.Features.Location
                     var lgasInState = await stateRepositoryAsync.GetLGAsinStateAsync(query.StateId);
                     if (lgasInState == null)
                     {
-                        return new Response<GetAllLGAsinStateViewModel>(new GetAllLGAsinStateViewModel { }, message: $"No lgas found in the specified State.", successStatus: false);
+                        return new Response<GetAllLGAsinStateViewModel>(new GetAllLGAsinStateViewModel { }, responsestatus: APIResponseStatus.fail.ToString(), message: $"No lgas found in the specified State.");
                     }
 
                     foreach (var lga in lgasInState)
                     {
                         LGAViewModel lgaViewModel = new LGAViewModel
                         {
-                            Id = lga.Id,
+                            Id = lga.Id.ToString(),
                             LGAName = lga.Name,
                             Created = lga.Created,
                         };
@@ -54,12 +55,12 @@ namespace Application.Features.Location
                     GetAllLGAsinStateViewModel getAllDistrictsViewModel = new GetAllLGAsinStateViewModel
                     {
                         State = state.Name,
-                        StateId = state.Id,
+                        StateId = state.Id.ToString(),
                         LGAs = lgas,
                         Count = lgas.Count
                     };
 
-                    return new Response<GetAllLGAsinStateViewModel>(getAllDistrictsViewModel, message: $"Successfully retrieved LGAs for the specified state.", successStatus: true);
+                    return new Response<GetAllLGAsinStateViewModel>(getAllDistrictsViewModel, responsestatus: APIResponseStatus.success.ToString(), message: $"Successfully retrieved LGAs for the specified state.");
                 }
                 catch (Exception ex)
                 {

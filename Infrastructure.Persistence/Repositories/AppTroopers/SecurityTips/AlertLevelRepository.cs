@@ -12,7 +12,7 @@ using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 
 namespace Infrastructure.Persistence.Repositories.SecurityTips
 {
-    public class AlertLevelRepositoryAsync : GenericRepositoryAsync<AlertLevel>, IAlertLevelRespositoryAsync
+    public class AlertLevelRepositoryAsync : GenericRepositoryAsync<AlertLevel>, IAlertLevelRepositoryAsync
     {
         private readonly DbSet<AlertLevel> _alertLevel;
 
