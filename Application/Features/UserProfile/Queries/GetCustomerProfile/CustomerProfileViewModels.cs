@@ -54,12 +54,38 @@ namespace Application.Features.UserProfile
         public string InviterId { get; set; }
     }
 
+    public class DeactivateFriendshipViewModel
+    {
+        [Required]
+        public string CustomerId { get; set; }
+
+        [Required]
+        public string FriendId { get; set; }
+    }
+
+    public class ReactivateFriendshipViewModel
+    {
+        [Required]
+        public string CustomerId { get; set; }
+
+        [Required]
+        public string FriendId { get; set; }
+    }
+
     public class UpdateCustomerProfilePicViewModel
     {
         public string CustomerId { get; set; }
 
         [Required]
         public string customerProfilePicUrl { get; set; }
+    }
+
+    public class UpdateCustomerProfileViewModel
+    {
+        [Required]
+        public string CustomerId { get; set; }
+        public string FullName { get; set; }
+        public string Coordinates { get; set; }
     }
 
     public class CustomerTrustedContactViewModel

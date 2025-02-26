@@ -2,33 +2,29 @@
 using Application.Services.Interfaces.UserProfile;
 using Application.Wrappers;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Application.Features.UserProfile
 {
-    public class AcceptTrustedContactInvitationCommand : IRequest<DataListResponse<bool>>
+    public class RejectTrustedContactInvitationCommand : IRequest<DataListResponse<bool>>
     {
         public string CustomerId { get; set; }
         public string InviterId { get; set; }
     }
 
-    public class AcceptTrustedContactInvitationCommandHandler : IRequestHandler<AcceptTrustedContactInvitationCommand, DataListResponse<bool>>
+    public class RejectTrustedContactInvitationCommandHandler : IRequestHandler<RejectTrustedContactInvitationCommand, DataListResponse<bool>>
     {
         private readonly ICustomerService _customerService;
         private readonly IUserAccessor _userAccessor;
 
-        public AcceptTrustedContactInvitationCommandHandler(ICustomerService customerService, IUserAccessor userAccessor)
+        public RejectTrustedContactInvitationCommandHandler(ICustomerService customerService, IUserAccessor userAccessor)
         {
             _customerService = customerService;
             _userAccessor = userAccessor;
         }
 
-        public async Task<DataListResponse<bool>> Handle(AcceptTrustedContactInvitationCommand request, CancellationToken cancellationToken)
+        public async Task<DataListResponse<bool>> Handle(RejectTrustedContactInvitationCommand request, CancellationToken cancellationToken)
         {
             if (request.CustomerId == request.InviterId)
             {
@@ -40,15 +36,14 @@ namespace Application.Features.UserProfile
 
             }
 
-            var viewModel = new AcceptCustomerTrustedContactInvitationViewModel
+            var viewModel = new RejectCustomerTrustedContactInvitationViewModel
             {
                 CustomerId = request.CustomerId,
                 InviterId = request.InviterId
             };
 
-           
-            var acceptInviteStatus = await _customerService.AcceptCircleInvitation(viewModel);
-            return new DataListResponse<bool>(acceptInviteStatus, $"Trusted contact(s) successfully created.", successStatus: true);
+            var rejectInviteStatus = await _customerService.RejectCircleInvitation(viewModel);
+            return new DataListResponse<bool>(rejectInviteStatus, "Trusted contact invitation successfully rejected.", successStatus: true);
         }
     }
 }
