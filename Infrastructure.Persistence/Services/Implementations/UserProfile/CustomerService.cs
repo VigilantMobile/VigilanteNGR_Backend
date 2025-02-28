@@ -82,58 +82,13 @@ namespace Infrastructure.Persistence.Services
 
                 //Get Location(s)
 
-                customerProfile = await (from customer in _context.Users
-                                         join town in _context.Towns on customer.TownId equals town.Id
-                                         join lga in _context.LGAs on town.LGAId equals lga.Id
-                                         join state in _context.States on lga.StateId equals state.Id
-                                         join country in _context.Countries on state.CountryId equals country.Id
-                                         join subscriptionPlan in _context.Subscriptions on customer.SubscriptionId equals subscriptionPlan.Id
-
-                                         where customer.Id == CustomerId
-                                         select new CustomerProfileViewModel()
-                                         {
-                                             CustomerId = customer.Id,
-                                             CustomerName = customer.FirstName,
-                                             CustomerPhone = customer.PhoneNumber,
-                                             CustomerLocation = new CustomerLocationViewModel
-                                             {
-                                                 Address = customer.AddressLine1,
-                                                 City = new CustomerCityViewModel
-                                                 {
-                                                     CityId = town.Id.ToString(),
-                                                     CityName = town.Name,
-                                                     GoogleMapsPlaceId = town.GoogleMapsPlaceId
-                                                 },
-                                                 District = new CustomerDistrictViewModel
-                                                 {
-
-                                                     DistrictId = lga.Id.ToString(),
-                                                     DistrictName = lga.Name,
-                                                     GoogleMapsPlaceId = lga.GoogleMapsPlaceId
-                                                 },
-                                                 State = new CustomerStateViewModel
-                                                 {
-                                                     StateId = state.Id.ToString(),
-                                                     StateName = state.Name,
-                                                     GoogleMapsPlaceId = state.GoogleMapsPlaceId
-                                                 },
-                                                 Country = new CustomerCountryViewModel
-                                                 {
-                                                     CountryId = country.Id.ToString(),
-                                                     CountryName = country.Name,
-                                                     GoogleMapsPlaceId = country.GoogleMapsPlaceId
-                                                 },
-                                             },
-                                             SubscriptionPlan = new CustomerSubscriptionPlan
-                                             {
-                                                 SubscriptionPlanId = subscriptionPlan.Id.ToString(),
-                                                 SubscriptionPlanName = subscriptionPlan.SubscriptionName
-                                             }
-                                         }).FirstOrDefaultAsync();
-
-                //Get Customer Trusted Contacts:
-                var trustedContacts = await GetCustomerTrustedContactsAsync(CustomerId);
-                customerProfile.CustomerTrustedContacts = trustedContacts;
+                customerProfile = await _trustedPersonRepositoryAsync.GetCustomerProfileAsync(CustomerId);
+                if (customerProfile != null)
+                {
+                    //Get Customer Trusted Contacts:
+                    var trustedContacts = await GetCustomerTrustedContactsAsync(CustomerId);
+                    customerProfile.CustomerTrustedContacts = trustedContacts;
+                }
 
                 return customerProfile;
             }
@@ -198,20 +153,8 @@ namespace Infrastructure.Persistence.Services
         {
             try
             {
-                var trustedContacts = await (from contact in _context.TrustedPeople
-                                             join customer in _context.Users on contact.InviterId equals customer.Id
-                                             where customer.Id == CustomerId
-                                             join contactProfile in _context.Users on contact.PhoneNumber equals contactProfile.PhoneNumber
-                                             select new CustomerTrustedContactViewModel()
-                                             {
-                                                 EmailAddress = contact.EmailAddress,
-                                                 FullName = contact.FullName,
-                                                 PhoneNumber = contact.PhoneNumber,
-                                                 InvitationStatus = contact.Status.ToString(),
-                                                 ProfilePicUrl = contact.Status != TrustedContactStatus.Accepted ? null : contactProfile.CustomerProfileUrl
-                                             }).ToListAsync();
 
-                return trustedContacts;
+                return await _trustedPersonRepositoryAsync.GetCustomerTrustedContactsAsync(CustomerId);
             }
             catch (Exception ex)
             {
@@ -422,7 +365,7 @@ namespace Infrastructure.Persistence.Services
             }
         }
 
-        public async Task<bool> UpdateCustomerProfileAsync(UpdateCustomerProfileViewModel model)
+        public async Task<bool>  UpdateCustomerProfileAsync(UpdateCustomerProfileViewModel model)
         {
             try
             {

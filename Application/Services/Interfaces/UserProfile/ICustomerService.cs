@@ -20,9 +20,6 @@ namespace Application.Services.Interfaces.UserProfile
         Task<bool> AcceptCircleInvitation(AcceptCustomerTrustedContactInvitationViewModel model);
         Task<bool> DeactivateFriendship(DeactivateFriendshipViewModel model);
         Task<bool> ReactivateFriendship(ReactivateFriendshipViewModel model);
-
-
-
-
+        Task<bool> UpdateCustomerProfileAsync(UpdateCustomerProfileViewModel model);
     }
 }

@@ -10,6 +10,7 @@ using Application.Features.Products.Commands.UpdateProduct;
 using Application.Features.Products.Queries.GetAllProducts;
 using Application.Features.Products.Queries.GetProductById;
 using Application.Features.UserProfile;
+using Application.Features.UserProfile.Commands.UpdateUserProfile;
 using Application.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -54,6 +55,14 @@ namespace VGWebAPI.Controllers.v1
 
         [HttpPost("TrustedContacts/acceptinvite")]
         public async Task<IActionResult> AcceptTrustedContactInvitationAsync([FromBody] AcceptTrustedContactInvitationCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return Ok(response);
+        }
+
+        // New endpoint for updating customer profile
+        [HttpPost("update-profile")]
+        public async Task<IActionResult> UpdateCustomerProfileAsync([FromBody] UpdateCustomerProfileCommand command)
         {
             var response = await Mediator.Send(command);
             return Ok(response);
