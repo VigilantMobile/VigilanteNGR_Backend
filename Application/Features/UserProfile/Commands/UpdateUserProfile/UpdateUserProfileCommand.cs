@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Services.Interfaces.UserProfile;
 using Application.Wrappers;
+using Domain.Common.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace Application.Features.UserProfile.Commands.UpdateUserProfile
             };
 
             bool result = await _customerService.UpdateCustomerProfileAsync(updateViewModel);
-            return new Response<bool>(result, "Customer profile successfully updated.");
+            return new Response<bool>(result, responsestatus: APIResponseStatus.success.ToString(), "Customer profile successfully updated.");
         }
     }
 }

@@ -24,7 +24,12 @@ namespace Application.Features.UserProfile
 
         public async Task<DataListResponse<bool>> Handle(ReactivateFriendshipCommand request, CancellationToken cancellationToken)
         {
-            var result = await _customerService.ReactivateFriendship(request.CustomerId, request.FriendId);
+            var model = new ReactivateFriendshipViewModel
+            {
+                CustomerId = request.CustomerId,
+                FriendId = request.FriendId
+            };
+            var result = await _customerService.ReactivateFriendship(model);
             return new DataListResponse<bool>(result, "Friendship reactivation request initiated successfully.", successStatus: true);
         }
     }

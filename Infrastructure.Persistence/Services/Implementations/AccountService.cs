@@ -142,7 +142,7 @@ namespace Infrastructure.Persistence.Services
 
                 JwtSecurityToken jwtSecurityToken = await GenerateJWToken(user);
                 AuthenticationResponse response = new AuthenticationResponse();
-                response.Id = user.Id;
+                response.customerId = user.Id;
                 response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
                 response.JWTokenExpiration = jwtSecurityToken.ValidTo;
                 response.Email = user.Email;
@@ -464,7 +464,7 @@ namespace Infrastructure.Persistence.Services
 
                 JwtSecurityToken jwtSecurityToken = await GenerateJWToken(user);
                 AuthenticationResponse response = new AuthenticationResponse();
-                response.Id = user.Id;
+                response.customerId = user.Id;
                 response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
                 response.Email = user.Email;
                 response.UserName = user.UserName;
