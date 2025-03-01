@@ -40,6 +40,10 @@ namespace Application.Features.UserProfile.Commands.UpdateUserProfile
             };
 
             bool result = await _customerService.UpdateCustomerProfileAsync(updateViewModel);
+            if (!result)
+            {
+                return new Response<bool>(result, responsestatus: APIResponseStatus.success.ToString(), "An error occurred while updating the customer profile.");
+            }
             return new Response<bool>(result, responsestatus: APIResponseStatus.success.ToString(), "Customer profile successfully updated.");
         }
     }
