@@ -53,8 +53,9 @@ namespace Infrastructure.Persistence.Services
         ITrustedPersonRepositoryAsync _trustedPersonRepositoryAsync;
         private readonly IUtilities _utilities;
         private readonly IEmailService _emailService;
+        private readonly ILocationService _locationService;
         public CustomerService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ITrustedPersonRepositoryAsync trustedPersonRepositoryAsync,
-        ILogger logger, IEmailService emailService, IUtilities utilities, IGeoCodingService geoCodingService)
+        ILogger logger, IEmailService emailService, IUtilities utilities, IGeoCodingService geoCodingService, ILocationService locationService)
         {
             _context = context;
             _logger = logger;
@@ -63,6 +64,7 @@ namespace Infrastructure.Persistence.Services
             _utilities = utilities;
             _emailService = emailService;
             _geoCodingService = geoCodingService;
+            _locationService = locationService;
         }
 
         public async Task<CustomerProfileViewModel> GetCustomerProfileAsync(string CustomerId)
