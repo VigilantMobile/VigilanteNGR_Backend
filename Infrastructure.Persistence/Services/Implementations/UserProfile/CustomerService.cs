@@ -377,21 +377,40 @@ namespace Infrastructure.Persistence.Services
                     throw new ApiException($"Customer with ID {model.CustomerId} not found.");
                 }
 
-                // Split full name into first and last names
-                var nameParts = model.FullName.Split(' ');
-                customer.FirstName = nameParts[0];
-                customer.LastName = nameParts.Length > 1 ? string.Join(' ', nameParts.Skip(1)) : string.Empty;
-
-                // Get detailed location information from coordinates
-                var customerDetailedLocation = await _geoCodingService.GetCustomerLiveAddresses(model.Coordinates);
-                if (customerDetailedLocation == null)
+                if (!string.IsNullOrEmpty(model.FullName))
                 {
-                    throw new ApiException("Invalid coordinates provided.");
+                    var nameParts = model.FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                    if (nameParts.Length > 0)
+                    {
+                        customer.FirstName = nameParts[0];
+                        customer.LastName = nameParts.Length > 1 ? nameParts[nameParts.Length - 1] : string.Empty;
+                        customer.MiddleName = nameParts.Length > 2
+                            ? string.Join(" ", nameParts.Skip(1).Take(nameParts.Length - 2))
+                            : string.Empty;
+                    }
+                    else
+                    {
+                        // Handle the case where the full name is empty or whitespace
+                        customer.FirstName = string.Empty;
+                        customer.LastName = string.Empty;
+                        customer.MiddleName = string.Empty;
+                    }
                 }
 
-                // Update customer address based on the location information
-                customer.AddressLine1 = customerDetailedLocation.Data.FormattedAddress;
-                customer.TownId = await _geoCodingService.GetOrCreateTownIdAsync(customerDetailedLocation.Data.TownOrDistrict, customerDetailedLocation.Data.CountryOrDistrictOrLGA, customerDetailedLocation.Data.StateOrProvinceOrRegion, customerDetailedLocation.Data.Country);
+                // Get detailed location information from coordinates
+                if (!string.IsNullOrEmpty(model.Coordinates))
+                {
+                    var customerDetailedLocation = await _geoCodingService.GetCustomerLiveAddresses(model.Coordinates);
+                    if (customerDetailedLocation == null)
+                    {
+                        throw new ApiException("Invalid coordinates provided.");
+                    }
+
+                    // Update customer address based on the location information
+                    customer.AddressLine1 = customerDetailedLocation.Data.FormattedAddress;
+                    customer.TownId = await _geoCodingService.GetOrCreateTownIdAsync(customerDetailedLocation.Data.TownOrDistrict, customerDetailedLocation.Data.CountryOrDistrictOrLGA, customerDetailedLocation.Data.StateOrProvinceOrRegion, customerDetailedLocation.Data.Country);
+                }
 
                 var result = await _userManager.UpdateAsync(customer);
                 if (!result.Succeeded)

@@ -58,7 +58,7 @@ namespace Infrastructure.Persistence.Repositories.Panic
                                          select new CustomerProfileViewModel()
                                          {
                                              CustomerId = customer.Id,
-                                             CustomerName = customer.FirstName,
+                                             CustomerName = $"{customer.FirstName} {(customer.MiddleName == null ? "" : customer.MiddleName + " ")}{customer.LastName}",
                                              CustomerPhone = customer.PhoneNumber,
                                              CustomerLocation = new CustomerLocationViewModel
                                              {

@@ -14,12 +14,6 @@ namespace Application.Features.UserProfile
         {
             RuleFor(x => x.CustomerId)
                 .NotEmpty().WithMessage("CustomerId is required.");
-
-            RuleFor(x => x.FullName)
-                .NotEmpty().WithMessage("FullName is required.");
-
-            RuleFor(x => x.Coordinates)
-                .NotEmpty().WithMessage("Coordinates are required.");
         }
     }
 }
