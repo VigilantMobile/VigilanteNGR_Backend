@@ -35,7 +35,6 @@ namespace Application.DTOs.Account
         [Required]
         public string locationCoordinates { get; set; }
 
-        [Required]
         public string Address { get; set; }
 
         //public string SettlementId { get; set; }
