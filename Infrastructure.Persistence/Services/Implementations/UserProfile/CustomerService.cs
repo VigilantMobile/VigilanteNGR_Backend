@@ -88,8 +88,8 @@ namespace Infrastructure.Persistence.Services
                 if (customerProfile != null)
                 {
                     //Get Customer Trusted Contacts:
-                    var trustedContacts = await GetCustomerTrustedContactsAsync(CustomerId);
-                    customerProfile.CustomerTrustedContacts = trustedContacts;
+                    var trustedContacts = await GetCircleMembersAsync(CustomerId);
+                    customerProfile.CustomerCircle = trustedContacts;
                 }
 
                 return customerProfile;
@@ -226,6 +226,60 @@ namespace Infrastructure.Persistence.Services
                 return null;
             }
         }
+
+        public async Task<TrustedContactsResponseViewModel> GetCircleMembersAsync(string customerId)
+        {
+            try
+            {
+                // Retrieve all trusted contacts where the customer is involved.
+                var contacts = await _context.TrustedPeople
+                    .Where(x => x.InviterId == customerId || x.InviterteeId == customerId)
+                    .ToListAsync();
+
+                // Map accepted contacts to members.
+                var members = contacts
+                    .Where(x => x.Status == TrustedContactStatus.Accepted)
+                    .Select(x => new TrustedContactMemberViewModel
+                    {
+                        ContactId = x.Id.ToString(),
+                        CustomerId = customerId,
+                        // Determine the "friend" as the other party.
+                        FriendId = x.InviterId == customerId ? x.InviterteeId : x.InviterId,
+                        Status = x.Status.ToString(),
+                        // Assuming a single flag controls profile visibility for both parties.
+                        CustomerVisible = x.isProfileVisible,
+                        FriendVisible = x.isProfileVisible
+                    })
+                    .ToList();
+
+                // Map pending invitations.
+                var invitations = contacts
+                    .Where(x => x.Status == TrustedContactStatus.Pending)
+                    .Select(x => new TrustedContactInvitationViewModel
+                    {
+                        ContactId = x.Id.ToString(),
+                        CustomerId = customerId,
+                        // Determine the friend based on who is the inviter.
+                        FriendId = x.InviterId == customerId ? x.InviterteeId : x.InviterId,
+                        Status = x.Status.ToString(),
+                        // If the current customer initiated the invitation, mark as sent.
+                        SentByCustomer = (x.InviterId == customerId)
+                    })
+                    .ToList();
+
+                return new TrustedContactsResponseViewModel
+                {
+                    Members = members,
+                    Invitations = invitations
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while retrieving circle members: {ex.Message}", ex);
+                throw;
+            }
+        }
+
 
         // For multiple inviter IDs.
         //public async Task<bool> AcceptCircleInvitation(AcceptCustomerTrustedContactInvitationViewModel model)

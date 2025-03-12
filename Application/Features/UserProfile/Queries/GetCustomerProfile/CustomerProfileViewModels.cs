@@ -15,12 +15,14 @@ namespace Application.Features.UserProfile
         public string CustomerProfilePhoto { get; set; }
 
         [Required, MinLength(1)]
-        public List<CustomerTrustedContactViewModel> CustomerTrustedContacts { get; set; }
+        //public List<CustomerTrustedContactViewModel> CustomerCircle { get; set; }
+
+        public TrustedContactsResponseViewModel CustomerCircle { get; set; }
         public CustomerLocationViewModel CustomerLocation { get; set; }
         public CustomerSubscriptionPlan SubscriptionPlan { get; set; }
     }
 
-    public class TrustedContactsResponseViewModel
+     public class TrustedContactsResponseViewModel
     {
         public List<TrustedContactMemberViewModel> Members { get; set; }
         public List<TrustedContactInvitationViewModel> Invitations { get; set; }
