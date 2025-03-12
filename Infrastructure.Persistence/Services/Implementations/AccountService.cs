@@ -11,6 +11,7 @@ using Domain.Entities.Identity;
 using Domain.Settings;
 using Infrastructure.Persistence.Contexts;
 using Infrastructure.Persistence.Helpers;
+using Infrastructure.Persistence.Services.Implementations.Location;
 using Infrastructure.Shared.Services;
 using Infrastructure.Shared.Services.Notification.SMSHelperClasses;
 using Microsoft.AspNetCore.Http;
@@ -44,6 +45,8 @@ namespace Infrastructure.Persistence.Services
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailService _emailService;
         private readonly ILocationService _locationService;
+        private readonly IGeoCodingService _geoCodingService;
+
         private readonly ISMSService _smsService;
         private readonly JWTSettings _jwtSettings;
         private readonly VGNGAEmailSenders _emailSenderAddresses;
@@ -68,6 +71,7 @@ namespace Infrastructure.Persistence.Services
             ApplicationDbContext context,
             IHttpContextAccessor accessor,
             IMemoryCache memoryCache,
+            IGeoCodingService geoCodingService,
         //IMailgunEmailService mailgunEmailService,
         ILogger logger,
         IOptions<AppConfig> appConfig)
@@ -88,6 +92,7 @@ namespace Infrastructure.Persistence.Services
             _memoryCache = memoryCache;
             _appConfig = appConfig.Value;
             _locationService = locationService;
+            _geoCodingService = geoCodingService;
         }
 
         public ClaimsPrincipal User => _accessor.HttpContext.User;
@@ -191,6 +196,19 @@ namespace Infrastructure.Persistence.Services
                     //throw new ApiException($"User already exists.");
                 }
 
+                string addressLine1 = request.Address;
+
+                // If coordinates are provided, use the geocoding service to get a more accurate address.
+                if (!string.IsNullOrWhiteSpace(request.locationCoordinates))
+                {
+                    var geoResult = await _geoCodingService.GetCustomerLiveAddresses(request.locationCoordinates);
+                    if (geoResult == null)
+                    {
+                        throw new ApiException("Invalid coordinates provided.");
+                    }
+                    addressLine1 = geoResult.Data.FormattedAddress;
+                }
+
                 //Get cityId 
                 var customerLocation = await _locationService.SaveCustomerLocationInfo(request.locationCoordinates);
                 if (customerLocation != null)
@@ -229,14 +247,13 @@ namespace Infrastructure.Persistence.Services
                         LastName = lastName,
                         UserName = request.PhoneNumber,
                         PhoneNumber = request.PhoneNumber,
-                        AddressLine1 = request.Address,
+                        AddressLine1 = addressLine1,
                         TownId = Guid.Parse(cityId),
                         EmailConfirmed = false,      // set email and phone confirmed automatically after configuring twilio sendgrid for Otps
                         PhoneNumberConfirmed = false,
                         isActive = true,
                          
                         SubscriptionId = Guid.Parse("5F767D57-A64C-4B6F-96A9-CE81EF8A9F66")
-
                     };
 
                     var userWithSameEmail = await _userManager.FindByEmailAsync(request.Email);
