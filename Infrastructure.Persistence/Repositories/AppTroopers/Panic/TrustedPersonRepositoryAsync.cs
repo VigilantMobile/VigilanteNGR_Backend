@@ -12,18 +12,18 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories.Panic
 {
-    public class TrustedPersonRepositoryAsync : GenericRepositoryAsync<TrustedPerson>, ITrustedPersonRepositoryAsync
+    public class TrustedPersonRepositoryAsync : GenericRepositoryAsync<UserCircle>, ITrustedPersonRepositoryAsync
     {
-        private readonly DbSet<TrustedPerson> _trustedPerson;
+        private readonly DbSet<UserCircle> _trustedPerson;
         private readonly ApplicationDbContext _context;
 
         public TrustedPersonRepositoryAsync(ApplicationDbContext dbContext) : base(dbContext)
         {
             _context = dbContext;
-            _trustedPerson = dbContext.Set<TrustedPerson>();
+            _trustedPerson = dbContext.Set<UserCircle>();
         }
 
-        public async Task<TrustedPerson> IsOwnedByOwner(string Id, string ContactOwnerId)
+        public async Task<UserCircle> IsOwnedByOwner(string Id, string ContactOwnerId)
         {
             return await _trustedPerson.Where(x => x.Id == Guid.Parse(Id) && x.InviterId == ContactOwnerId).FirstOrDefaultAsync();
         }

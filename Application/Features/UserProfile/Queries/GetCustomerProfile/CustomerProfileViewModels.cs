@@ -20,6 +20,35 @@ namespace Application.Features.UserProfile
         public CustomerSubscriptionPlan SubscriptionPlan { get; set; }
     }
 
+    public class TrustedContactsResponseViewModel
+    {
+        public List<TrustedContactMemberViewModel> Members { get; set; }
+        public List<TrustedContactInvitationViewModel> Invitations { get; set; }
+    }
+
+    public class TrustedContactMemberViewModel
+    {
+        public string ContactId { get; set; }
+        public string CustomerId { get; set; }
+        public string FriendId { get; set; }
+        public string Status { get; set; }
+        public bool CustomerVisible { get; set; }
+        public bool FriendVisible { get; set; }
+    }
+
+    public class TrustedContactInvitationViewModel
+    {
+        public string ContactId { get; set; }
+        public string CustomerId { get; set; }
+        public string FriendId { get; set; }
+        public string Status { get; set; }
+        /// <summary>
+        /// Indicates if the invitation was sent by the customer.
+        /// If true, the invitation is outgoing; if false, it's an incoming invitation.
+        /// </summary>
+        public bool SentByCustomer { get; set; }
+    }
+
     public class CreateCustomerTrustedContactViewModel
     {
         public string CustomerId { get; set; }

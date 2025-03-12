@@ -337,9 +337,9 @@ namespace Infrastructure.Persistence.Services
                             var invitee = await _context.TrustedPeople.Where(x => x.PhoneNumber == request.PhoneNumber).FirstOrDefaultAsync();
                             if (invitee != null)
                             {
-                                invitee.TrustedUserId = user.Id;
+                                invitee.InviterteeId = user.Id;
                                 _context.Update(invitee);
-                                _context.SaveChanges();
+                                await _context.SaveChangesAsync();
                             }
 
                             RegisterResponse response = new RegisterResponse { Message = "Account Created Successfully." };
@@ -363,8 +363,6 @@ namespace Infrastructure.Persistence.Services
 
                         //throw new ApiException($"Email {request.Email } is already registered.");
                     }
-
-
                 }
                 else
                 {

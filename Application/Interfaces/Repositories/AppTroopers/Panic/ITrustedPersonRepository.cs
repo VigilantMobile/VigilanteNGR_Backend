@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces.Repositories.AppTroopers.Panic
 {
-    public interface ITrustedPersonRepositoryAsync : IGenericRepositoryAsync<TrustedPerson>
+    public interface ITrustedPersonRepositoryAsync : IGenericRepositoryAsync<UserCircle>
     {
-        Task<TrustedPerson> IsOwnedByOwner(string Id, string ContactOwnerId);
+        Task<UserCircle> IsOwnedByOwner(string Id, string ContactOwnerId);
         Task<List<CustomerTrustedContactViewModel>> GetCustomerTrustedContactsAsync(string customerId);
         Task<CustomerProfileViewModel> GetCustomerProfileAsync(string customerId);
 

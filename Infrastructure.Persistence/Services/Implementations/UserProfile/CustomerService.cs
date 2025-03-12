@@ -101,6 +101,56 @@ namespace Infrastructure.Persistence.Services
             }
         }
 
+        //public async Task<List<CustomerTrustedContactViewModel>> CreateCustomerTrustedContactsAsync(CreateCustomerTrustedContactViewModel createCustomerTrustedContactsRequest)
+        //{
+        //    try
+        //    {
+        //        var inviter = await _userManager.FindByIdAsync(createCustomerTrustedContactsRequest.CustomerId);
+
+        //        foreach (var contact in createCustomerTrustedContactsRequest.customerTrustedContacts)
+        //        {
+        //            UserCircle trustedPerson = new UserCircle
+        //            {
+        //                Id = Guid.NewGuid(),
+        //                InviterId = createCustomerTrustedContactsRequest.CustomerId,
+        //                EmailAddress = contact.EmailAddress,
+        //                FullName = contact.FullName,
+        //                FullAddress = contact.FullAddress,
+        //                PhoneNumber = contact.PhoneNumber,
+        //                Status = TrustedContactStatus.Pending,
+        //                Created = DateTime.UtcNow.AddHours(1),
+        //                CreatedBy = "Admin",
+        //                Inviter = inviter
+        //            };
+        //            await _context.TrustedPeople.AddAsync(trustedPerson);
+
+        //            //send invitation email
+        //            var vglntAboutUrl = new Uri("http://vigilantng-001-site1.itempurl.com");
+        //            await _emailService.SendAsync(new Application.DTOs.Email.EmailRequest()
+        //            {
+        //                From = "info@vigilanteng.com",
+        //                To = contact.EmailAddress,
+        //                Username = contact.FullName,
+        //                BodyParagraph1 = $"Welcome to the Vigilant NG community. User {inviter.FirstName} {inviter.LastName} invited you to their circle. To learn more about Vigilant, visit the link below.",
+        //                ButtonLabel = "Learn more!",
+        //                ButtonUrl = $"{vglntAboutUrl.ToString}",
+        //                BodyParagraph2 = $"Need further assistance? Email us at info@vigilant.com",
+        //                Subject = $"{inviter.FirstName} invited you to join the Vigilant community. "
+        //            });
+        //        }
+
+        //        await _context.SaveChangesAsync();
+
+        //        return createCustomerTrustedContactsRequest.customerTrustedContacts;
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError($"An error occurred while creating customer tusted contacts: {ex.Message}, {ex}");
+        //        throw ex;
+        //    }
+        //}
+
         public async Task<List<CustomerTrustedContactViewModel>> CreateCustomerTrustedContactsAsync(CreateCustomerTrustedContactViewModel createCustomerTrustedContactsRequest)
         {
             try
@@ -109,7 +159,10 @@ namespace Infrastructure.Persistence.Services
 
                 foreach (var contact in createCustomerTrustedContactsRequest.customerTrustedContacts)
                 {
-                    TrustedPerson trustedPerson = new TrustedPerson
+                    // Check if the invitee already exists based on their phone number.
+                    var existingUser = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == contact.PhoneNumber);
+
+                    UserCircle trustedPerson = new UserCircle
                     {
                         Id = Guid.NewGuid(),
                         InviterId = createCustomerTrustedContactsRequest.CustomerId,
@@ -120,34 +173,43 @@ namespace Infrastructure.Persistence.Services
                         Status = TrustedContactStatus.Pending,
                         Created = DateTime.UtcNow.AddHours(1),
                         CreatedBy = "Admin",
-                        Owner = inviter
+                        Inviter = inviter,
+                        // If the invitee is already registered, update TrustedUserId
+                        InviterteeId = existingUser != null ? existingUser.Id : null
                     };
+
                     await _context.TrustedPeople.AddAsync(trustedPerson);
 
-                    //send invitation email
-                    var vglntAboutUrl = new Uri("http://vigilantng-001-site1.itempurl.com");
-                    await _emailService.SendAsync(new Application.DTOs.Email.EmailRequest()
+                    // Only send invitation email if the invitee is not registered.
+                    if (existingUser == null)
                     {
-                        From = "info@vigilanteng.com",
-                        To = contact.EmailAddress,
-                        Username = contact.FullName,
-                        BodyParagraph1 = $"Welcome to the Vigilant NG community. User {inviter.FirstName} {inviter.LastName} invited you to their circle. To learn more about Vigilant, visit the link below.",
-                        ButtonLabel = "Learn more!",
-                        ButtonUrl = $"{vglntAboutUrl.ToString}",
-                        BodyParagraph2 = $"Need further assistance? Email us at info@vigilant.com",
-                        Subject = $"{inviter.FirstName} invited you to join the Vigilant community. "
-                    });
+                        var vglntAboutUrl = new Uri("http://vigilantng-001-site1.itempurl.com");
+                        await _emailService.SendAsync(new Application.DTOs.Email.EmailRequest()
+                        {
+                            From = "info@vigilanteng.com",
+                            To = contact.EmailAddress,
+                            Username = contact.FullName,
+                            BodyParagraph1 = $"Welcome to the Vigilant NG community. User {inviter.FirstName} {inviter.LastName} invited you to their circle. To learn more about Vigilant, visit the link below.",
+                            ButtonLabel = "Learn more!",
+                            ButtonUrl = $"{vglntAboutUrl.ToString}",
+                            BodyParagraph2 = $"Need further assistance? Email us at info@vigilant.com",
+                            Subject = $"{inviter.FirstName} invited you to join the Vigilant community. "
+                        });
+                    }
+                    else
+                    {
+                        _logger.LogInformation($"No invitation email sent. User with phone number {contact.PhoneNumber} is already registered.");
+                    }
                 }
 
                 await _context.SaveChangesAsync();
 
                 return createCustomerTrustedContactsRequest.customerTrustedContacts;
-
             }
             catch (Exception ex)
             {
-                _logger.LogError($"An error occurred while creating customer tusted contacts: {ex.Message}, {ex}");
-                throw ex;
+                _logger.LogError($"An error occurred while creating customer trusted contacts: {ex.Message}, {ex}");
+                throw;
             }
         }
 
@@ -215,7 +277,7 @@ namespace Infrastructure.Persistence.Services
             {
                 // Retrieve the pending invitation for this customer from the specific inviter.
                 var invitation = await _context.TrustedPeople
-                    .FirstOrDefaultAsync(x => x.TrustedUserId == model.CustomerId &&
+                    .FirstOrDefaultAsync(x => x.InviterteeId == model.CustomerId &&
                                               x.InviterId == model.InviterId &&
                                               x.Status == TrustedContactStatus.Pending);
 
@@ -251,7 +313,7 @@ namespace Infrastructure.Persistence.Services
             {
                 // Retrieve the pending invitation for this customer from the specific inviter.
                 var invitation = await _context.TrustedPeople
-                    .FirstOrDefaultAsync(x => x.TrustedUserId == model.CustomerId &&
+                    .FirstOrDefaultAsync(x => x.InviterteeId == model.CustomerId &&
                                               x.InviterId == model.InviterId &&
                                               x.Status == TrustedContactStatus.Pending);
 
@@ -290,8 +352,8 @@ namespace Infrastructure.Persistence.Services
                 var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
                     x.Status == TrustedContactStatus.Accepted &&
                     x.IsActive &&
-                    ((x.InviterId == model.CustomerId && x.TrustedUserId == model.FriendId) ||
-                     (x.InviterId == model.FriendId && x.TrustedUserId == model.CustomerId))
+                    ((x.InviterId == model.CustomerId && x.InviterteeId == model.FriendId) ||
+                     (x.InviterId == model.FriendId && x.InviterteeId == model.CustomerId))
                 );
 
                 if (connection == null)
@@ -318,8 +380,8 @@ namespace Infrastructure.Persistence.Services
                 var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
                     x.Status == TrustedContactStatus.Accepted &&
                     !x.IsActive &&
-                    ((x.InviterId == model.CustomerId && x.TrustedUserId == model.FriendId) ||
-                     (x.InviterId == model.CustomerId && x.TrustedUserId == model.FriendId))
+                    ((x.InviterId == model.CustomerId && x.InviterteeId == model.FriendId) ||
+                     (x.InviterId == model.CustomerId && x.InviterteeId == model.FriendId))
                 );
 
                 if (connection == null)
@@ -375,8 +437,8 @@ namespace Infrastructure.Persistence.Services
                 // Retrieve the friendship record where the connection is currently accepted.
                 var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
                     x.Status == TrustedContactStatus.Accepted &&
-                    ((x.InviterId == model.CustomerId && x.TrustedUserId == model.FriendId) ||
-                     (x.InviterId == model.FriendId && x.TrustedUserId == model.CustomerId))
+                    ((x.InviterId == model.CustomerId && x.InviterteeId == model.FriendId) ||
+                     (x.InviterId == model.FriendId && x.InviterteeId == model.CustomerId))
                 );
                 if (connection == null)
                 {

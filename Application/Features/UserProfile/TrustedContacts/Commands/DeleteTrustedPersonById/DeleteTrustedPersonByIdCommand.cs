@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace Application.Features.UserProfile
 {
-    public class DeleteTrustedPersonByIdCommand : IRequest<Response<TrustedPerson>>
+    public class DeleteTrustedPersonByIdCommand : IRequest<Response<UserCircle>>
     {
         [Required]
         public string TrustedPersonId { get; set; }
-        public class DeleteTrustedPersonByIdCommandHandler : IRequestHandler<DeleteTrustedPersonByIdCommand, Response<TrustedPerson>>
+        public class DeleteTrustedPersonByIdCommandHandler : IRequestHandler<DeleteTrustedPersonByIdCommand, Response<UserCircle>>
         {
             private readonly ITrustedPersonRepositoryAsync _trustedPersonRepository;
             private readonly IUserAccessor _userAccessor;
@@ -25,7 +25,7 @@ namespace Application.Features.UserProfile
                 _trustedPersonRepository = trustedPersonRepository;
                 _userAccessor = userAccessor;
             }
-            public async Task<Response<TrustedPerson>> Handle(DeleteTrustedPersonByIdCommand command, CancellationToken cancellationToken)
+            public async Task<Response<UserCircle>> Handle(DeleteTrustedPersonByIdCommand command, CancellationToken cancellationToken)
             {
                 string OwnerId = _userAccessor.GetUserId();
 
@@ -40,7 +40,7 @@ namespace Application.Features.UserProfile
                     await _trustedPersonRepository.DeleteAsync(trustedPerson);
 
                     //return new Response<Product>(product.Id);
-                    return new Response<TrustedPerson>(null, responsestatus: APIResponseStatus.success.ToString(), $"Trusted contact was successfully deleted.");
+                    return new Response<UserCircle>(null, responsestatus: APIResponseStatus.success.ToString(), $"Trusted contact was successfully deleted.");
                 }
             }
         }
