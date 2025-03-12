@@ -367,6 +367,33 @@ namespace Infrastructure.Persistence.Services
             }
         }
 
+        //Circle Visibility 
+        public async Task<bool> ToggleCustomerProfileVisibility(ToggleCustomerProfileVisibilityViewModel model)
+        {
+            try
+            {
+                // Retrieve the friendship record where the connection is currently accepted.
+                var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
+                    x.Status == TrustedContactStatus.Accepted &&
+                    ((x.InviterId == model.CustomerId && x.TrustedUserId == model.FriendId) ||
+                     (x.InviterId == model.FriendId && x.TrustedUserId == model.CustomerId))
+                );
+                if (connection == null)
+                {
+                    throw new ApiException("Active friendship not found.");
+                }
+                // Update the record to indicate that the profile visibility has been toggled.
+                connection.isProfileVisible = model.IsProfileVisible;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error updating profile visibility: {ex.Message}", ex);
+                return false;
+            }
+        }
+
         public async Task<bool>  UpdateCustomerProfileAsync(UpdateCustomerProfileViewModel model)
         {
             try

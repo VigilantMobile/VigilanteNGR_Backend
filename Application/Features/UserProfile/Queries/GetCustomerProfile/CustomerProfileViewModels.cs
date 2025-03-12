@@ -72,6 +72,17 @@ namespace Application.Features.UserProfile
         public string FriendId { get; set; }
     }
 
+    public class ToggleCustomerProfileVisibilityViewModel
+    {
+        [Required]
+        public string CustomerId { get; set; }
+
+        [Required]
+        public string FriendId { get; set; }
+
+        public bool IsProfileVisible { get; set; }
+    }
+
     public class UpdateCustomerProfilePicViewModel
     {
         public string CustomerId { get; set; }

@@ -52,7 +52,6 @@ namespace VGWebAPI.Controllers.v1
             return Ok(await Mediator.Send(new DeleteTrustedPersonByIdCommand { TrustedPersonId = id}));
         }
 
-
         [HttpPost("TrustedContacts/acceptinvite")]
         public async Task<IActionResult> AcceptTrustedContactInvitationAsync([FromBody] AcceptTrustedContactInvitationCommand command)
         {
@@ -60,16 +59,38 @@ namespace VGWebAPI.Controllers.v1
             return Ok(response);
         }
 
-        // New endpoint for updating customer profile
-        [HttpPost("update-profile")]
-        public async Task<IActionResult> UpdateCustomerProfileAsync([FromBody] UpdateCustomerProfileCommand command)
+        [HttpPost("TrustedContacts/rejectinvite")]
+        public async Task<IActionResult> RejectTrustedContactInvitationAsync([FromBody] RejectTrustedContactInvitationCommand command)
         {
             var response = await Mediator.Send(command);
             return Ok(response);
         }
 
-        [HttpPost("TrustedContacts/rejectinvite")]
-        public async Task<IActionResult> RejectTrustedContactInvitationAsync([FromBody] RejectTrustedContactInvitationCommand command)
+        [HttpPost("TrustedContacts/deactivate")]
+        public async Task<IActionResult> DeactivateFriendshipAsync([FromBody] DeactivateFriendshipCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpPost("TrustedContacts/reactivate")]
+        public async Task<IActionResult> ReactivateFriendshipAsync([FromBody] ReactivateFriendshipCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpPost("toggle-profile-visibility")]
+        public async Task<IActionResult> ToggleMemberVisibilityAsync([FromBody] ToggleMemberVisibilityCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return Ok(response);
+        }
+
+
+        // New endpoint for updating customer profile
+        [HttpPost("update-profile")]
+        public async Task<IActionResult> UpdateCustomerProfileAsync([FromBody] UpdateCustomerProfileCommand command)
         {
             var response = await Mediator.Send(command);
             return Ok(response);

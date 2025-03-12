@@ -21,5 +21,6 @@ namespace Application.Services.Interfaces.UserProfile
         Task<bool> DeactivateFriendship(DeactivateFriendshipViewModel model);
         Task<bool> ReactivateFriendship(ReactivateFriendshipViewModel model);
         Task<bool> UpdateCustomerProfileAsync(UpdateCustomerProfileViewModel model);
+        Task<bool> ToggleCustomerProfileVisibility(ToggleCustomerProfileVisibilityViewModel model);
     }
 }
