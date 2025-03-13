@@ -10,17 +10,18 @@ namespace Domain.Entities.AppTroopers.Panic
     public class UserCircle : AuditableBaseEntity
     {
 
-        [ForeignKey("Contact")]
+        [ForeignKey("Inviter")]
         public string InviterId { get; set; }
         public virtual ApplicationUser Inviter { get; set; }
 
         // The user who is invited as a trusted contact.
         // If the invited user isn’t registered yet, you could allow this to be null and store the email separately.
-        public string InviterteeId { get; set; }
-        [ForeignKey(nameof(InviterteeId))]
+        public string InviteeId { get; set; }
+        [ForeignKey(nameof(InviteeId))]
         public virtual ApplicationUser Invitee { get; set; }
         public string FullName { get; set; }
         public string FullAddress { get; set; }
+        public string Relationship { get; set; }
         public string EmailAddress { get; set; }
         [Required]
         public string PhoneNumber { get; set; }

@@ -175,7 +175,7 @@ namespace Infrastructure.Persistence.Services
                         CreatedBy = "Admin",
                         Inviter = inviter,
                         // If the invitee is already registered, update TrustedUserId
-                        InviterteeId = existingUser != null ? existingUser.Id : null
+                        InviteeId = existingUser != null ? existingUser.Id : null
                     };
 
                     await _context.TrustedPeople.AddAsync(trustedPerson);
@@ -233,7 +233,7 @@ namespace Infrastructure.Persistence.Services
             {
                 // Retrieve all trusted contacts where the customer is involved.
                 var circle = await _context.TrustedPeople
-                    .Where(x => x.InviterId == customerId || x.InviterteeId == customerId)
+                    .Where(x => x.InviterId == customerId || x.InviteeId == customerId)
                     .ToListAsync();
 
                 // Map accepted contacts to members.
@@ -243,7 +243,7 @@ namespace Infrastructure.Persistence.Services
                 {
                     membershipId = x.Id.ToString(),
                     userId = customerId,
-                    memberId = x.InviterId == customerId ? x.InviterteeId : x.InviterId,
+                    memberId = x.InviterId == customerId ? x.InviteeId : x.InviterId,
                     status = x.Status.ToString(),
                     userVisible = x.isProfileVisible,
                     memberVisible = x.isProfileVisible
@@ -270,7 +270,7 @@ namespace Infrastructure.Persistence.Services
                 {
                     invitationId = x.Id.ToString(),
                     userId = customerId,
-                    inviteeId = x.InviterId == customerId ? x.InviterteeId : x.InviterId,
+                    inviteeId = x.InviterId == customerId ? x.InviteeId : x.InviterId,
                     status = x.Status.ToString(),
                     sentByUser = (x.InviterId == customerId)
                 })
@@ -340,7 +340,7 @@ namespace Infrastructure.Persistence.Services
             {
                 // Retrieve the pending invitation for this customer from the specific inviter.
                 var invitation = await _context.TrustedPeople
-                    .FirstOrDefaultAsync(x => x.InviterteeId == model.userId &&
+                    .FirstOrDefaultAsync(x => x.InviteeId == model.userId &&
                                               x.InviterId == model.inviterId &&
                                               x.Status == TrustedContactStatus.Pending);
 
@@ -376,7 +376,7 @@ namespace Infrastructure.Persistence.Services
             {
                 // Retrieve the pending invitation for this customer from the specific inviter.
                 var invitation = await _context.TrustedPeople
-                    .FirstOrDefaultAsync(x => x.InviterteeId == model.userId &&
+                    .FirstOrDefaultAsync(x => x.InviteeId == model.userId &&
                                               x.InviterId == model.inviterId &&
                                               x.Status == TrustedContactStatus.Pending);
 
@@ -415,8 +415,8 @@ namespace Infrastructure.Persistence.Services
                 var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
                     x.Status == TrustedContactStatus.Accepted &&
                     x.IsActive &&
-                    ((x.InviterId == model.userId && x.InviterteeId == model.memberId) ||
-                     (x.InviterId == model.memberId && x.InviterteeId == model.userId))
+                    ((x.InviterId == model.userId && x.InviteeId == model.memberId) ||
+                     (x.InviterId == model.memberId && x.InviteeId == model.userId))
                 );
 
                 if (connection == null)
@@ -443,8 +443,8 @@ namespace Infrastructure.Persistence.Services
                 var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
                     x.Status == TrustedContactStatus.Accepted &&
                     !x.IsActive &&
-                    ((x.InviterId == model.userId && x.InviterteeId == model.memberId) ||
-                     (x.InviterId == model.userId && x.InviterteeId == model.memberId))
+                    ((x.InviterId == model.userId && x.InviteeId == model.memberId) ||
+                     (x.InviterId == model.userId && x.InviteeId == model.memberId))
                 );
 
                 if (connection == null)
@@ -500,8 +500,8 @@ namespace Infrastructure.Persistence.Services
                 // Retrieve the friendship record where the connection is currently accepted.
                 var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
                     x.Status == TrustedContactStatus.Accepted &&
-                    ((x.InviterId == model.userId && x.InviterteeId == model.memberId) ||
-                     (x.InviterId == model.memberId && x.InviterteeId == model.userId))
+                    ((x.InviterId == model.userId && x.InviteeId == model.memberId) ||
+                     (x.InviterId == model.memberId && x.InviteeId == model.userId))
                 );
                 if (connection == null)
                 {

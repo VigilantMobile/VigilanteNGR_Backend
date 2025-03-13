@@ -337,7 +337,7 @@ namespace Infrastructure.Persistence.Services
                             var invitee = await _context.TrustedPeople.Where(x => x.PhoneNumber == request.PhoneNumber).FirstOrDefaultAsync();
                             if (invitee != null)
                             {
-                                invitee.InviterteeId = user.Id;
+                                invitee.InviteeId = user.Id;
                                 _context.Update(invitee);
                                 await _context.SaveChangesAsync();
                             }
