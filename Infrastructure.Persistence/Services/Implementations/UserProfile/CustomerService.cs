@@ -89,7 +89,7 @@ namespace Infrastructure.Persistence.Services
                 {
                     //Get Customer Trusted Contacts:
                     var trustedContacts = await GetCircleMembersAsync(CustomerId);
-                    customerProfile.CustomerCircle = trustedContacts;
+                    customerProfile.userCircle = trustedContacts;
                 }
 
                 return customerProfile;
@@ -151,25 +151,25 @@ namespace Infrastructure.Persistence.Services
         //    }
         //}
 
-        public async Task<List<CustomerTrustedContactViewModel>> CreateCustomerTrustedContactsAsync(CreateCustomerTrustedContactViewModel createCustomerTrustedContactsRequest)
+        public async Task<List<CircleMemberViewModel>> CreateCustomerTrustedContactsAsync(CreateCircleMemberViewModel createCustomerTrustedContactsRequest)
         {
             try
             {
-                var inviter = await _userManager.FindByIdAsync(createCustomerTrustedContactsRequest.CustomerId);
+                var inviter = await _userManager.FindByIdAsync(createCustomerTrustedContactsRequest.userId);
 
-                foreach (var contact in createCustomerTrustedContactsRequest.customerTrustedContacts)
+                foreach (var contact in createCustomerTrustedContactsRequest.circleMembers)
                 {
                     // Check if the invitee already exists based on their phone number.
-                    var existingUser = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == contact.PhoneNumber);
+                    var existingUser = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == contact.phoneNumber);
 
                     UserCircle trustedPerson = new UserCircle
                     {
                         Id = Guid.NewGuid(),
-                        InviterId = createCustomerTrustedContactsRequest.CustomerId,
-                        EmailAddress = contact.EmailAddress,
-                        FullName = contact.FullName,
-                        FullAddress = contact.FullAddress,
-                        PhoneNumber = contact.PhoneNumber,
+                        InviterId = createCustomerTrustedContactsRequest.userId,
+                        EmailAddress = contact.emailAddress,
+                        FullName = contact.fullName,
+                        FullAddress = contact.fullAddress,
+                        PhoneNumber = contact.phoneNumber,
                         Status = TrustedContactStatus.Pending,
                         Created = DateTime.UtcNow.AddHours(1),
                         CreatedBy = "Admin",
@@ -187,8 +187,8 @@ namespace Infrastructure.Persistence.Services
                         await _emailService.SendAsync(new Application.DTOs.Email.EmailRequest()
                         {
                             From = "info@vigilanteng.com",
-                            To = contact.EmailAddress,
-                            Username = contact.FullName,
+                            To = contact.emailAddress,
+                            Username = contact.fullName,
                             BodyParagraph1 = $"Welcome to the Vigilant NG community. User {inviter.FirstName} {inviter.LastName} invited you to their circle. To learn more about Vigilant, visit the link below.",
                             ButtonLabel = "Learn more!",
                             ButtonUrl = $"{vglntAboutUrl.ToString}",
@@ -198,13 +198,13 @@ namespace Infrastructure.Persistence.Services
                     }
                     else
                     {
-                        _logger.LogInformation($"No invitation email sent. User with phone number {contact.PhoneNumber} is already registered.");
+                        _logger.LogInformation($"No invitation email sent. User with phone number {contact.phoneNumber} is already registered.");
                     }
                 }
 
                 await _context.SaveChangesAsync();
 
-                return createCustomerTrustedContactsRequest.customerTrustedContacts;
+                return createCustomerTrustedContactsRequest.circleMembers;
             }
             catch (Exception ex)
             {
@@ -213,7 +213,7 @@ namespace Infrastructure.Persistence.Services
             }
         }
 
-        public async Task<List<CustomerTrustedContactViewModel>> GetCustomerTrustedContactsAsync(string CustomerId)
+        public async Task<List<CircleMemberViewModel>> GetCustomerTrustedContactsAsync(string CustomerId)
         {
             try
             {
@@ -232,45 +232,54 @@ namespace Infrastructure.Persistence.Services
             try
             {
                 // Retrieve all trusted contacts where the customer is involved.
-                var contacts = await _context.TrustedPeople
+                var circle = await _context.TrustedPeople
                     .Where(x => x.InviterId == customerId || x.InviterteeId == customerId)
                     .ToListAsync();
 
                 // Map accepted contacts to members.
-                var members = contacts
-                    .Where(x => x.Status == TrustedContactStatus.Accepted)
-                    .Select(x => new TrustedContactMemberViewModel
-                    {
-                        ContactId = x.Id.ToString(),
-                        CustomerId = customerId,
-                        // Determine the "friend" as the other party.
-                        FriendId = x.InviterId == customerId ? x.InviterteeId : x.InviterId,
-                        Status = x.Status.ToString(),
-                        // Assuming a single flag controls profile visibility for both parties.
-                        CustomerVisible = x.isProfileVisible,
-                        FriendVisible = x.isProfileVisible
-                    })
-                    .ToList();
+                var members = circle
+                .Where(x => x.Status == TrustedContactStatus.Accepted)
+                .Select(x => new CircleMembersViewModel
+                {
+                    membershipId = x.Id.ToString(),
+                    userId = customerId,
+                    memberId = x.InviterId == customerId ? x.InviterteeId : x.InviterId,
+                    status = x.Status.ToString(),
+                    userVisible = x.isProfileVisible,
+                    memberVisible = x.isProfileVisible
+                })
+                .ToList();
 
-                // Map pending invitations.
-                var invitations = contacts
-                    .Where(x => x.Status == TrustedContactStatus.Pending)
-                    .Select(x => new TrustedContactInvitationViewModel
-                    {
-                        ContactId = x.Id.ToString(),
-                        CustomerId = customerId,
-                        // Determine the friend based on who is the inviter.
-                        FriendId = x.InviterId == customerId ? x.InviterteeId : x.InviterId,
-                        Status = x.Status.ToString(),
-                        // If the current customer initiated the invitation, mark as sent.
-                        SentByCustomer = (x.InviterId == customerId)
-                    })
-                    .ToList();
+                //// Map pending invitations.
+                //var invitations = circle
+                //    .Where(x => x.Status == TrustedContactStatus.Pending)
+                //    .Select(x => new CircleMemberInvitationViewModel
+                //    {
+                //        invitationId = x.Id.ToString(),
+                //        userId = customerId,
+                //        // Determine the friend based on who is the inviter.
+                //        FriendId = x.InviterId == customerId ? x.InviterteeId : x.InviterId,
+                //        Status = x.Status.ToString(),
+                //        // If the current customer initiated the invitation, mark as sent.
+                //        SentByUser = (x.InviterId == customerId)
+                //    })
+                //    .ToList();
+                var invitations = circle
+                .Where(x => x.Status == TrustedContactStatus.Pending)
+                .Select(x => new CircleMemberInvitationViewModel
+                {
+                    invitationId = x.Id.ToString(),
+                    userId = customerId,
+                    inviteeId = x.InviterId == customerId ? x.InviterteeId : x.InviterId,
+                    status = x.Status.ToString(),
+                    sentByUser = (x.InviterId == customerId)
+                })
+                .ToList();
 
                 return new TrustedContactsResponseViewModel
                 {
-                    Members = members,
-                    Invitations = invitations
+                    members = members,
+                    invitations = invitations
                 };
             }
             catch (Exception ex)
@@ -325,14 +334,14 @@ namespace Infrastructure.Persistence.Services
         //    }
         //}
 
-        public async Task<bool> AcceptCircleInvitation(AcceptCustomerTrustedContactInvitationViewModel model)
+        public async Task<bool> AcceptCircleInvitation(AcceptCircleMemberInvitationViewModel model)
         {
             try
             {
                 // Retrieve the pending invitation for this customer from the specific inviter.
                 var invitation = await _context.TrustedPeople
-                    .FirstOrDefaultAsync(x => x.InviterteeId == model.CustomerId &&
-                                              x.InviterId == model.InviterId &&
+                    .FirstOrDefaultAsync(x => x.InviterteeId == model.userId &&
+                                              x.InviterId == model.inviterId &&
                                               x.Status == TrustedContactStatus.Pending);
 
                 if (invitation == null)
@@ -341,10 +350,10 @@ namespace Infrastructure.Persistence.Services
                 }
 
                 // Optionally verify that the inviter exists.
-                var inviter = await _userManager.FindByIdAsync(model.InviterId);
+                var inviter = await _userManager.FindByIdAsync(model.inviterId);
                 if (inviter == null)
                 {
-                    throw new ApiException($"Inviter with ID {model.InviterId} not found.");
+                    throw new ApiException($"Inviter with ID {model.inviterId} not found.");
                 }
 
                 // Update the invitation status to Accepted.
@@ -361,14 +370,14 @@ namespace Infrastructure.Persistence.Services
             }
         }
 
-        public async Task<bool> RejectCircleInvitation(RejectCustomerTrustedContactInvitationViewModel model)
+        public async Task<bool> RejectCircleInvitation(RejectCircleInvitationViewModel model)
         {
             try
             {
                 // Retrieve the pending invitation for this customer from the specific inviter.
                 var invitation = await _context.TrustedPeople
-                    .FirstOrDefaultAsync(x => x.InviterteeId == model.CustomerId &&
-                                              x.InviterId == model.InviterId &&
+                    .FirstOrDefaultAsync(x => x.InviterteeId == model.userId &&
+                                              x.InviterId == model.inviterId &&
                                               x.Status == TrustedContactStatus.Pending);
 
                 if (invitation == null)
@@ -377,10 +386,10 @@ namespace Infrastructure.Persistence.Services
                 }
 
                 // Optionally verify that the inviter exists.
-                var inviter = await _userManager.FindByIdAsync(model.InviterId);
+                var inviter = await _userManager.FindByIdAsync(model.inviterId);
                 if (inviter == null)
                 {
-                    throw new ApiException($"Inviter with ID {model.InviterId} not found.");
+                    throw new ApiException($"Inviter with ID {model.inviterId} not found.");
                 }
 
                 // Update the invitation status to Rejected.
@@ -398,7 +407,7 @@ namespace Infrastructure.Persistence.Services
         }
 
         // Circle Activation Deactivation
-        public async Task<bool> DeactivateFriendship(DeactivateFriendshipViewModel model)
+        public async Task<bool> DeactivateFriendship(DeactivateCircleMembershipViewModel model)
         {
             try
             {
@@ -406,8 +415,8 @@ namespace Infrastructure.Persistence.Services
                 var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
                     x.Status == TrustedContactStatus.Accepted &&
                     x.IsActive &&
-                    ((x.InviterId == model.CustomerId && x.InviterteeId == model.FriendId) ||
-                     (x.InviterId == model.FriendId && x.InviterteeId == model.CustomerId))
+                    ((x.InviterId == model.userId && x.InviterteeId == model.memberId) ||
+                     (x.InviterId == model.memberId && x.InviterteeId == model.userId))
                 );
 
                 if (connection == null)
@@ -426,7 +435,7 @@ namespace Infrastructure.Persistence.Services
                 return false;
             }
         }
-        public async Task<bool> ReactivateFriendship(ReactivateFriendshipViewModel model)
+        public async Task<bool> ReactivateFriendship(ReactivateCircleMembershipViewModel model)
         {
             try
             {
@@ -434,8 +443,8 @@ namespace Infrastructure.Persistence.Services
                 var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
                     x.Status == TrustedContactStatus.Accepted &&
                     !x.IsActive &&
-                    ((x.InviterId == model.CustomerId && x.InviterteeId == model.FriendId) ||
-                     (x.InviterId == model.CustomerId && x.InviterteeId == model.FriendId))
+                    ((x.InviterId == model.userId && x.InviterteeId == model.memberId) ||
+                     (x.InviterId == model.userId && x.InviterteeId == model.memberId))
                 );
 
                 if (connection == null)
@@ -484,22 +493,22 @@ namespace Infrastructure.Persistence.Services
         }
 
         //Circle Visibility 
-        public async Task<bool> ToggleCustomerProfileVisibility(ToggleCustomerProfileVisibilityViewModel model)
+        public async Task<bool> ToggleCustomerProfileVisibility(ToggleCircleMembershipVisibilityViewModel model)
         {
             try
             {
                 // Retrieve the friendship record where the connection is currently accepted.
                 var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
                     x.Status == TrustedContactStatus.Accepted &&
-                    ((x.InviterId == model.CustomerId && x.InviterteeId == model.FriendId) ||
-                     (x.InviterId == model.FriendId && x.InviterteeId == model.CustomerId))
+                    ((x.InviterId == model.userId && x.InviterteeId == model.memberId) ||
+                     (x.InviterId == model.memberId && x.InviterteeId == model.userId))
                 );
                 if (connection == null)
                 {
                     throw new ApiException("Active friendship not found.");
                 }
                 // Update the record to indicate that the profile visibility has been toggled.
-                connection.isProfileVisible = model.IsProfileVisible;
+                connection.isProfileVisible = model.isProfileVisible;
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -510,19 +519,19 @@ namespace Infrastructure.Persistence.Services
             }
         }
 
-        public async Task<bool>  UpdateCustomerProfileAsync(UpdateCustomerProfileViewModel model)
+        public async Task<bool>  UpdateCustomerProfileAsync(UpdateUserProfileViewModel model)
         {
             try
             {
-                var customer = await _userManager.FindByIdAsync(model.CustomerId);
+                var customer = await _userManager.FindByIdAsync(model.userId);
                 if (customer == null)
                 {
-                    throw new ApiException($"Customer with ID {model.CustomerId} not found.");
+                    throw new ApiException($"Customer with ID {model.userId} not found.");
                 }
 
-                if (!string.IsNullOrEmpty(model.FullName))
+                if (!string.IsNullOrEmpty(model.fullName))
                 {
-                    var nameParts = model.FullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    var nameParts = model.fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
                     if (nameParts.Length > 0)
                     {
@@ -542,9 +551,9 @@ namespace Infrastructure.Persistence.Services
                 }
 
                 // Get detailed location information from coordinates
-                if (!string.IsNullOrEmpty(model.Coordinates))
+                if (!string.IsNullOrEmpty(model.coordinates))
                 {
-                    var customerDetailedLocation = await _geoCodingService.GetCustomerLiveAddresses(model.Coordinates);
+                    var customerDetailedLocation = await _geoCodingService.GetCustomerLiveAddresses(model.coordinates);
                     if (customerDetailedLocation == null)
                     {
                         throw new ApiException("Invalid coordinates provided.");

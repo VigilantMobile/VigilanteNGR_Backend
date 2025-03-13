@@ -23,24 +23,24 @@ namespace Infrastructure.Persistence.Repositories.Panic
             _trustedPerson = dbContext.Set<UserCircle>();
         }
 
-        public async Task<UserCircle> IsOwnedByOwner(string Id, string ContactOwnerId)
+        public async Task<UserCircle> IsOwnedByOwner(string id, string contactOwnerId)
         {
-            return await _trustedPerson.Where(x => x.Id == Guid.Parse(Id) && x.InviterId == ContactOwnerId).FirstOrDefaultAsync();
+            return await _trustedPerson.Where(x => x.Id == Guid.Parse(id) && x.InviterId == contactOwnerId).FirstOrDefaultAsync();
         }
 
-        public async Task<List<CustomerTrustedContactViewModel>> GetCustomerTrustedContactsAsync(string customerId)
+        public async Task<List<CircleMemberViewModel>> GetCustomerTrustedContactsAsync(string customerId)
         {
             var trustedContacts = await (from contact in _context.TrustedPeople
                                          join customer in _context.Users on contact.InviterId equals customer.Id
                                          where customer.Id == customerId
                                          join contactProfile in _context.Users on contact.PhoneNumber equals contactProfile.PhoneNumber
-                                         select new CustomerTrustedContactViewModel()
+                                         select new CircleMemberViewModel()
                                          {
-                                             EmailAddress = contact.EmailAddress,
-                                             FullName = contact.FullName,
-                                             PhoneNumber = contact.PhoneNumber,
-                                             InvitationStatus = contact.Status.ToString(),
-                                             ProfilePicUrl = contact.Status != TrustedContactStatus.Accepted ? null : contactProfile.CustomerProfileUrl
+                                             emailAddress = contact.EmailAddress,
+                                             fullName = contact.FullName,
+                                             phoneNumber = contact.PhoneNumber,
+                                             invitationStatus = contact.Status.ToString(),
+                                             profilePicUrl = contact.Status != TrustedContactStatus.Accepted ? null : contactProfile.CustomerProfileUrl
                                          }).ToListAsync();
 
             return trustedContacts;
@@ -57,41 +57,41 @@ namespace Infrastructure.Persistence.Repositories.Panic
                                          where customer.Id == customerId
                                          select new CustomerProfileViewModel()
                                          {
-                                             CustomerId = customer.Id,
-                                             CustomerName = $"{customer.FirstName} {(customer.MiddleName == null ? "" : customer.MiddleName + " ")}{customer.LastName}",
-                                             CustomerPhone = customer.PhoneNumber,
-                                             CustomerLocation = new CustomerLocationViewModel
+                                             userId = customer.Id,
+                                             fullName = $"{customer.FirstName} {(customer.MiddleName == null ? "" : customer.MiddleName + " ")}{customer.LastName}",
+                                             phoneNumber = customer.PhoneNumber,
+                                             userLocation = new UserLocationViewModel
                                              {
-                                                 Address = customer.AddressLine1,
-                                                 City = new CustomerCityViewModel
+                                                 address = customer.AddressLine1,
+                                                 city = new CustomerCityViewModel
                                                  {
-                                                     CityId = town.Id.ToString(),
-                                                     CityName = town.Name,
-                                                     GoogleMapsPlaceId = town.GoogleMapsPlaceId
+                                                     cityId = town.Id.ToString(),
+                                                     cityName = town.Name,
+                                                     googleMapsPlaceId = town.GoogleMapsPlaceId
                                                  },
-                                                 District = new CustomerDistrictViewModel
+                                                 district = new CustomerDistrictViewModel
                                                  {
-                                                     DistrictId = lga.Id.ToString(),
-                                                     DistrictName = lga.Name,
-                                                     GoogleMapsPlaceId = lga.GoogleMapsPlaceId
+                                                     districtId = lga.Id.ToString(),
+                                                     districtName = lga.Name,
+                                                     googleMapsPlaceId = lga.GoogleMapsPlaceId
                                                  },
-                                                 State = new CustomerStateViewModel
+                                                 state = new CustomerStateViewModel
                                                  {
-                                                     StateId = state.Id.ToString(),
-                                                     StateName = state.Name,
-                                                     GoogleMapsPlaceId = state.GoogleMapsPlaceId
+                                                     stateId = state.Id.ToString(),
+                                                     stateName = state.Name,
+                                                     googleMapsPlaceId = state.GoogleMapsPlaceId
                                                  },
-                                                 Country = new CustomerCountryViewModel
+                                                 country = new CustomerCountryViewModel
                                                  {
-                                                     CountryId = country.Id.ToString(),
-                                                     CountryName = country.Name,
-                                                     GoogleMapsPlaceId = country.GoogleMapsPlaceId
+                                                     countryId = country.Id.ToString(),
+                                                     countryName = country.Name,
+                                                     googleMapsPlaceId = country.GoogleMapsPlaceId
                                                  },
                                              },
-                                             SubscriptionPlan = new CustomerSubscriptionPlan
+                                             subscriptionPlan = new UserSubscriptionPlan
                                              {
-                                                 SubscriptionPlanId = subscriptionPlan.Id.ToString(),
-                                                 SubscriptionPlanName = subscriptionPlan.SubscriptionName
+                                                 subscriptionPlanId = subscriptionPlan.Id.ToString(),
+                                                 subscriptionPlanName = subscriptionPlan.SubscriptionName
                                              }
                                          }).FirstOrDefaultAsync();
 

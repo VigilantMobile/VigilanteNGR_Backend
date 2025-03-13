@@ -14,7 +14,7 @@ namespace Application.Features.UserProfile
 {
     public partial class ToggleMemberVisibilityCommand : IRequest<Response<bool>>
     {
-        public ToggleCustomerProfileVisibilityViewModel model { get; set; }
+        public ToggleCircleMembershipVisibilityViewModel model { get; set; }
     }
 
     public class ToggleProfileVisibilityCommandHandler : IRequestHandler<ToggleMemberVisibilityCommand, Response<bool>>
@@ -29,7 +29,7 @@ namespace Application.Features.UserProfile
         public async Task<Response<bool>> Handle(ToggleMemberVisibilityCommand request, CancellationToken cancellationToken)
         {
             bool result = await _customerService.ToggleCustomerProfileVisibility(request.model);
-            string message = request.model.IsProfileVisible
+            string message = request.model.isProfileVisible
                 ? "Profile visibility turned on successfully."
                 : "Profile visibility turned off successfully.";
 

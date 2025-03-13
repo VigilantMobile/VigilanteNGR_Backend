@@ -40,10 +40,10 @@ namespace Application.Features.UserProfile
 
             }
 
-            var viewModel = new AcceptCustomerTrustedContactInvitationViewModel
+            var viewModel = new AcceptCircleMemberInvitationViewModel
             {
-                CustomerId = request.CustomerId,
-                InviterId = request.InviterId
+                userId = request.CustomerId,
+                inviterId = request.InviterId
             };
 
            

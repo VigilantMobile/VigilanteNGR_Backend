@@ -35,7 +35,7 @@ namespace VGWebAPI.Controllers.v1
         }
 
         [HttpPost("TrustedContacts/add")]
-        public async Task<IActionResult> CreateCustomerTrustedContactsAsync([FromBody] CreateCustomerTrustedContactViewModel createCustomerTrustedContactsRequest)
+        public async Task<IActionResult> CreateCustomerTrustedContactsAsync([FromBody] CreateCircleMemberViewModel createCustomerTrustedContactsRequest)
         {
             return Ok(await Mediator.Send(new CreateTrustedContactsCommand { createCustomerTrustedContactsRequest = createCustomerTrustedContactsRequest }));
         }

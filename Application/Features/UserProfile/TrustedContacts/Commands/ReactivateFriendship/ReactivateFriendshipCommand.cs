@@ -9,8 +9,8 @@ namespace Application.Features.UserProfile
 
     public class ReactivateFriendshipCommand : IRequest<DataListResponse<bool>>
     {
-        public string CustomerId { get; set; }
-        public string FriendId { get; set; }
+        public string userId { get; set; }
+        public string memberId { get; set; }
     }
 
     public class ReactivateFriendshipCommandHandler : IRequestHandler<ReactivateFriendshipCommand, DataListResponse<bool>>
@@ -24,10 +24,10 @@ namespace Application.Features.UserProfile
 
         public async Task<DataListResponse<bool>> Handle(ReactivateFriendshipCommand request, CancellationToken cancellationToken)
         {
-            var model = new ReactivateFriendshipViewModel
+            var model = new ReactivateCircleMembershipViewModel
             {
-                CustomerId = request.CustomerId,
-                FriendId = request.FriendId
+                userId = request.userId,
+                memberId = request.memberId
             };
             var result = await _customerService.ReactivateFriendship(model);
             return new DataListResponse<bool>(result, "Friendship reactivation request initiated successfully.", successStatus: true);

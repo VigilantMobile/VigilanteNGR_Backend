@@ -32,11 +32,11 @@ namespace Application.Features.UserProfile.Commands.UpdateUserProfile
 
         public async Task<Response<bool>> Handle(UpdateCustomerProfileCommand request, CancellationToken cancellationToken)
         {
-            var updateViewModel = new UpdateCustomerProfileViewModel
+            var updateViewModel = new UpdateUserProfileViewModel
             {
-                CustomerId = request.CustomerId,
-                FullName = request.FullName,
-                Coordinates = request.Coordinates
+                userId = request.CustomerId,
+                fullName = request.FullName,
+                coordinates = request.Coordinates
             };
 
             bool result = await _customerService.UpdateCustomerProfileAsync(updateViewModel);

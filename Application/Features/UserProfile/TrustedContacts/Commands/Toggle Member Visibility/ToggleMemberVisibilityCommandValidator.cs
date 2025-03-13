@@ -12,10 +12,10 @@ namespace Application.Features.UserProfile
     {
         public ToggleProfileVisibilityCommandValidator()
         {
-            RuleFor(x => x.model.CustomerId)
+            RuleFor(x => x.model.userId)
                 .NotEmpty().WithMessage("CustomerId is required.");
 
-            RuleFor(x => x.model.FriendId)
+            RuleFor(x => x.model.memberId)
                 .NotEmpty().WithMessage("FriendId is required.");
         }
     }
