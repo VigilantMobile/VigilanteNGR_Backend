@@ -95,9 +95,9 @@ namespace Domain.Entities.Identity
         public virtual ICollection<Settlement> InternalStaffSettlements { get; set; }
         public virtual ICollection<Curfew> AdminAuthorizedCurfews { get; set; }
         public virtual ICollection<Curfew> OperatorIniatedCurfews { get; set; }
-        public virtual ICollection<TrustedPerson> TrustedPeople { get; set; }
+        public virtual ICollection<UserCircle> TrustedPeople { get; set; }
 
-        public virtual ICollection<TrustedPerson> TrustedContactsReceived { get; set; } = new List<TrustedPerson>();
+        public virtual ICollection<UserCircle> TrustedContactsReceived { get; set; } = new List<UserCircle>();
 
         //External Staff fields
         public ExternalStaffType ExternalStaffType { get; set; }

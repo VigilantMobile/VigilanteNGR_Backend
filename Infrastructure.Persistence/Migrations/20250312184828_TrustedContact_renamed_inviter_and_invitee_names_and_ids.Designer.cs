@@ -4,6 +4,7 @@ using Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250312184828_TrustedContact_renamed_inviter_and_invitee_names_and_ids")]
+    partial class TrustedContact_renamed_inviter_and_invitee_names_and_ids
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -477,7 +480,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("PanicRecords");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.UserCircle", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.TrustedPerson", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -498,10 +501,10 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("InviteeId")
+                    b.Property<string>("InviterId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("InviterId")
+                    b.Property<string>("InviterteeId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsActive")
@@ -517,9 +520,6 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Relationship")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -528,11 +528,11 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InviteeId");
-
                     b.HasIndex("InviterId");
 
-                    b.ToTable("UserCircle");
+                    b.HasIndex("InviterteeId");
+
+                    b.ToTable("TrustedPeople");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.AlertLevel", b =>
@@ -2096,16 +2096,16 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Commute");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.UserCircle", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.TrustedPerson", b =>
                 {
-                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "Invitee")
-                        .WithMany("TrustedContactsReceived")
-                        .HasForeignKey("InviteeId");
-
                     b.HasOne("Domain.Entities.Identity.ApplicationUser", "Inviter")
                         .WithMany("TrustedPeople")
                         .HasForeignKey("InviterId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "Invitee")
+                        .WithMany("TrustedContactsReceived")
+                        .HasForeignKey("InviterteeId");
 
                     b.Navigation("Invitee");
 

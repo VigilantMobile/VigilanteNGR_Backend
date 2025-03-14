@@ -95,7 +95,7 @@ namespace Infrastructure.Persistence.Services.Implementations.Location
                     customerPreciseLocation.StateOrProvinceOrRegion = address.address_components.Where(x => x.types[0] == "administrative_area_level_1").FirstOrDefault().long_name;
                     customerPreciseLocation.CountryOrDistrictOrLGA = address.address_components.Where(x => x.types[0] == "administrative_area_level_2").FirstOrDefault().long_name;
                     customerPreciseLocation.TownOrDistrict = address.address_components.Where(x => x.types[0] == "administrative_area_level_3").FirstOrDefault().long_name;
-                    customerPreciseLocation.FormattedAddress = address.formatted_address;
+                    customerPreciseLocation.FormattedAddress = reverseGeocodingResponse.results[0].formatted_address;
 
                     return new Response<CustomerPreciseLocation>(customerPreciseLocation, $"Coordinates successfully reversed.");
 

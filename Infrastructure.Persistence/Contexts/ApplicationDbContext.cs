@@ -76,7 +76,7 @@ namespace Infrastructure.Persistence.Contexts
         //Panic
         public DbSet<Panic> PanicRecords { get; set; }
         public DbSet<Commute> CommuteRecords { get; set; }
-        public DbSet<TrustedPerson> TrustedPeople { get; set; }
+        public DbSet<UserCircle> UserCircle { get; set; }
 
         //Curfew
         public DbSet<Curfew> StateCurfew { get; set; }
@@ -274,7 +274,7 @@ namespace Infrastructure.Persistence.Contexts
            .WithMany(g => g.SettlementMissingPeople).HasForeignKey(s => s.SettlementId).OnDelete(DeleteBehavior.Restrict);
 
             //Trusted
-            builder.Entity<TrustedPerson>().HasOne(s => s.Owner)
+            builder.Entity<UserCircle>().HasOne(s => s.Inviter)
                    .WithMany(g => g.TrustedPeople).HasForeignKey(s => s.InviterId).OnDelete(DeleteBehavior.Restrict);
 
             //missing items--------------------------------------------------------------------------------------------------------------------

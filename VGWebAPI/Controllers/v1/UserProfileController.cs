@@ -10,6 +10,7 @@ using Application.Features.Products.Commands.UpdateProduct;
 using Application.Features.Products.Queries.GetAllProducts;
 using Application.Features.Products.Queries.GetProductById;
 using Application.Features.UserProfile;
+using Application.Features.UserProfile.Commands.UpdateUserProfile;
 using Application.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,7 +35,7 @@ namespace VGWebAPI.Controllers.v1
         }
 
         [HttpPost("TrustedContacts/add")]
-        public async Task<IActionResult> CreateCustomerTrustedContactsAsync([FromBody] CreateCustomerTrustedContactViewModel createCustomerTrustedContactsRequest)
+        public async Task<IActionResult> CreateCustomerTrustedContactsAsync([FromBody] CreateCircleMemberViewModel createCustomerTrustedContactsRequest)
         {
             return Ok(await Mediator.Send(new CreateTrustedContactsCommand { createCustomerTrustedContactsRequest = createCustomerTrustedContactsRequest }));
         }
@@ -51,7 +52,6 @@ namespace VGWebAPI.Controllers.v1
             return Ok(await Mediator.Send(new DeleteTrustedPersonByIdCommand { TrustedPersonId = id}));
         }
 
-
         [HttpPost("TrustedContacts/acceptinvite")]
         public async Task<IActionResult> AcceptTrustedContactInvitationAsync([FromBody] AcceptTrustedContactInvitationCommand command)
         {
@@ -61,6 +61,36 @@ namespace VGWebAPI.Controllers.v1
 
         [HttpPost("TrustedContacts/rejectinvite")]
         public async Task<IActionResult> RejectTrustedContactInvitationAsync([FromBody] RejectTrustedContactInvitationCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpPost("TrustedContacts/deactivate")]
+        public async Task<IActionResult> DeactivateFriendshipAsync([FromBody] DeactivateFriendshipCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpPost("TrustedContacts/reactivate")]
+        public async Task<IActionResult> ReactivateFriendshipAsync([FromBody] ReactivateFriendshipCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpPost("toggle-profile-visibility")]
+        public async Task<IActionResult> ToggleMemberVisibilityAsync([FromBody] ToggleMemberVisibilityCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return Ok(response);
+        }
+
+
+        // New endpoint for updating customer profile
+        [HttpPost("update-profile")]
+        public async Task<IActionResult> UpdateCustomerProfileAsync([FromBody] UpdateCustomerProfileCommand command)
         {
             var response = await Mediator.Send(command);
             return Ok(response);
