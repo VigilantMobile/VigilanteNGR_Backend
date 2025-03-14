@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.UserProfile
 {
-    public class UpdateTrustedPersonCommand : IRequest<Response<TrustedPerson>>
+    public class UpdateTrustedPersonCommand : IRequest<Response<UserCircle>>
     {
         [Required]
         public string CustomerId { get; set; }
@@ -31,7 +31,7 @@ namespace Application.Features.UserProfile
         [Required]
         public string Gender { get; set; }
 
-        public class UpdateTrustedPersonCommandHandler : IRequestHandler<UpdateTrustedPersonCommand, Response<TrustedPerson>>
+        public class UpdateTrustedPersonCommandHandler : IRequestHandler<UpdateTrustedPersonCommand, Response<UserCircle>>
         {
             private readonly ITrustedPersonRepositoryAsync _trustedPersonRepository;
             private readonly IUserAccessor _userAccessor;
@@ -42,7 +42,7 @@ namespace Application.Features.UserProfile
                 _userAccessor = userAccessor ?? throw new ArgumentNullException(nameof(userAccessor));
             }
 
-            public async Task<Response<TrustedPerson>> Handle(UpdateTrustedPersonCommand command, CancellationToken cancellationToken)
+            public async Task<Response<UserCircle>> Handle(UpdateTrustedPersonCommand command, CancellationToken cancellationToken)
             {
                 string InviterId = _userAccessor.GetUserId();
 
@@ -63,7 +63,7 @@ namespace Application.Features.UserProfile
 
                     await _trustedPersonRepository.UpdateAsync(trustedPerson);
 
-                    return new Response<TrustedPerson>(trustedPerson, responsestatus: APIResponseStatus.success.ToString(), $"Trusted contact successfully updated");
+                    return new Response<UserCircle>(trustedPerson, responsestatus: APIResponseStatus.success.ToString(), $"Trusted contact successfully updated");
                 }
             }
         }

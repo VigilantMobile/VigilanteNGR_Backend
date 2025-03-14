@@ -15,12 +15,12 @@ using System.Threading.Tasks;
 
 namespace Application.Features.UserProfile
 {
-    public partial class CreateTrustedContactsCommand : IRequest<DataListResponse<List<CustomerTrustedContactViewModel>>>
+    public partial class CreateTrustedContactsCommand : IRequest<DataListResponse<List<CircleMemberViewModel>>>
     {
         [Required]
-        public CreateCustomerTrustedContactViewModel createCustomerTrustedContactsRequest { get; set; }
+        public CreateCircleMemberViewModel createCustomerTrustedContactsRequest { get; set; }
     }
-    public class CreateTrustedPersonCommandHandler : IRequestHandler<CreateTrustedContactsCommand, DataListResponse<List<CustomerTrustedContactViewModel>>>
+    public class CreateTrustedPersonCommandHandler : IRequestHandler<CreateTrustedContactsCommand, DataListResponse<List<CircleMemberViewModel>>>
     {
         private readonly ICustomerService _customerService;
         private readonly IMapper _mapper;
@@ -32,7 +32,7 @@ namespace Application.Features.UserProfile
             _userAccessor = userAccessor ?? throw new ArgumentNullException(nameof(userAccessor));
         }
 
-        public async Task<DataListResponse<List<CustomerTrustedContactViewModel>>>Handle(CreateTrustedContactsCommand request, CancellationToken cancellationToken)
+        public async Task<DataListResponse<List<CircleMemberViewModel>>>Handle(CreateTrustedContactsCommand request, CancellationToken cancellationToken)
         {
             string InviterId = _userAccessor.GetUserId();
             //foreach (var trustedContact in request.createCustomerTrustedContactsRequest.customerTrustedContacts)
@@ -44,9 +44,9 @@ namespace Application.Features.UserProfile
             //    await _trustedPersonRepository.AddAsync(contact, _userAccessor.GetUserId());
             //}
 
-            List<CustomerTrustedContactViewModel> createdTrustedContacts = await _customerService.CreateCustomerTrustedContactsAsync(request.createCustomerTrustedContactsRequest);
+            List<CircleMemberViewModel> createdTrustedContacts = await _customerService.CreateCustomerTrustedContactsAsync(request.createCustomerTrustedContactsRequest);
 
-            return new DataListResponse<List<CustomerTrustedContactViewModel>>(createdTrustedContacts, $"Trusted contact(s) successfully created.", successStatus: true);
+            return new DataListResponse<List<CircleMemberViewModel>>(createdTrustedContacts, $"Trusted contact(s) successfully created.", successStatus: true);
 
         }
     }

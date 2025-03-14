@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Application.Features.UserProfile
 {
-    public class CreateTrustedPersonsCommandValidator : AbstractValidator<TrustedPerson>
+    public class CreateTrustedPersonsCommandValidator : AbstractValidator<UserCircle>
     {
         private readonly ITrustedPersonRepositoryAsync trustedPersonRepository;
 

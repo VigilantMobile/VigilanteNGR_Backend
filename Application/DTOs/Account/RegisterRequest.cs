@@ -13,8 +13,10 @@ namespace Application.DTOs.Account
         //public string LastName { get; set; }
 
         [EmailAddress]
+        [Required]
         public string Email { get; set; }
 
+        [Required]
         [RegularExpression(@"^([0-9]{11})$", ErrorMessage = "Invalid Mobile Number. Phone number must be 11 characters.")]
         public string PhoneNumber { get; set; }
 
@@ -33,7 +35,6 @@ namespace Application.DTOs.Account
         [Required]
         public string locationCoordinates { get; set; }
 
-        [Required]
         public string Address { get; set; }
 
         //public string SettlementId { get; set; }

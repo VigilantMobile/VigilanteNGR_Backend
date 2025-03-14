@@ -9,23 +9,55 @@ namespace Application.Features.UserProfile
 {
     public class CustomerProfileViewModel
     {
-        public string CustomerId { get; set; }
-        public string CustomerName { get; set; }
-        public string CustomerPhone { get; set; }
-        public string CustomerProfilePhoto { get; set; }
+        public string userId { get; set; }
+        public string fullName { get; set; }
+        public string phoneNumber { get; set; }
+        public string profilePhotoUrl { get; set; }
 
         [Required, MinLength(1)]
-        public List<CustomerTrustedContactViewModel> CustomerTrustedContacts { get; set; }
-        public CustomerLocationViewModel CustomerLocation { get; set; }
-        public CustomerSubscriptionPlan SubscriptionPlan { get; set; }
+        //public List<CustomerTrustedContactViewModel> CustomerCircle { get; set; }
+
+        public TrustedContactsResponseViewModel userCircle { get; set; }
+        public UserLocationViewModel userLocation { get; set; }
+        public UserSubscriptionPlan subscriptionPlan { get; set; }
     }
 
-    public class CreateCustomerTrustedContactViewModel
+    public class TrustedContactsResponseViewModel
     {
-        public string CustomerId { get; set; }
+        public List<CircleMembersViewModel> members { get; set; }
+        public List<CircleMemberInvitationViewModel> invitations { get; set; }
+    }
+
+    public class CircleMembersViewModel
+    {
+        public string membershipId { get; set; }
+        public string userId { get; set; }
+        public string memberId { get; set; }
+        public string status { get; set; }
+        public bool userVisible { get; set; }
+        public bool memberVisible { get; set; }
+    }
+
+    public class CircleMemberInvitationViewModel
+    {
+        public string invitationId { get; set; }
+        public string userId { get; set; }
+        public string memberId { get; set; }
+        public string inviteeId { get; set; }
+        public string status { get; set; }
+        /// <summary>
+        /// Indicates if the invitation was sent by the customer.
+        /// If true, the invitation is outgoing; if false, it's an incoming invitation.
+        /// </summary>
+        public bool sentByUser { get; set; }
+    }
+
+    public class CreateCircleMemberViewModel
+    {
+        public string userId { get; set; }
 
         [Required, MinLength(1)]
-        public List<CustomerTrustedContactViewModel> customerTrustedContacts { get; set; }
+        public List<CircleMemberViewModel> circleMembers { get; set; }
     }
 
     //public class AcceptCustomerTrustedContactInvitationViewModel
@@ -36,115 +68,126 @@ namespace Application.Features.UserProfile
     //    public List<string> InviterIds { get; set; }
     //}
 
-    public class AcceptCustomerTrustedContactInvitationViewModel
+    public class AcceptCircleMemberInvitationViewModel
     {
         [Required]
-        public string CustomerId { get; set; }
+        public string userId { get; set; }
 
         [Required]
-        public string InviterId { get; set; }
+        public string inviterId { get; set; }
     }
 
-    public class RejectCustomerTrustedContactInvitationViewModel
+    public class RejectCircleInvitationViewModel
     {
         [Required]
-        public string CustomerId { get; set; }
+        public string userId { get; set; }
 
         [Required]
-        public string InviterId { get; set; }
+        public string inviterId { get; set; }
     }
 
-    public class DeactivateFriendshipViewModel
+    public class DeactivateCircleMembershipViewModel
     {
         [Required]
-        public string CustomerId { get; set; }
+        public string userId { get; set; }
 
         [Required]
-        public string FriendId { get; set; }
+        public string memberId { get; set; }
     }
 
-    public class ReactivateFriendshipViewModel
+    public class ReactivateCircleMembershipViewModel
     {
         [Required]
-        public string CustomerId { get; set; }
+        public string userId { get; set; }
 
         [Required]
-        public string FriendId { get; set; }
+        public string memberId { get; set; }
     }
 
-    public class UpdateCustomerProfilePicViewModel
+    public class ToggleCircleMembershipVisibilityViewModel
     {
-        public string CustomerId { get; set; }
+        [Required]
+        public string userId { get; set; }
 
         [Required]
-        public string customerProfilePicUrl { get; set; }
+        public string memberId { get; set; }
+
+        public bool isProfileVisible { get; set; }
     }
 
-    public class UpdateCustomerProfileViewModel
+    public class UpdateUserProfilePhotoUrlViewModel
     {
+        public string userId { get; set; }
+
         [Required]
-        public string CustomerId { get; set; }
-        public string FullName { get; set; }
-        public string Coordinates { get; set; }
+        public string userProfilePhotoUrl { get; set; }
     }
 
-    public class CustomerTrustedContactViewModel
+    public class UpdateUserProfileViewModel
     {
         [Required]
-        public string FullName { get; set; }
+        public string userId { get; set; }
+        public string fullName { get; set; }
+        public string coordinates { get; set; }
+    }
+
+    public class CircleMemberViewModel
+    {
+        [Required]
+        public string fullName { get; set; }
 
         [Required]
-        public string FullAddress { get; set; }
+        public string fullAddress { get; set; }
         [Required]
-        public string PhoneNumber { get; set; }
+        public string phoneNumber { get; set; }
         [Required]
         [EmailAddress]
-        public string EmailAddress { get; set; }
+        public string emailAddress { get; set; }
         [Required]
-        public string Gender { get; set; }
-        public string ProfilePicUrl { get; set; }
-        public string InvitationStatus { get; set; }
+        public string gender { get; set; }
+        public string profilePicUrl { get; set; }
+        public string invitationStatus { get; set; }
     }
 
-    public class CustomerLocationViewModel
+    public class UserLocationViewModel
     {
-        public string Address { get; set; }
-        public CustomerCityViewModel City { get; set; }
-        public CustomerDistrictViewModel District { get; set; }
-        public CustomerStateViewModel State { get; set; }
-        public CustomerCountryViewModel Country { get; set; }
+        public string address { get; set; }
+        public CustomerCityViewModel city { get; set; }
+        public CustomerDistrictViewModel district { get; set; }
+        public CustomerStateViewModel state { get; set; }
+        public CustomerCountryViewModel country { get; set; }
     }
 
     public class CustomerCountryViewModel
     {
-        public string CountryId { get; set; }
-        public string CountryName { get; set; }
-        public string GoogleMapsPlaceId { get; set; }
+        public string countryId { get; set; }
+        public string countryName { get; set; }
+        public string googleMapsPlaceId { get; set; }
     }
     public class CustomerStateViewModel
     {
-        public string StateId { get; set; }
-        public string StateName { get; set; }
-        public string GoogleMapsPlaceId { get; set; }
+        public string stateId { get; set; }
+        public string stateName { get; set; }
+        public string googleMapsPlaceId { get; set; }
 
     }
     public class CustomerDistrictViewModel
     {
-        public string DistrictId { get; set; }
-        public string DistrictName { get; set; }
-        public string GoogleMapsPlaceId { get; set; }
+        public string districtId { get; set; }
+        public string districtName { get; set; }
+        public string googleMapsPlaceId { get; set; }
 
     }
     public class CustomerCityViewModel
     {
-        public string CityId { get; set; }
-        public string CityName { get; set; }
-        public string GoogleMapsPlaceId { get; set; }
+        public string cityId { get; set; }
+        public string cityName { get; set; }
+        public string googleMapsPlaceId { get; set; }
     }
 
-    public class CustomerSubscriptionPlan
+    public class UserSubscriptionPlan
     {
-        public string SubscriptionPlanId { get; set; }
-        public string SubscriptionPlanName { get; set; }
+        public string subscriptionPlanId { get; set; }
+        public string subscriptionPlanName { get; set; }
     }
 }

@@ -53,8 +53,9 @@ namespace Infrastructure.Persistence.Services
         ITrustedPersonRepositoryAsync _trustedPersonRepositoryAsync;
         private readonly IUtilities _utilities;
         private readonly IEmailService _emailService;
+        private readonly ILocationService _locationService;
         public CustomerService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ITrustedPersonRepositoryAsync trustedPersonRepositoryAsync,
-        ILogger logger, IEmailService emailService, IUtilities utilities, IGeoCodingService geoCodingService)
+        ILogger logger, IEmailService emailService, IUtilities utilities, IGeoCodingService geoCodingService, ILocationService locationService)
         {
             _context = context;
             _logger = logger;
@@ -63,6 +64,7 @@ namespace Infrastructure.Persistence.Services
             _utilities = utilities;
             _emailService = emailService;
             _geoCodingService = geoCodingService;
+            _locationService = locationService;
         }
 
         public async Task<CustomerProfileViewModel> GetCustomerProfileAsync(string CustomerId)
@@ -82,58 +84,13 @@ namespace Infrastructure.Persistence.Services
 
                 //Get Location(s)
 
-                customerProfile = await (from customer in _context.Users
-                                         join town in _context.Towns on customer.TownId equals town.Id
-                                         join lga in _context.LGAs on town.LGAId equals lga.Id
-                                         join state in _context.States on lga.StateId equals state.Id
-                                         join country in _context.Countries on state.CountryId equals country.Id
-                                         join subscriptionPlan in _context.Subscriptions on customer.SubscriptionId equals subscriptionPlan.Id
-
-                                         where customer.Id == CustomerId
-                                         select new CustomerProfileViewModel()
-                                         {
-                                             CustomerId = customer.Id,
-                                             CustomerName = customer.FirstName,
-                                             CustomerPhone = customer.PhoneNumber,
-                                             CustomerLocation = new CustomerLocationViewModel
-                                             {
-                                                 Address = customer.AddressLine1,
-                                                 City = new CustomerCityViewModel
-                                                 {
-                                                     CityId = town.Id.ToString(),
-                                                     CityName = town.Name,
-                                                     GoogleMapsPlaceId = town.GoogleMapsPlaceId
-                                                 },
-                                                 District = new CustomerDistrictViewModel
-                                                 {
-
-                                                     DistrictId = lga.Id.ToString(),
-                                                     DistrictName = lga.Name,
-                                                     GoogleMapsPlaceId = lga.GoogleMapsPlaceId
-                                                 },
-                                                 State = new CustomerStateViewModel
-                                                 {
-                                                     StateId = state.Id.ToString(),
-                                                     StateName = state.Name,
-                                                     GoogleMapsPlaceId = state.GoogleMapsPlaceId
-                                                 },
-                                                 Country = new CustomerCountryViewModel
-                                                 {
-                                                     CountryId = country.Id.ToString(),
-                                                     CountryName = country.Name,
-                                                     GoogleMapsPlaceId = country.GoogleMapsPlaceId
-                                                 },
-                                             },
-                                             SubscriptionPlan = new CustomerSubscriptionPlan
-                                             {
-                                                 SubscriptionPlanId = subscriptionPlan.Id.ToString(),
-                                                 SubscriptionPlanName = subscriptionPlan.SubscriptionName
-                                             }
-                                         }).FirstOrDefaultAsync();
-
-                //Get Customer Trusted Contacts:
-                var trustedContacts = await GetCustomerTrustedContactsAsync(CustomerId);
-                customerProfile.CustomerTrustedContacts = trustedContacts;
+                customerProfile = await _trustedPersonRepositoryAsync.GetCustomerProfileAsync(CustomerId);
+                if (customerProfile != null)
+                {
+                    //Get Customer Trusted Contacts:
+                    var trustedContacts = await GetCircleMembersAsync(CustomerId);
+                    customerProfile.userCircle = trustedContacts;
+                }
 
                 return customerProfile;
             }
@@ -144,74 +101,124 @@ namespace Infrastructure.Persistence.Services
             }
         }
 
-        public async Task<List<CustomerTrustedContactViewModel>> CreateCustomerTrustedContactsAsync(CreateCustomerTrustedContactViewModel createCustomerTrustedContactsRequest)
+        //public async Task<List<CustomerTrustedContactViewModel>> CreateCustomerTrustedContactsAsync(CreateCustomerTrustedContactViewModel createCustomerTrustedContactsRequest)
+        //{
+        //    try
+        //    {
+        //        var inviter = await _userManager.FindByIdAsync(createCustomerTrustedContactsRequest.CustomerId);
+
+        //        foreach (var contact in createCustomerTrustedContactsRequest.customerTrustedContacts)
+        //        {
+        //            UserCircle trustedPerson = new UserCircle
+        //            {
+        //                Id = Guid.NewGuid(),
+        //                InviterId = createCustomerTrustedContactsRequest.CustomerId,
+        //                EmailAddress = contact.EmailAddress,
+        //                FullName = contact.FullName,
+        //                FullAddress = contact.FullAddress,
+        //                PhoneNumber = contact.PhoneNumber,
+        //                Status = TrustedContactStatus.Pending,
+        //                Created = DateTime.UtcNow.AddHours(1),
+        //                CreatedBy = "Admin",
+        //                Inviter = inviter
+        //            };
+        //            await _context.TrustedPeople.AddAsync(trustedPerson);
+
+        //            //send invitation email
+        //            var vglntAboutUrl = new Uri("http://vigilantng-001-site1.itempurl.com");
+        //            await _emailService.SendAsync(new Application.DTOs.Email.EmailRequest()
+        //            {
+        //                From = "info@vigilanteng.com",
+        //                To = contact.EmailAddress,
+        //                Username = contact.FullName,
+        //                BodyParagraph1 = $"Welcome to the Vigilant NG community. User {inviter.FirstName} {inviter.LastName} invited you to their circle. To learn more about Vigilant, visit the link below.",
+        //                ButtonLabel = "Learn more!",
+        //                ButtonUrl = $"{vglntAboutUrl.ToString}",
+        //                BodyParagraph2 = $"Need further assistance? Email us at info@vigilant.com",
+        //                Subject = $"{inviter.FirstName} invited you to join the Vigilant community. "
+        //            });
+        //        }
+
+        //        await _context.SaveChangesAsync();
+
+        //        return createCustomerTrustedContactsRequest.customerTrustedContacts;
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError($"An error occurred while creating customer tusted contacts: {ex.Message}, {ex}");
+        //        throw ex;
+        //    }
+        //}
+
+        public async Task<List<CircleMemberViewModel>> CreateCustomerTrustedContactsAsync(CreateCircleMemberViewModel createCustomerTrustedContactsRequest)
         {
             try
             {
-                var inviter = await _userManager.FindByIdAsync(createCustomerTrustedContactsRequest.CustomerId);
+                var inviter = await _userManager.FindByIdAsync(createCustomerTrustedContactsRequest.userId);
 
-                foreach (var contact in createCustomerTrustedContactsRequest.customerTrustedContacts)
+                foreach (var contact in createCustomerTrustedContactsRequest.circleMembers)
                 {
-                    TrustedPerson trustedPerson = new TrustedPerson
+                    // Check if the invitee already exists based on their phone number.
+                    var existingUser = await _userManager.Users.FirstOrDefaultAsync(u => u.PhoneNumber == contact.phoneNumber);
+
+                    UserCircle trustedPerson = new UserCircle
                     {
                         Id = Guid.NewGuid(),
-                        InviterId = createCustomerTrustedContactsRequest.CustomerId,
-                        EmailAddress = contact.EmailAddress,
-                        FullName = contact.FullName,
-                        FullAddress = contact.FullAddress,
-                        PhoneNumber = contact.PhoneNumber,
+                        InviterId = createCustomerTrustedContactsRequest.userId,
+                        EmailAddress = contact.emailAddress,
+                        FullName = contact.fullName,
+                        FullAddress = contact.fullAddress,
+                        PhoneNumber = contact.phoneNumber,
                         Status = TrustedContactStatus.Pending,
                         Created = DateTime.UtcNow.AddHours(1),
                         CreatedBy = "Admin",
-                        Owner = inviter
+                        Inviter = inviter,
+                        // If the invitee is already registered, update TrustedUserId
+                        InviteeId = existingUser != null ? existingUser.Id : null
                     };
-                    await _context.TrustedPeople.AddAsync(trustedPerson);
 
-                    //send invitation email
-                    var vglntAboutUrl = new Uri("http://vigilantng-001-site1.itempurl.com");
-                    await _emailService.SendAsync(new Application.DTOs.Email.EmailRequest()
+                    await _context.UserCircle.AddAsync(trustedPerson);
+
+                    // Only send invitation email if the invitee is not registered.
+                    if (existingUser == null)
                     {
-                        From = "info@vigilanteng.com",
-                        To = contact.EmailAddress,
-                        Username = contact.FullName,
-                        BodyParagraph1 = $"Welcome to the Vigilant NG community. User {inviter.FirstName} {inviter.LastName} invited you to their circle. To learn more about Vigilant, visit the link below.",
-                        ButtonLabel = "Learn more!",
-                        ButtonUrl = $"{vglntAboutUrl.ToString}",
-                        BodyParagraph2 = $"Need further assistance? Email us at info@vigilant.com",
-                        Subject = $"{inviter.FirstName} invited you to join the Vigilant community. "
-                    });
+                        var vglntAboutUrl = new Uri("http://vigilantng-001-site1.itempurl.com");
+                        await _emailService.SendAsync(new Application.DTOs.Email.EmailRequest()
+                        {
+                            From = "info@vigilanteng.com",
+                            To = contact.emailAddress,
+                            Username = contact.fullName,
+                            BodyParagraph1 = $"Welcome to the Vigilant NG community. User {inviter.FirstName} {inviter.LastName} invited you to their circle. To learn more about Vigilant, visit the link below.",
+                            ButtonLabel = "Learn more!",
+                            ButtonUrl = $"{vglntAboutUrl.ToString}",
+                            BodyParagraph2 = $"Need further assistance? Email us at info@vigilant.com",
+                            Subject = $"{inviter.FirstName} invited you to join the Vigilant community. "
+                        });
+                    }
+                    else
+                    {
+                        _logger.LogInformation($"No invitation email sent. User with phone number {contact.phoneNumber} is already registered.");
+                    }
                 }
 
                 await _context.SaveChangesAsync();
 
-                return createCustomerTrustedContactsRequest.customerTrustedContacts;
-
+                return createCustomerTrustedContactsRequest.circleMembers;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"An error occurred while creating customer tusted contacts: {ex.Message}, {ex}");
-                throw ex;
+                _logger.LogError($"An error occurred while creating customer trusted contacts: {ex.Message}, {ex}");
+                throw;
             }
         }
 
-        public async Task<List<CustomerTrustedContactViewModel>> GetCustomerTrustedContactsAsync(string CustomerId)
+        public async Task<List<CircleMemberViewModel>> GetCustomerTrustedContactsAsync(string CustomerId)
         {
             try
             {
-                var trustedContacts = await (from contact in _context.TrustedPeople
-                                             join customer in _context.Users on contact.InviterId equals customer.Id
-                                             where customer.Id == CustomerId
-                                             join contactProfile in _context.Users on contact.PhoneNumber equals contactProfile.PhoneNumber
-                                             select new CustomerTrustedContactViewModel()
-                                             {
-                                                 EmailAddress = contact.EmailAddress,
-                                                 FullName = contact.FullName,
-                                                 PhoneNumber = contact.PhoneNumber,
-                                                 InvitationStatus = contact.Status.ToString(),
-                                                 ProfilePicUrl = contact.Status != TrustedContactStatus.Accepted ? null : contactProfile.CustomerProfileUrl
-                                             }).ToListAsync();
 
-                return trustedContacts;
+                return await _trustedPersonRepositoryAsync.GetCustomerTrustedContactsAsync(CustomerId);
             }
             catch (Exception ex)
             {
@@ -219,6 +226,60 @@ namespace Infrastructure.Persistence.Services
                 return null;
             }
         }
+
+        public async Task<TrustedContactsResponseViewModel> GetCircleMembersAsync(string customerId)
+        {
+            try
+            {
+                // Retrieve all trusted contacts where the customer is involved.
+                var circle = await _context.UserCircle
+                    .Where(x => x.InviterId == customerId || x.InviteeId == customerId)
+                    .ToListAsync();
+
+                // Map accepted contacts to members.
+                var members = circle
+                    .Where(x => x.Status == TrustedContactStatus.Accepted)
+                    .Select(x => new CircleMembersViewModel
+                    {
+                        membershipId = x.Id.ToString(),
+                        userId = customerId,
+                        memberId = x.InviterId == customerId ? x.InviteeId : x.InviterId,
+                        status = x.Status.ToString(),
+                        // If current customer is the inviter, use InviterProfileVisible for their own setting and InviteeProfileVisible for the member.
+                        // Otherwise, if the customer is the invitee, use InviteeProfileVisible for themselves and InviterProfileVisible for the member.
+                        userVisible = x.InviterId == customerId ? x.InviterProfileVisible : x.InviteeProfileVisible,
+                        memberVisible = x.InviterId == customerId ? x.InviteeProfileVisible : x.InviterProfileVisible
+                    })
+                    .ToList();
+
+                // Map pending invitations.
+                var invitations = circle
+                    .Where(x => x.Status == TrustedContactStatus.Pending)
+                    .Select(x => new CircleMemberInvitationViewModel
+                    {
+                        invitationId = x.Id.ToString(),
+                        userId = customerId,
+                        // For pending invitations, the inviteeId remains the same.
+                        inviteeId = x.InviterId == customerId ? x.InviteeId : x.InviterId,
+                        status = x.Status.ToString(),
+                        sentByUser = (x.InviterId == customerId)
+                    })
+                    .ToList();
+
+                return new TrustedContactsResponseViewModel
+                {
+                    members = members,
+                    invitations = invitations
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An error occurred while retrieving circle members: {ex.Message}", ex);
+                throw;
+            }
+        }
+
+
 
         // For multiple inviter IDs.
         //public async Task<bool> AcceptCircleInvitation(AcceptCustomerTrustedContactInvitationViewModel model)
@@ -264,14 +325,14 @@ namespace Infrastructure.Persistence.Services
         //    }
         //}
 
-        public async Task<bool> AcceptCircleInvitation(AcceptCustomerTrustedContactInvitationViewModel model)
+        public async Task<bool> AcceptCircleInvitation(AcceptCircleMemberInvitationViewModel model)
         {
             try
             {
                 // Retrieve the pending invitation for this customer from the specific inviter.
-                var invitation = await _context.TrustedPeople
-                    .FirstOrDefaultAsync(x => x.TrustedUserId == model.CustomerId &&
-                                              x.InviterId == model.InviterId &&
+                var invitation = await _context.UserCircle
+                    .FirstOrDefaultAsync(x => x.InviteeId == model.userId &&
+                                              x.InviterId == model.inviterId &&
                                               x.Status == TrustedContactStatus.Pending);
 
                 if (invitation == null)
@@ -280,10 +341,10 @@ namespace Infrastructure.Persistence.Services
                 }
 
                 // Optionally verify that the inviter exists.
-                var inviter = await _userManager.FindByIdAsync(model.InviterId);
+                var inviter = await _userManager.FindByIdAsync(model.inviterId);
                 if (inviter == null)
                 {
-                    throw new ApiException($"Inviter with ID {model.InviterId} not found.");
+                    throw new ApiException($"Inviter with ID {model.inviterId} not found.");
                 }
 
                 // Update the invitation status to Accepted.
@@ -300,14 +361,14 @@ namespace Infrastructure.Persistence.Services
             }
         }
 
-        public async Task<bool> RejectCircleInvitation(RejectCustomerTrustedContactInvitationViewModel model)
+        public async Task<bool> RejectCircleInvitation(RejectCircleInvitationViewModel model)
         {
             try
             {
                 // Retrieve the pending invitation for this customer from the specific inviter.
-                var invitation = await _context.TrustedPeople
-                    .FirstOrDefaultAsync(x => x.TrustedUserId == model.CustomerId &&
-                                              x.InviterId == model.InviterId &&
+                var invitation = await _context.UserCircle
+                    .FirstOrDefaultAsync(x => x.InviteeId == model.userId &&
+                                              x.InviterId == model.inviterId &&
                                               x.Status == TrustedContactStatus.Pending);
 
                 if (invitation == null)
@@ -316,10 +377,10 @@ namespace Infrastructure.Persistence.Services
                 }
 
                 // Optionally verify that the inviter exists.
-                var inviter = await _userManager.FindByIdAsync(model.InviterId);
+                var inviter = await _userManager.FindByIdAsync(model.inviterId);
                 if (inviter == null)
                 {
-                    throw new ApiException($"Inviter with ID {model.InviterId} not found.");
+                    throw new ApiException($"Inviter with ID {model.inviterId} not found.");
                 }
 
                 // Update the invitation status to Rejected.
@@ -337,16 +398,16 @@ namespace Infrastructure.Persistence.Services
         }
 
         // Circle Activation Deactivation
-        public async Task<bool> DeactivateFriendship(DeactivateFriendshipViewModel model)
+        public async Task<bool> DeactivateFriendship(DeactivateCircleMembershipViewModel model)
         {
             try
             {
                 // Retrieve the accepted friendship (active connection) where the customer is involved.
-                var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
+                var connection = await _context.UserCircle.FirstOrDefaultAsync(x =>
                     x.Status == TrustedContactStatus.Accepted &&
                     x.IsActive &&
-                    ((x.InviterId == model.CustomerId && x.TrustedUserId == model.FriendId) ||
-                     (x.InviterId == model.FriendId && x.TrustedUserId == model.CustomerId))
+                    ((x.InviterId == model.userId && x.InviteeId == model.memberId) ||
+                     (x.InviterId == model.memberId && x.InviteeId == model.userId))
                 );
 
                 if (connection == null)
@@ -365,16 +426,16 @@ namespace Infrastructure.Persistence.Services
                 return false;
             }
         }
-        public async Task<bool> ReactivateFriendship(ReactivateFriendshipViewModel model)
+        public async Task<bool> ReactivateFriendship(ReactivateCircleMembershipViewModel model)
         {
             try
             {
                 // Retrieve the inactive friendship record where the connection is currently accepted but deactivated.
-                var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
+                var connection = await _context.UserCircle.FirstOrDefaultAsync(x =>
                     x.Status == TrustedContactStatus.Accepted &&
                     !x.IsActive &&
-                    ((x.InviterId == model.CustomerId && x.TrustedUserId == model.FriendId) ||
-                     (x.InviterId == model.CustomerId && x.TrustedUserId == model.FriendId))
+                    ((x.InviterId == model.userId && x.InviteeId == model.memberId) ||
+                     (x.InviterId == model.userId && x.InviteeId == model.memberId))
                 );
 
                 if (connection == null)
@@ -422,31 +483,91 @@ namespace Infrastructure.Persistence.Services
             }
         }
 
-        public async Task<bool> UpdateCustomerProfileAsync(UpdateCustomerProfileViewModel model)
+        //Circle Visibility 
+        public async Task<bool> ToggleCustomerProfileVisibility(ToggleCircleMembershipVisibilityViewModel model)
         {
             try
             {
-                var customer = await _userManager.FindByIdAsync(model.CustomerId);
+                // Retrieve the accepted connection between the two users.
+                var connection = await _context.UserCircle.FirstOrDefaultAsync(x =>
+                    x.Status == TrustedContactStatus.Accepted &&
+                    ((x.InviterId == model.userId && x.InviteeId == model.memberId) ||
+                     (x.InviterId == model.memberId && x.InviteeId == model.userId))
+                );
+                if (connection == null)
+                {
+                    throw new ApiException("Active friendship not found.");
+                }
+
+                // Determine which side of the connection is the current user and update that visibility flag.
+                if (connection.InviterId == model.userId)
+                {
+                    connection.InviterProfileVisible = model.isProfileVisible;
+                }
+                else if (connection.InviteeId == model.userId)
+                {
+                    connection.InviteeProfileVisible = model.isProfileVisible;
+                }
+                else
+                {
+                    throw new ApiException("User is not part of the connection.");
+                }
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error updating profile visibility: {ex.Message}", ex);
+                return false;
+            }
+        }
+
+
+        public async Task<bool>  UpdateCustomerProfileAsync(UpdateUserProfileViewModel model)
+        {
+            try
+            {
+                var customer = await _userManager.FindByIdAsync(model.userId);
                 if (customer == null)
                 {
-                    throw new ApiException($"Customer with ID {model.CustomerId} not found.");
+                    throw new ApiException($"Customer with ID {model.userId} not found.");
                 }
 
-                // Split full name into first and last names
-                var nameParts = model.FullName.Split(' ');
-                customer.FirstName = nameParts[0];
-                customer.LastName = nameParts.Length > 1 ? string.Join(' ', nameParts.Skip(1)) : string.Empty;
+                if (!string.IsNullOrEmpty(model.fullName))
+                {
+                    var nameParts = model.fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                    if (nameParts.Length > 0)
+                    {
+                        customer.FirstName = nameParts[0];
+                        customer.LastName = nameParts.Length > 1 ? nameParts[nameParts.Length - 1] : string.Empty;
+                        customer.MiddleName = nameParts.Length > 2
+                            ? string.Join(" ", nameParts.Skip(1).Take(nameParts.Length - 2))
+                            : string.Empty;
+                    }
+                    else
+                    {
+                        // Handle the case where the full name is empty or whitespace
+                        customer.FirstName = string.Empty;
+                        customer.LastName = string.Empty;
+                        customer.MiddleName = string.Empty;
+                    }
+                }
 
                 // Get detailed location information from coordinates
-                var customerDetailedLocation = await _geoCodingService.GetCustomerLiveAddresses(model.Coordinates);
-                if (customerDetailedLocation == null)
+                if (!string.IsNullOrEmpty(model.coordinates))
                 {
-                    throw new ApiException("Invalid coordinates provided.");
-                }
+                    var customerDetailedLocation = await _geoCodingService.GetCustomerLiveAddresses(model.coordinates);
+                    if (customerDetailedLocation == null)
+                    {
+                        throw new ApiException("Invalid coordinates provided.");
+                    }
 
-                // Update customer address based on the location information
-                customer.AddressLine1 = customerDetailedLocation.Data.FormattedAddress;
-                customer.TownId = await _geoCodingService.GetOrCreateTownIdAsync(customerDetailedLocation.Data.TownOrDistrict, customerDetailedLocation.Data.CountryOrDistrictOrLGA, customerDetailedLocation.Data.StateOrProvinceOrRegion, customerDetailedLocation.Data.Country);
+                    // Update customer address based on the location information
+                    customer.AddressLine1 = customerDetailedLocation.Data.FormattedAddress;
+                    customer.TownId = await _geoCodingService.GetOrCreateTownIdAsync(customerDetailedLocation.Data.TownOrDistrict, customerDetailedLocation.Data.CountryOrDistrictOrLGA, customerDetailedLocation.Data.StateOrProvinceOrRegion, customerDetailedLocation.Data.Country);
+                }
 
                 var result = await _userManager.UpdateAsync(customer);
                 if (!result.Succeeded)

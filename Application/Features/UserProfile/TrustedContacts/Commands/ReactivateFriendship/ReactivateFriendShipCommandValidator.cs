@@ -6,10 +6,10 @@ namespace Application.Features.UserProfile
     {
         public ReactivateFriendshipCommandValidator()
         {
-            RuleFor(x => x.CustomerId)
+            RuleFor(x => x.userId)
                 .NotEmpty().WithMessage("CustomerId is required.");
 
-            RuleFor(x => x.FriendId)
+            RuleFor(x => x.memberId)
                 .NotEmpty().WithMessage("FriendId is required.");
         }
     }

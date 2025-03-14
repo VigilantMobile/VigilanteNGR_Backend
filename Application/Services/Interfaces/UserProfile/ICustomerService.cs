@@ -13,16 +13,14 @@ namespace Application.Services.Interfaces.UserProfile
     public interface ICustomerService : IAutoDependencyService
     {
         Task<CustomerProfileViewModel> GetCustomerProfileAsync(string CustomerId);
-        Task<List<CustomerTrustedContactViewModel>> GetCustomerTrustedContactsAsync(string CustomerId);
-        Task<List<CustomerTrustedContactViewModel>> CreateCustomerTrustedContactsAsync(CreateCustomerTrustedContactViewModel customerTrustedContacts);
+        Task<List<CircleMemberViewModel>> GetCustomerTrustedContactsAsync(string CustomerId);
+        Task<List<CircleMemberViewModel>> CreateCustomerTrustedContactsAsync(CreateCircleMemberViewModel customerTrustedContacts);
         Task<bool> UpdateCustomerProfilePicUrl(string customerProfilePicUrl, string CustomerId);
-        Task<bool> RejectCircleInvitation(RejectCustomerTrustedContactInvitationViewModel model);
-        Task<bool> AcceptCircleInvitation(AcceptCustomerTrustedContactInvitationViewModel model);
-        Task<bool> DeactivateFriendship(DeactivateFriendshipViewModel model);
-        Task<bool> ReactivateFriendship(ReactivateFriendshipViewModel model);
-
-
-
-
+        Task<bool> RejectCircleInvitation(RejectCircleInvitationViewModel model);
+        Task<bool> AcceptCircleInvitation(AcceptCircleMemberInvitationViewModel model);
+        Task<bool> DeactivateFriendship(DeactivateCircleMembershipViewModel model);
+        Task<bool> ReactivateFriendship(ReactivateCircleMembershipViewModel model);
+        Task<bool> UpdateCustomerProfileAsync(UpdateUserProfileViewModel model);
+        Task<bool> ToggleCustomerProfileVisibility(ToggleCircleMembershipVisibilityViewModel model);
     }
 }

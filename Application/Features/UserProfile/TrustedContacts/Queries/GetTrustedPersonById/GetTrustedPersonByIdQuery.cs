@@ -9,24 +9,24 @@ using System.Threading.Tasks;
 
 namespace Application.Features.UserProfile
 {
-    public class GetTrustedPersonByIdQuery : IRequest<Response<TrustedPerson>>
+    public class GetTrustedPersonByIdQuery : IRequest<Response<UserCircle>>
     {
         public string Id { get; set; }
-        public class GetTrustedPersonByIdQueryHandler : IRequestHandler<GetTrustedPersonByIdQuery, Response<TrustedPerson>>
+        public class GetTrustedPersonByIdQueryHandler : IRequestHandler<GetTrustedPersonByIdQuery, Response<UserCircle>>
         {
             private readonly ITrustedPersonRepositoryAsync _trustedPersonRepository;
             public GetTrustedPersonByIdQueryHandler(ITrustedPersonRepositoryAsync trustedPersonRepository)
             {
                 _trustedPersonRepository = trustedPersonRepository;
             }
-            public async Task<Response<TrustedPerson>> Handle(GetTrustedPersonByIdQuery query, CancellationToken cancellationToken)
+            public async Task<Response<UserCircle>> Handle(GetTrustedPersonByIdQuery query, CancellationToken cancellationToken)
             {
                 var trustedPerson = await _trustedPersonRepository.GetByIdAsync(query.Id);
                 if (trustedPerson == null)
 
                     throw new ApiException($"Trusted contact not found.");
 
-                return new Response<TrustedPerson>(trustedPerson, responsestatus: APIResponseStatus.success.ToString(), message: $"Trusted contact successfully retrieved.");
+                return new Response<UserCircle>(trustedPerson, responsestatus: APIResponseStatus.success.ToString(), message: $"Trusted contact successfully retrieved.");
 
             }
         }

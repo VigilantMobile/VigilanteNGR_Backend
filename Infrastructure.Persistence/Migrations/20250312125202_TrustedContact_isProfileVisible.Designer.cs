@@ -4,6 +4,7 @@ using Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250312125202_TrustedContact_isProfileVisible")]
+    partial class TrustedContact_isProfileVisible
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -477,7 +480,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("PanicRecords");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.UserCircle", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.TrustedPerson", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -498,9 +501,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("InviteeId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("InviterId")
                         .HasColumnType("nvarchar(450)");
 
@@ -517,22 +517,22 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Relationship")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<string>("TrustedUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("isProfileVisible")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("InviteeId");
-
                     b.HasIndex("InviterId");
 
-                    b.ToTable("UserCircle");
+                    b.HasIndex("TrustedUserId");
+
+                    b.ToTable("TrustedPeople");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.AlertLevel", b =>
@@ -2096,20 +2096,20 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("Commute");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.UserCircle", b =>
+            modelBuilder.Entity("Domain.Entities.AppTroopers.Panic.TrustedPerson", b =>
                 {
-                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "Invitee")
-                        .WithMany("TrustedContactsReceived")
-                        .HasForeignKey("InviteeId");
-
-                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "Inviter")
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "Owner")
                         .WithMany("TrustedPeople")
                         .HasForeignKey("InviterId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Invitee");
+                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "TrustedUser")
+                        .WithMany("TrustedContactsReceived")
+                        .HasForeignKey("TrustedUserId");
 
-                    b.Navigation("Inviter");
+                    b.Navigation("Owner");
+
+                    b.Navigation("TrustedUser");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Comment", b =>

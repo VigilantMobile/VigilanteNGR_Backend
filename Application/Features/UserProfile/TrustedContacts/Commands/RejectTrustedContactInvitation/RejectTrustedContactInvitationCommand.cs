@@ -36,10 +36,10 @@ namespace Application.Features.UserProfile
 
             }
 
-            var viewModel = new RejectCustomerTrustedContactInvitationViewModel
+            var viewModel = new RejectCircleInvitationViewModel
             {
-                CustomerId = request.CustomerId,
-                InviterId = request.InviterId
+                userId = request.CustomerId,
+                inviterId = request.InviterId
             };
 
             var rejectInviteStatus = await _customerService.RejectCircleInvitation(viewModel);
