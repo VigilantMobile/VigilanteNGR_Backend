@@ -28,6 +28,7 @@ namespace Domain.Entities.AppTroopers.Panic
         public TrustedContactStatus Status { get; set; }
         // New property: indicates whether the connection is active (true) or turned off/inactive (false)
         public bool IsActive { get; set; } = true;
-        public bool isProfileVisible { get; set; } = true;
+        public bool InviterProfileVisible { get; set; } = true;
+        public bool InviteeProfileVisible { get; set; } = true;
     }
 }

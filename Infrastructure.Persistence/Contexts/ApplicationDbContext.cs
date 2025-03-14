@@ -76,7 +76,7 @@ namespace Infrastructure.Persistence.Contexts
         //Panic
         public DbSet<Panic> PanicRecords { get; set; }
         public DbSet<Commute> CommuteRecords { get; set; }
-        public DbSet<UserCircle> TrustedPeople { get; set; }
+        public DbSet<UserCircle> UserCircle { get; set; }
 
         //Curfew
         public DbSet<Curfew> StateCurfew { get; set; }

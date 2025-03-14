@@ -30,7 +30,7 @@ namespace Infrastructure.Persistence.Repositories.Panic
 
         public async Task<List<CircleMemberViewModel>> GetCustomerTrustedContactsAsync(string customerId)
         {
-            var trustedContacts = await (from contact in _context.TrustedPeople
+            var trustedContacts = await (from contact in _context.UserCircle
                                          join customer in _context.Users on contact.InviterId equals customer.Id
                                          where customer.Id == customerId
                                          join contactProfile in _context.Users on contact.PhoneNumber equals contactProfile.PhoneNumber

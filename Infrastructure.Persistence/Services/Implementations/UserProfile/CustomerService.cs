@@ -178,7 +178,7 @@ namespace Infrastructure.Persistence.Services
                         InviteeId = existingUser != null ? existingUser.Id : null
                     };
 
-                    await _context.TrustedPeople.AddAsync(trustedPerson);
+                    await _context.UserCircle.AddAsync(trustedPerson);
 
                     // Only send invitation email if the invitee is not registered.
                     if (existingUser == null)
@@ -232,49 +232,39 @@ namespace Infrastructure.Persistence.Services
             try
             {
                 // Retrieve all trusted contacts where the customer is involved.
-                var circle = await _context.TrustedPeople
+                var circle = await _context.UserCircle
                     .Where(x => x.InviterId == customerId || x.InviteeId == customerId)
                     .ToListAsync();
 
                 // Map accepted contacts to members.
                 var members = circle
-                .Where(x => x.Status == TrustedContactStatus.Accepted)
-                .Select(x => new CircleMembersViewModel
-                {
-                    membershipId = x.Id.ToString(),
-                    userId = customerId,
-                    memberId = x.InviterId == customerId ? x.InviteeId : x.InviterId,
-                    status = x.Status.ToString(),
-                    userVisible = x.isProfileVisible,
-                    memberVisible = x.isProfileVisible
-                })
-                .ToList();
+                    .Where(x => x.Status == TrustedContactStatus.Accepted)
+                    .Select(x => new CircleMembersViewModel
+                    {
+                        membershipId = x.Id.ToString(),
+                        userId = customerId,
+                        memberId = x.InviterId == customerId ? x.InviteeId : x.InviterId,
+                        status = x.Status.ToString(),
+                        // If current customer is the inviter, use InviterProfileVisible for their own setting and InviteeProfileVisible for the member.
+                        // Otherwise, if the customer is the invitee, use InviteeProfileVisible for themselves and InviterProfileVisible for the member.
+                        userVisible = x.InviterId == customerId ? x.InviterProfileVisible : x.InviteeProfileVisible,
+                        memberVisible = x.InviterId == customerId ? x.InviteeProfileVisible : x.InviterProfileVisible
+                    })
+                    .ToList();
 
-                //// Map pending invitations.
-                //var invitations = circle
-                //    .Where(x => x.Status == TrustedContactStatus.Pending)
-                //    .Select(x => new CircleMemberInvitationViewModel
-                //    {
-                //        invitationId = x.Id.ToString(),
-                //        userId = customerId,
-                //        // Determine the friend based on who is the inviter.
-                //        FriendId = x.InviterId == customerId ? x.InviterteeId : x.InviterId,
-                //        Status = x.Status.ToString(),
-                //        // If the current customer initiated the invitation, mark as sent.
-                //        SentByUser = (x.InviterId == customerId)
-                //    })
-                //    .ToList();
+                // Map pending invitations.
                 var invitations = circle
-                .Where(x => x.Status == TrustedContactStatus.Pending)
-                .Select(x => new CircleMemberInvitationViewModel
-                {
-                    invitationId = x.Id.ToString(),
-                    userId = customerId,
-                    inviteeId = x.InviterId == customerId ? x.InviteeId : x.InviterId,
-                    status = x.Status.ToString(),
-                    sentByUser = (x.InviterId == customerId)
-                })
-                .ToList();
+                    .Where(x => x.Status == TrustedContactStatus.Pending)
+                    .Select(x => new CircleMemberInvitationViewModel
+                    {
+                        invitationId = x.Id.ToString(),
+                        userId = customerId,
+                        // For pending invitations, the inviteeId remains the same.
+                        inviteeId = x.InviterId == customerId ? x.InviteeId : x.InviterId,
+                        status = x.Status.ToString(),
+                        sentByUser = (x.InviterId == customerId)
+                    })
+                    .ToList();
 
                 return new TrustedContactsResponseViewModel
                 {
@@ -288,6 +278,7 @@ namespace Infrastructure.Persistence.Services
                 throw;
             }
         }
+
 
 
         // For multiple inviter IDs.
@@ -339,7 +330,7 @@ namespace Infrastructure.Persistence.Services
             try
             {
                 // Retrieve the pending invitation for this customer from the specific inviter.
-                var invitation = await _context.TrustedPeople
+                var invitation = await _context.UserCircle
                     .FirstOrDefaultAsync(x => x.InviteeId == model.userId &&
                                               x.InviterId == model.inviterId &&
                                               x.Status == TrustedContactStatus.Pending);
@@ -375,7 +366,7 @@ namespace Infrastructure.Persistence.Services
             try
             {
                 // Retrieve the pending invitation for this customer from the specific inviter.
-                var invitation = await _context.TrustedPeople
+                var invitation = await _context.UserCircle
                     .FirstOrDefaultAsync(x => x.InviteeId == model.userId &&
                                               x.InviterId == model.inviterId &&
                                               x.Status == TrustedContactStatus.Pending);
@@ -412,7 +403,7 @@ namespace Infrastructure.Persistence.Services
             try
             {
                 // Retrieve the accepted friendship (active connection) where the customer is involved.
-                var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
+                var connection = await _context.UserCircle.FirstOrDefaultAsync(x =>
                     x.Status == TrustedContactStatus.Accepted &&
                     x.IsActive &&
                     ((x.InviterId == model.userId && x.InviteeId == model.memberId) ||
@@ -440,7 +431,7 @@ namespace Infrastructure.Persistence.Services
             try
             {
                 // Retrieve the inactive friendship record where the connection is currently accepted but deactivated.
-                var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
+                var connection = await _context.UserCircle.FirstOrDefaultAsync(x =>
                     x.Status == TrustedContactStatus.Accepted &&
                     !x.IsActive &&
                     ((x.InviterId == model.userId && x.InviteeId == model.memberId) ||
@@ -497,8 +488,8 @@ namespace Infrastructure.Persistence.Services
         {
             try
             {
-                // Retrieve the friendship record where the connection is currently accepted.
-                var connection = await _context.TrustedPeople.FirstOrDefaultAsync(x =>
+                // Retrieve the accepted connection between the two users.
+                var connection = await _context.UserCircle.FirstOrDefaultAsync(x =>
                     x.Status == TrustedContactStatus.Accepted &&
                     ((x.InviterId == model.userId && x.InviteeId == model.memberId) ||
                      (x.InviterId == model.memberId && x.InviteeId == model.userId))
@@ -507,8 +498,21 @@ namespace Infrastructure.Persistence.Services
                 {
                     throw new ApiException("Active friendship not found.");
                 }
-                // Update the record to indicate that the profile visibility has been toggled.
-                connection.isProfileVisible = model.isProfileVisible;
+
+                // Determine which side of the connection is the current user and update that visibility flag.
+                if (connection.InviterId == model.userId)
+                {
+                    connection.InviterProfileVisible = model.isProfileVisible;
+                }
+                else if (connection.InviteeId == model.userId)
+                {
+                    connection.InviteeProfileVisible = model.isProfileVisible;
+                }
+                else
+                {
+                    throw new ApiException("User is not part of the connection.");
+                }
+
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -518,6 +522,7 @@ namespace Infrastructure.Persistence.Services
                 return false;
             }
         }
+
 
         public async Task<bool>  UpdateCustomerProfileAsync(UpdateUserProfileViewModel model)
         {

@@ -334,7 +334,7 @@ namespace Infrastructure.Persistence.Services
                             });
 
                             //update user's id in Trusted Contacts table
-                            var invitee = await _context.TrustedPeople.Where(x => x.PhoneNumber == request.PhoneNumber).FirstOrDefaultAsync();
+                            var invitee = await _context.UserCircle.Where(x => x.PhoneNumber == request.PhoneNumber).FirstOrDefaultAsync();
                             if (invitee != null)
                             {
                                 invitee.InviteeId = user.Id;
