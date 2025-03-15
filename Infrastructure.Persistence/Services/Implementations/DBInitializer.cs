@@ -391,6 +391,9 @@ namespace Infrastructure.Persistence.Services
 
                         #region seed source categories
                         //Seed default source cateories levels
+
+                       
+
                         if (!(context.SourceCategories.Any()))
                         {
                             IList<SourceCategory> newSourceCategories = new List<SourceCategory>() {
@@ -431,23 +434,209 @@ namespace Infrastructure.Persistence.Services
 
                         #region seed tip categories
                         //Seed default source cateories levels
+
+                        if (!(context.SecurityTipCategoryTypes.Any()))
+                        {
+                            var categoryTypes = new List<SecurityTipCategoryType>
+                        {
+                            new SecurityTipCategoryType { Id = Guid.NewGuid(), Name = "Violence & Crime", Description = "Incidents involving violence or criminal acts against persons" },
+                            new SecurityTipCategoryType { Id = Guid.NewGuid(), Name = "Property Crime", Description = "Criminal acts against property" },
+                            new SecurityTipCategoryType { Id = Guid.NewGuid(), Name = "Public Safety", Description = "Incidents affecting public safety and welfare" },
+                            new SecurityTipCategoryType { Id = Guid.NewGuid(), Name = "Public Order", Description = "Disruptions to public order and suspicious activities" },
+                            new SecurityTipCategoryType { Id = Guid.NewGuid(), Name = "Environmental/Natural", Description = "Weather-related and environmental hazards" },
+                            new SecurityTipCategoryType { Id = Guid.NewGuid(), Name = "Terrorism & Major Threats", Description = "Serious threats to public security" }
+                        };
+
+                            context.SecurityTipCategoryTypes.AddRange(categoryTypes);
+                            context.SaveChanges();
+                        }
+
+
+                        // Seed data for the category types
+
+
+                        //if (!(context.SecurityTipCategories.Any()))
+                        //{
+                        //    IList<SecurityTipCategory> newTipCategories = new List<SecurityTipCategory>() {
+                        //    new SecurityTipCategory() { Id = Guid.NewGuid(), Name = "Robbery/Theft", Description = "Robbery/Theft", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                        //    new SecurityTipCategory() { Id = Guid.NewGuid(), Name = "Accident/Traffic", Description = "Accident/Traffic", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                        //    new SecurityTipCategory() { Id = Guid.NewGuid(), Name = "Arson/Fire", Description = "Arson/Fire", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                        //    new SecurityTipCategory() { Id = Guid.NewGuid(), Name = "Riot", Description = "Riot", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                        //    new SecurityTipCategory() { Id = Guid.NewGuid(), Name = "Terrorism", Description = "Terrorism", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                        //    new SecurityTipCategory() { Id = Guid.NewGuid(), Name = "Public Protests", Description = "Protest", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                        //    new SecurityTipCategory() { Id = Guid.NewGuid(), Name = "Confraternity/Cultism Activities", Description = "Confraternity/Cultism Activities", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
+                        //    new SecurityTipCategory() { Id = Guid.NewGuid(), Name = "Other", Description = "Other", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)}
+
+                        //    };
+
+                        //    context.SecurityTipCategories.AddRange(newTipCategories);
+                        //    context.SaveChanges();
+
+                        //}
+
                         if (!(context.SecurityTipCategories.Any()))
                         {
-                            IList<SecurityTipCategory> newTipCategories = new List<SecurityTipCategory>() {
-                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Robbery/Theft", Description = "Robbery/Theft", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
-                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Accident/Traffic", Description = "Accident/Traffic", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
-                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Arson/Fire", Description = "Arson/Fire", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
-                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Riot", Description = "Riot", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
-                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Terrorism", Description = "Terrorism", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
-                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Public Protests", Description = "Protest", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
-                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Confraternity/Cultism Activities", Description = "Confraternity/Cultism Activities", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)},
-                            new SecurityTipCategory() { Id = Guid.NewGuid(), CategoryName = "Other", Description = "Other", CreatedBy="Antman", Created = DateTime.UtcNow.AddHours(1)}
+                            // Get the category type IDs (assuming they're already in the database)
+                            var violenceTypeId = context.SecurityTipCategoryTypes.FirstOrDefault(t => t.Name == "Violence & Crime")?.Id ??
+                                                 new Guid("05D31B6C-2E4C-4186-85E7-DBEC6BD4B913");
+                            var propertyTypeId = context.SecurityTipCategoryTypes.FirstOrDefault(t => t.Name == "Property Crime")?.Id ??
+                                                 new Guid("C57D64DF-DB71-4CCD-BDF2-050F63513FC3");
+                            var publicSafetyTypeId = context.SecurityTipCategoryTypes.FirstOrDefault(t => t.Name == "Public Safety")?.Id ??
+                                                     new Guid("28F7F93B-4C40-492F-B168-08B3DAAC2559");
+                            var publicOrderTypeId = context.SecurityTipCategoryTypes.FirstOrDefault(t => t.Name == "Public Order")?.Id ??
+                                                    new Guid("AC3F6513-8B96-4111-87DC-88A6E14AF730");
+                            var environmentalTypeId = context.SecurityTipCategoryTypes.FirstOrDefault(t => t.Name == "Environmental/Natural")?.Id ??
+                                                      new Guid("A315533D-3532-4478-990E-EE4B76E16BBB");
+                            var terrorismTypeId = context.SecurityTipCategoryTypes.FirstOrDefault(t => t.Name == "Terrorism & Major Threats")?.Id ??
+                                                  new Guid("5B798595-D394-4B6C-8364-3D802295D75D");
 
+                            // Create new categories with the structured categories we agreed on
+                            IList<SecurityTipCategory> newTipCategories = new List<SecurityTipCategory>() {
+                                // Violence & Crime
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Armed Robbery",
+                                    Description = "Theft using weapons or threat of force",
+                                    CategoryTypeId = violenceTypeId,
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                },
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Assault/Attack",
+                                    Description = "Physical attack against person(s)",
+                                    CategoryTypeId = violenceTypeId,
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                },
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Kidnapping",
+                                    Description = "Abduction or hostage situation",
+                                    CategoryTypeId = violenceTypeId,
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                },
+        
+                                // Property Crime
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Vandalism",
+                                    Description = "Damage to property, graffiti, destruction",
+                                    CategoryTypeId = propertyTypeId,
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                },
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Theft/Burglary",
+                                    Description = "Theft of property, break-ins",
+                                    CategoryTypeId = propertyTypeId,
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                },
+        
+                                // Public Safety
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Accident/Traffic",
+                                    Description = "Road incidents, accidents",
+                                    CategoryTypeId = publicSafetyTypeId,
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                },
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Fire/Hazard",
+                                    Description = "Fires, gas leaks, dangerous materials",
+                                    CategoryTypeId = publicSafetyTypeId,
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                },
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Medical Emergency",
+                                    Description = "Medical situations requiring assistance",
+                                    CategoryTypeId = publicSafetyTypeId,
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                },
+        
+                                // Public Order
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Civil Unrest/Protest",
+                                    Description = "Demonstrations, riots, civil disturbances",
+                                    CategoryTypeId = publicOrderTypeId,
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                },
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Suspicious Activity",
+                                    Description = "Unusual behavior, suspicious objects/persons",
+                                    CategoryTypeId = publicOrderTypeId,
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                },
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Confraternity/Cultism Activities",
+                                    Description = "Gang or cult-related activities",
+                                    CategoryTypeId = publicOrderTypeId,
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                },
+        
+                                // Environmental/Natural
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Flooding",
+                                    Description = "Floods, water hazards",
+                                    CategoryTypeId = environmentalTypeId,
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                },
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Severe Weather",
+                                    Description = "Storms, extreme weather conditions",
+                                    CategoryTypeId = environmentalTypeId,
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                },
+        
+                                // Terrorism & Major Threats
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Terrorism",
+                                    Description = "Terrorist acts or threats",
+                                    CategoryTypeId = terrorismTypeId,
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                },
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Mass Casualty Event",
+                                    Description = "Events affecting many people",
+                                    CategoryTypeId = terrorismTypeId,
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                },
+        
+                                // Miscellaneous - keep "Other" as a category under one of the types
+                                new SecurityTipCategory() {
+                                    Id = Guid.NewGuid(),
+                                    Name = "Other",
+                                    Description = "Other security incidents not listed",
+                                    CategoryTypeId = publicSafetyTypeId, // You can choose which type to place "Other" under
+                                    CreatedBy = "Antman",
+                                    Created = DateTime.UtcNow.AddHours(1)
+                                }
                             };
 
                             context.SecurityTipCategories.AddRange(newTipCategories);
                             context.SaveChanges();
-
                         }
 
                         #endregion seed tip categories 

@@ -16,17 +16,17 @@ namespace Domain.Entities.AppTroopers.SecurityTips
         [Required]
         [MaxLength(100)]
         public string Body { get; set; }
+
         [Required]
-
-
         [ForeignKey("Source")]
         public Guid SourceId { get; set; }
         public virtual Source Source { get; set; }
 
         public bool IsBroadcasted { get; set; }
+
         public int Casualties { get; set; }
 
-        //Tip Status
+        // Tip Status
         [ForeignKey("SecurityTipStatus")]
         public Guid SecurityTipStatusId { get; set; }
         public virtual SecurityTipStatus SecurityTipStatus { get; set; }
@@ -34,21 +34,21 @@ namespace Domain.Entities.AppTroopers.SecurityTips
         [MaxLength(100)]
         public string TipStatusString { get; set; }
 
-        //broadcaster
+        // Broadcaster
         [Required]
         [ForeignKey("ApplicationUser")]
         public string BroadcasterId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
-        
-        //Admin Authorization
-        public bool isAdminAuthorized { get; set; }
+
+        // Admin Authorization
+        public bool IsAdminAuthorized { get; set; } // Fixed casing to match C# conventions
 
         [ForeignKey("VGNGAAdminAuthorizer")]
         public string AdminAuthorizerID { get; set; }
         public virtual ApplicationUser VGNGAAdminAuthorizer { get; set; }
 
-        //External - not presently in use
-        [ForeignKey("ExternalIniator")]
+        // External - not presently in use
+        [ForeignKey("ExternalInitiator")] // Fixed typo in attribute name - was "ExternalIniator"
         public string ExternalInitiatorId { get; set; }
         public virtual ApplicationUser ExternalInitiator { get; set; }
 
@@ -56,27 +56,19 @@ namespace Domain.Entities.AppTroopers.SecurityTips
         public string ExternalAuthorizerId { get; set; }
         public virtual ApplicationUser ExternalAuthorizer { get; set; }
 
-        //Coverage Type - based on broadcaster => Nullable for each or Generic
+        // Coverage Type - based on broadcaster => Nullable for each or Generic
         [Required]
-        public string LocationId { get; set; } //No FK
+        public string LocationId { get; set; } // No FK
 
         [Required]
         [ForeignKey("BroadcastLevel")]
-        public Guid BroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
+        public Guid BroadcastLevelId { get; set; } // e.g. lga, state; tbd by broadcaster ID
         public virtual BroadcastLevel BroadcastLevel { get; set; }
-        
-        //escalation
+
+        // Escalation
         public bool EscalationRequested { get; set; }
 
-        //[Required]
-        //public int EscalationLocationId { get; set; } //No FK
-
-        //[Required]
-        //[ForeignKey("EscalationBroadcastLevel")]
-        //public int EscalationBroadcastLevelId { get; set; } //e.g. lga, state; tbd by broadcaster ID
-        //public virtual BroadcastLevel EscalationBroadcastLevel { get; set; }
-        
-        //broadcaster type
+        // Broadcaster type
         [Required]
         [ForeignKey("BroadcasterType")]
         public Guid BroadcasterTypeId { get; set; }
@@ -90,7 +82,6 @@ namespace Domain.Entities.AppTroopers.SecurityTips
         public Guid SecurityTipCategoryId { get; set; }
         public virtual SecurityTipCategory SecurityTipCategory { get; set; }
 
-        //
         [Required]
         [ForeignKey("AlertLevel")]
         public Guid AlertLevelId { get; set; }

@@ -4,6 +4,7 @@ using Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250314230539_modified-db-ondelete-behaviours")]
+    partial class modifieddbondeletebehaviours
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -812,9 +815,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("ExternalInitiatorId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("IsAdminAuthorized")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsBroadcasted")
                         .HasColumnType("bit");
 
@@ -858,6 +858,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<Guid?>("TownId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("isAdminAuthorized")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AdminAuthorizerID");
@@ -897,43 +900,11 @@ namespace Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CategoryTypeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("CategoryName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("CategoryTypeId");
-
-                    b.ToTable("SecurityTipCategories");
-                });
-
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipCategoryType", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
@@ -941,7 +912,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
@@ -949,12 +921,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
-                    b.ToTable("SecurityTipCategoryTypes");
+                    b.ToTable("SecurityTipCategories");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipStatus", b =>
@@ -2308,17 +2277,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("VGNGAAdminAuthorizer");
                 });
 
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipCategory", b =>
-                {
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.SecurityTipCategoryType", "CategoryType")
-                        .WithMany("Categories")
-                        .HasForeignKey("CategoryTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CategoryType");
-                });
-
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Source", b =>
                 {
                     b.HasOne("Domain.Entities.AppTroopers.SecurityTips.SourceCategory", "SourceCategory")
@@ -2529,11 +2487,6 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipCategory", b =>
                 {
                     b.Navigation("SecurityTips");
-                });
-
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipCategoryType", b =>
-                {
-                    b.Navigation("Categories");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipStatus", b =>
