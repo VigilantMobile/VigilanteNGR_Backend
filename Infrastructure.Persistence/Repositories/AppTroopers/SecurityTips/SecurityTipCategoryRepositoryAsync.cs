@@ -19,7 +19,7 @@ namespace Infrastructure.Persistence.Repositories.SecurityTips
         public Task<bool> IsUniqueCategoryName(string CategoryName)
         {
             return _securityTipCategory
-                .AllAsync(p => p.CategoryName != CategoryName);
+                .AllAsync(p => p.Name != CategoryName);
         }
     }
 }

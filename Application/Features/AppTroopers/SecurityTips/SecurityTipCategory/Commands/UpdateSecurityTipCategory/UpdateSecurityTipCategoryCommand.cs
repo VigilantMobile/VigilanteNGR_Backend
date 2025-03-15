@@ -32,7 +32,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.UpdateSecurityT
                 }
                 else
                 {
-                    securityTipCategory.CategoryName = command.CategoryName;
+                    securityTipCategory.Name = command.CategoryName;
                     securityTipCategory.Description = command.Description;
                     securityTipCategory.LastModified = DateTime.UtcNow.AddHours(1);
                     await _securityTipCategoryRepository.UpdateAsync(securityTipCategory);
