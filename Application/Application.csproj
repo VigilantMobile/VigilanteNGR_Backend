@@ -38,7 +38,7 @@
   <ItemGroup>
     <Folder Include="DTOs\Account\AppTroopers\" />
     <Folder Include="Features\AppTroopers\Panic\" />
-    <Folder Include="Features\UserProfile\TrustedContacts\Queries\GetAllTrustedPeopleForUser\" />
+    <Folder Include="Features\UserProfile\Circle\Queries\GetAllTrustedPeopleForUser\" />
     <Folder Include="Features\AppTroopers\SecurityTips\SecurityTips\Commands\DeleteSecurityTip\" />
     <Folder Include="Features\AppTroopers\SecurityTips\SecurityTips\Commands\UpdateSecurityTip\" />
     <Folder Include="Features\AppTroopers\SecurityTip\" />
