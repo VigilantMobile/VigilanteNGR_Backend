@@ -53,19 +53,45 @@ namespace Application.Features.AppTroopers.SecurityTips
     {
         public string Id { get; set; }
         public string Subject { get; set; }
-        public string Body { get; set; }
-        public string TipStatus { get; set; }
+        public string Description { get; set; }
+        public string Coordinates { get; set; }
+        public string SecurityTipStatus { get; set; }
         public string BroadcasterName { get; set; }
-        public string SecurityTipCategory { get; set; }
+        public AlertCategoryType AlertCategoryType { get; set; }
+        public AlertCategory SecurityTipCategory { get; set; }
+        public AlertLocation AlertLocation { get; set; }
         public string AlertLevel { get; set; }
-        public string BroadcastLevel { get; set; }
         public bool IsBroadcasted { get; set; }
-        public string BroadcastLevelId { get; set; }
-        public string BroadcastLocationId { get; set; }
-        public string BroadcastLocation { get; set; }
+        public Broadcaster Broadcaster { get; set; }
         //Broadcaster
-        public string BroadcasterTownId { get; set; }
-        public string BroadcasterFullLocation { get; set; }
+    }
+
+    public class AlertLocation
+    {
+        public string City { get; set; }
+        public string StateOrProvince { get; set; }
+        public string Country { get; set; }
+    }
+
+    public class AlertCategoryType
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class AlertCategory
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class Broadcaster
+    {
+        public string Id { get; set; }
+        public string FullName { get; set; }
+        public string ProfilePhotoUrl { get; set; }
     }
 
     public class BroadcasterandTipLocations

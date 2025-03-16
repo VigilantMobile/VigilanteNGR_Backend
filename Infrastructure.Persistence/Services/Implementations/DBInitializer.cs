@@ -350,34 +350,9 @@ namespace Infrastructure.Persistence.Services
                         if (!(context.BroadcasterTypes.Any()))
                         {
                             IList<BroadcasterType> broadcasterTypes = new List<BroadcasterType>() {
-                        new BroadcasterType() { Id = Guid.NewGuid(),Name = "Settlement Vigilante Authority", Description = "Settlement Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialSettlementVigilante, Created = DateTime.UtcNow.AddHours(1)},
-                         
-                        new BroadcasterType() { Id = Guid.NewGuid(),  Name = "Town Vigilante Authority", Description = "Town Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialTownVigilante, Created = DateTime.UtcNow.AddHours(1)},
-
-                        new BroadcasterType() { Id = Guid.NewGuid(), Name = "LGA Vigilante Authority", Description = "LGA Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialLGAVigilante, Created = DateTime.UtcNow.AddHours(1)},
-
-                        new BroadcasterType() { Id = Guid.NewGuid(), Name = "State Vigilante Authority", Description = "State Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialStateVigilante, Created = DateTime.UtcNow.AddHours(1)},
-
-                        new BroadcasterType() { Id = Guid.NewGuid(), Name = "Country Vigilante Authority", Description = "Nationwide Vigilante Authority",  Broadcaster = BroadcasterTypeEnum.OfficialFederalVigilante, Created = DateTime.UtcNow.AddHours(1)},
-
-                        //npf
-                        new BroadcasterType() { Id = Guid.NewGuid(), Name = "NPF Settlement Authority", Description = "NPF Settlement Authority",  Broadcaster = BroadcasterTypeEnum.NPFSettlement, Created = DateTime.UtcNow.AddHours(1)},
-
-                        new BroadcasterType() { Id = Guid.NewGuid(),  Name = "NPF Town Authority", Description = "NPF Town Authority",  Broadcaster = BroadcasterTypeEnum.NPFTown, Created = DateTime.UtcNow.AddHours(1)},
-
-                        new BroadcasterType() { Id = Guid.NewGuid(),  Name = "NPF Settlement Authority", Description = "NPF Settlement Authority",  Broadcaster = BroadcasterTypeEnum.NPFLGA, Created = DateTime.UtcNow.AddHours(1)},
-
-                        new BroadcasterType() { Id = Guid.NewGuid(),  Name = "NPF Settlement Authority", Description = "NPF Settlement Authority",  Broadcaster = BroadcasterTypeEnum.NPFState, Created = DateTime.UtcNow.AddHours(1)},
-
-                        new BroadcasterType() { Id = Guid.NewGuid(),  Name = "NPF Federal Authority", Description = "NPF Federal Authority",  Broadcaster = BroadcasterTypeEnum.NPFFederal, Created = DateTime.UtcNow.AddHours(1)},
-
-                        // Users 
-                        new BroadcasterType() { Id = Guid.NewGuid(),  Name = "VGNGA User", Description = "VGNGA Registered Users",  Broadcaster = BroadcasterTypeEnum.VGNGAUser, Created = DateTime.UtcNow.AddHours(1)},
-
-                        new BroadcasterType() { Id = Guid.NewGuid(),  Name = "VGNGA Verified User ", Description = "VGNGA Verified User",  Broadcaster = BroadcasterTypeEnum.VGNGAVerifiedUser, Created = DateTime.UtcNow.AddHours(1)},
-
-                        // VGNGA
-                           new BroadcasterType() { Id = Guid.NewGuid(),  Name = "Official VGNGA", Description = "Official VGNGA",  Broadcaster = BroadcasterTypeEnum.OfficialVGNGA, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcasterType() { Id = Guid.NewGuid(),Name = "Vigilant Admin", Description = "Vigilant Admin",  Broadcaster = BroadcasterTypeEnum.VigilantAdmin, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcasterType() { Id = Guid.NewGuid(),  Name = "Vigilant User", Description = "Vigilant User",  Broadcaster = BroadcasterTypeEnum.VigilantUser, Created = DateTime.UtcNow.AddHours(1)},
+                        new BroadcasterType() { Id = Guid.NewGuid(), Name = "Security Authority", Description = "Security Authority",  Broadcaster = BroadcasterTypeEnum.SecurityAuthority, Created = DateTime.UtcNow.AddHours(1)},
 
                             };
                             context.BroadcasterTypes.AddRange(broadcasterTypes);
@@ -385,14 +360,10 @@ namespace Infrastructure.Persistence.Services
 
                         }
 
-
-
                         #endregion seed broadcaster types
 
                         #region seed source categories
                         //Seed default source cateories levels
-
-                       
 
                         if (!(context.SourceCategories.Any()))
                         {

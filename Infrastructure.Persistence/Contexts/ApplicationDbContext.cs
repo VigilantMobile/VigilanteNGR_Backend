@@ -71,7 +71,6 @@ namespace Infrastructure.Persistence.Contexts
         public DbSet<AlertLevel> AlertLevels { get; set; }
         public DbSet<SourceCategory> SourceCategories { get; set; }
         public DbSet<Source> Sources { get; set; }
-        public DbSet<SecurityTipStatus> SecurityTipStatuses { get; set; }
         public DbSet<EscalatedTip> EscalatedTips { get; set; }
         
         //Panic
@@ -572,18 +571,9 @@ namespace Infrastructure.Persistence.Contexts
             builder.Entity<SecurityTip>().HasOne(s => s.ApplicationUser)
               .WithMany(g => g.CustomerSecurityTips).HasForeignKey(s => s.BroadcasterId).OnDelete(DeleteBehavior.Restrict);
 
-            //Tip Status
-            builder.Entity<SecurityTipStatus>().HasMany(s => s.SecurityTips)
-           .WithOne(g => g.SecurityTipStatus).HasForeignKey(s => s.SecurityTipStatusId).OnDelete(DeleteBehavior.Restrict);
-
             // builder.Entity<SecurityTip>().HasOne(s => s.ApplicationUser)
             //.WithMany(g => g.CustomerSecurityTips).HasForeignKey(s => s.BroadcasterId).OnDelete(DeleteBehavior.Restrict);
             //users
-            builder.Entity<SecurityTip>().HasOne(s => s.ExternalInitiator)
-            .WithMany(g => g.ExternalStaffIniatedTips).HasForeignKey(s => s.ExternalInitiatorId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<SecurityTip>().HasOne(s => s.ExternalAuthorizer)
-             .WithMany(g => g.ExternalStaffAuthorizedTips).HasForeignKey(s => s.ExternalAuthorizerId).OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<SecurityTip>().HasMany(s => s.Comments)
             .WithOne(g => g.SecurityTip).HasForeignKey(s => s.SecurityTipId).OnDelete(DeleteBehavior.Restrict);
@@ -634,14 +624,8 @@ namespace Infrastructure.Persistence.Contexts
           .WithOne(g => g.Source).HasForeignKey(s => s.SourceId).OnDelete(DeleteBehavior.Restrict);
 
             //Escalated Tips
-            builder.Entity<SecurityTip>().HasMany(s => s.EscalatedTips)
-          .WithOne(g => g.SecurityTip).HasForeignKey(s => s.SecurityTipId).OnDelete(DeleteBehavior.Restrict);
-
             builder.Entity<BroadcastLevel>().HasMany(s => s.EscalatedTips)
           .WithOne(g => g.EscalationBroadcastLevel).HasForeignKey(s => s.EscalationBroadcastLevelId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<ApplicationUser>().HasMany(s => s.ApprovedEscalatedTips)
-          .WithOne(g => g.EscalationAuthorizer).HasForeignKey(s => s.EscalationAuthorizerID).OnDelete(DeleteBehavior.Restrict);
 
             //All Decimals will have 18,6 Range
             foreach (var property in builder.Model.GetEntityTypes()

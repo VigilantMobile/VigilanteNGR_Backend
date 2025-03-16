@@ -22,10 +22,9 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
         public int Casualties { get; set; }
         public string AlertLevelId { get; set; }
         public string BroadcastLevelId { get; set; } // 1,2,3 for state, lga and 
-        public string LocationId { get; set; }
+        public string Coordinates { get; set; }
         public string SourceId { get; set; }
-        public string Body { get; set; }
-        public string TipStatus { get; set; }
+        public string Description { get; set; }
         public string coordinates { get; set; }
     }
     public class CreateSecurityTipCommandHandler : IRequestHandler<CreateSecurityTipCommand, Response<CreateSecurityTipResponse>>

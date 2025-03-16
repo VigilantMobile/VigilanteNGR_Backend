@@ -42,7 +42,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
                 if (!SecurityTipsForUserLiveLocation.Success) 
                     throw new ApiException($"{SecurityTipsForUserLiveLocation.Message}");
 
-                return new Response<GetLiveLocationSecurityTipResponse>(SecurityTipsForUserLiveLocation, $"Security tip retrieval for {SecurityTipsForUserLiveLocation.SecurityTipsList.First().BroadcasterFullLocation} user successful");
+                return new Response<GetLiveLocationSecurityTipResponse>(SecurityTipsForUserLiveLocation, $"Security tip retrieval for {SecurityTipsForUserLiveLocation.SecurityTipsList.First().Coordinates} user successful");
             }
         }
     }

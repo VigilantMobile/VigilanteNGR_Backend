@@ -78,96 +78,67 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
             bool isCreated = false;
             SecurityTip saveTipResult = new SecurityTip();
             try
-            {
-                var source = await _context.Sources.Where(x => x.SourceName == SourcesEnum.VGNGAUser.ToString()).FirstOrDefaultAsync();
-                //Get Post Eligibilitys
-                var postEligibility = await _securityTipEligibilityService.GetSecurityTipPostEligibility(securityTipRequest.BroadcasterId,
-                    securityTipRequest.BroadcastLevelId, securityTipRequest.AlertLevelId, securityTipRequest.coordinates, securityTipRequest.LocationId);
-
-                if (postEligibility.CanPostTip)
+            {// Get the user to check if active
+                var user = await _userManager.FindByIdAsync(securityTipRequest.BroadcasterId);
+                if (user == null || !user.isActive)
                 {
-                    string SavedTipId = string.Empty;
-
-                    SecurityTip securityTip = new SecurityTip
-                    {
-                        Subject = securityTipRequest.Subject, 
-                        Body = securityTipRequest.Body, 
-                        AlertLevelId = Guid.Parse(securityTipRequest.AlertLevelId),
-                        BroadcastLevelId = Guid.Parse(securityTipRequest.BroadcastLevelId),
-                        LocationId = securityTipRequest.LocationId,
-                        BroadcasterId = securityTipRequest.BroadcasterId,
-                        SecurityTipCategoryId = Guid.Parse(securityTipRequest.CategoryId),
-                        Casualties = securityTipRequest.Casualties,
-                        SourceId = source.Id,
-                        CreatedBy = securityTipRequest.BroadcasterId,
-                        Created = DateTime.UtcNow.AddHours(1)
-                    };
-
-                    if (postEligibility.CanBroadcastImmediately)
-                    {
-                        securityTip.IsBroadcasted = true;
-                        securityTip.TipStatusString = SecurityTipStatusEnum.BroadcastedPendingVerification.ToString();
-
-                        //Do BroadCast();
-                        //Save Tip
-                        saveTipResult = await _securityTipRepositoryAsync.AddAsync(securityTip);
-                        SavedTipId = saveTipResult.Id.ToString();
-                    }
-                    else 
-                    {
-                        //Can't broadcast Tip immediately
-                       
-                        if (!postEligibility.EscalationRequested) //tip is district level escalation unnecessary:
-                        {
-                            securityTip.IsBroadcasted = false;
-                            securityTip.TipStatusString = SecurityTipStatusEnum.PendingApproval.ToString();
-                            securityTip.TipStatusString = SecurityTipStatusEnum.PendingApproval.ToString();
-                            saveTipResult = await _securityTipRepositoryAsync.AddAsync(securityTip);
-                            SavedTipId = saveTipResult.Id.ToString();
-                        }
-                        else
-                        {
-                            securityTip.EscalationRequested = true;
-                            saveTipResult = await _securityTipRepositoryAsync.AddAsync(securityTip);
-                            SavedTipId = saveTipResult.Id.ToString();
-
-                            EscalatedTip escalatedTip = new EscalatedTip
-                            {
-                                EscalationBroadcastLevelId = Guid.Parse(securityTipRequest.BroadcastLevelId),
-                                EscalationLocationId = securityTipRequest.LocationId,
-                                CreatedBy = securityTipRequest.BroadcasterId,
-                                Created = DateTime.UtcNow.AddHours(1),
-                                SecurityTipId = Guid.Parse(SavedTipId)
-                            };
-
-                            await _escalatedTipsRepositoryAsync.AddAsync(escalatedTip);
-                        }
-                    }
-
-                    createSecurityTipResponse.SecurityTipStatus = saveTipResult.TipStatusString;
-                    createSecurityTipResponse.IsDispatched = saveTipResult.IsBroadcasted;
-                    createSecurityTipResponse.IsCreated = true;
-                    createSecurityTipResponse.Message = $"Security Tip Created";
+                    createSecurityTipResponse.IsCreated = false;
+                    createSecurityTipResponse.Message = "User is not authorized to create security tips";
                     return createSecurityTipResponse;
                 }
-                else
+
+                // Get source
+                var source = await _context.Sources
+                    .FirstOrDefaultAsync(x => x.SourceName == SourcesEnum.VGNGAUser.ToString());
+
+                if (source == null)
                 {
-                    //Sorry Cant post tip with {reason}
-                    createSecurityTipResponse.SecurityTipStatus = saveTipResult.TipStatusString;
-                    createSecurityTipResponse.IsDispatched = saveTipResult.IsBroadcasted;
-                    createSecurityTipResponse.IsCreated = true;
-                    createSecurityTipResponse.Message = postEligibility.FailureReason;
+                    createSecurityTipResponse.IsCreated = false;
+                    createSecurityTipResponse.Message = "Invalid source configuration";
                     return createSecurityTipResponse;
                 }
+
+                // Create security tip
+                var securityTip = new SecurityTip
+                {
+                    Subject = securityTipRequest.Subject,
+                    Body = securityTipRequest.Description,
+                    AlertLevelId = Guid.Parse(securityTipRequest.AlertLevelId),
+                    Coordinates = securityTipRequest.Coordinates,
+                    BroadcasterId = securityTipRequest.BroadcasterId,
+                    SecurityTipCategoryId = Guid.Parse(securityTipRequest.CategoryId),
+                    Casualties = securityTipRequest.Casualties,
+                    SourceId = source.Id,
+                    CreatedBy = securityTipRequest.BroadcasterId,
+                    Created = DateTime.UtcNow.AddHours(1),
+                    IsBroadcasted = true, // Auto-approve for active users
+                    Status = SecurityTipStatusEnum.Approved
+                };
+
+                // Save the tip
+                var savedTip = await _securityTipRepositoryAsync.AddAsync(securityTip);
+
+                // Prepare response
+                createSecurityTipResponse.SecurityTipStatus = savedTip.Status.ToString();
+                createSecurityTipResponse.IsDispatched = savedTip.IsBroadcasted;
+                createSecurityTipResponse.IsCreated = true;
+                createSecurityTipResponse.Message = "Security Tip Created Successfully";
+
+                return createSecurityTipResponse;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"An error occurred while saving a security tip: ");
+                _logger.LogError(ex, "An error occurred while saving security tip for user {UserId}",
+                    securityTipRequest.BroadcasterId);
+
                 createSecurityTipResponse.IsCreated = false;
-                createSecurityTipResponse.Message = "It's not you, it's us. An error occurred while creating the security tip: Please try again later.";
+                createSecurityTipResponse.Message = "An error occurred while creating the security tip. Please try again later.";
                 return createSecurityTipResponse;
             }
+
         }
+           
+        
 
         public async Task<BroadcasterandTipLocations> GetBroadcasterandTipLocations(string BroadcastLevelId, string BroadcastLocationId, string BroadcasterTownId)
         {
@@ -212,110 +183,147 @@ namespace Infrastructure.Persistence.Services.Implementations.AppTroopers.Securi
 
         public async Task<GetSecurityTipResponse> GetSecurityTip(string SecurityTipId)
         {
-            GetSecurityTipResponse securityTipResponse = new GetSecurityTipResponse();
-
             try
             {
-                var Securitytip = await (from securityTip in _context.SecurityTips
-                                                join broadcaster in _context.Users on securityTip.BroadcasterId equals broadcaster.Id
-                                                join category in _context.SecurityTipCategories on securityTip.SecurityTipCategoryId equals category.Id
-                                                join alertLevel in _context.AlertLevels on securityTip.AlertLevelId equals alertLevel.Id
-
-
+                var securityTip = await (from tip in _context.SecurityTips
+                                         join broadcaster in _context.Users on tip.BroadcasterId equals broadcaster.Id
+                                         join category in _context.SecurityTipCategories on tip.SecurityTipCategoryId equals category.Id
+                                         join alertLevel in _context.AlertLevels on tip.AlertLevelId equals alertLevel.Id
+                                         join categoryType in _context.SecurityTipCategoryTypes on category.CategoryTypeId equals categoryType.Id
+                                         where tip.Id == Guid.Parse(SecurityTipId)
                                          select new GetSecurityTipResponse
                                          {
-                                              Id =  securityTip.Id.ToString(),
-                                              Subject = securityTip.Subject,
-                                              Body = securityTip.Body,
-                                              BroadcasterName = $"{broadcaster.FirstName} {broadcaster.LastName}" ,
-                                              TipStatus = securityTip.TipStatusString,
-                                              AlertLevel = alertLevel.Name,
-                                              SecurityTipCategory = category.Name,
-                                              BroadcastLevelId = securityTip.BroadcastLevelId.ToString(),
-                                              BroadcastLocationId = securityTip.LocationId,
-                                              BroadcasterTownId = broadcaster.TownId.ToString(),
+                                             Id = tip.Id.ToString(),
+                                             Subject = tip.Subject,
+                                             Description = tip.Body,
+                                             Coordinates = tip.Coordinates,
+                                             SecurityTipStatus = tip.Status.ToString(),
+                                             BroadcasterName = $"{broadcaster.FirstName} {broadcaster.LastName}",
+                                             AlertLevel = alertLevel.Name,
+                                             IsBroadcasted = tip.IsBroadcasted,
+                                             AlertCategoryType = new AlertCategoryType
+                                             {
+                                                 Id = categoryType.Id.ToString(),
+                                                 Name = categoryType.Name,
+                                                 Description = categoryType.Description
+                                             },
+                                             SecurityTipCategory = new AlertCategory
+                                             {
+                                                 Id = category.Id.ToString(),
+                                                 Name = category.Name,
+                                                 Description = category.Description
+                                             },
+                                             Broadcaster = new Broadcaster
+                                             {
+                                                 Id = broadcaster.Id,
+                                                 FullName = $"{broadcaster.FirstName} {broadcaster.LastName}",
+                                                 ProfilePhotoUrl = broadcaster.CustomerProfileUrl
+                                             }
                                          }).FirstOrDefaultAsync();
 
-                //Get Tip Broadcast Location
-
-                var broadcasterAndTipLocations = await GetBroadcasterandTipLocations(Securitytip.BroadcastLevelId, Securitytip.BroadcastLocationId, Securitytip.BroadcasterTownId);
-
-                if (broadcasterAndTipLocations == null)
+                if (securityTip == null)
                 {
-                    securityTipResponse = null;
-                    return securityTipResponse;
+                    _logger.LogWarning($"Security tip with ID {SecurityTipId} was not found");
+                    return null;
                 }
 
-                securityTipResponse.BroadcastLevel = broadcasterAndTipLocations.BroadcastLocationLevel;
-                securityTipResponse.BroadcastLocation = broadcasterAndTipLocations.BroadcastLocation;
-                securityTipResponse.BroadcasterFullLocation = broadcasterAndTipLocations.BroadcasterFullLocation;
-
-                return securityTipResponse;
+                // Get location details using coordinates
+                var locationDetails = await _geocodingService.GetCustomerLiveAddresses(securityTip.Coordinates);
+                if (locationDetails != null && locationDetails.Data != null)
+                {
+                    securityTip.AlertLocation = new AlertLocation
+                    {
+                        City = locationDetails.Data.TownOrDistrict,
+                        StateOrProvince = locationDetails.Data.StateOrProvinceOrRegion,
+                        Country = locationDetails.Data.Country
+                    };
+                }
+                return securityTip;
             }
             catch (Exception ex)
             {
-               _logger.LogError($"An error occurred while retrieving security tip: {ex.StackTrace}");
-                securityTipResponse = null;
-               return securityTipResponse;
+                _logger.LogError(ex, "An error occurred while retrieving security tip with ID {SecurityTipId}", SecurityTipId);
+                return null;
             }
         }
 
         public async Task<GetSecurityTipsListResponse> GetSecurityTipsPostedByUser(string Userid, int pageNumber, int pageSize)
         {
             GetSecurityTipsListResponse getSecurityTipsListResponse = new GetSecurityTipsListResponse();
-           
+
             try
             {
-                var UserSecuritytips = await (from securityTip in _context.SecurityTips
-                                         join broadcaster in _context.Users on securityTip.BroadcasterId equals broadcaster.Id
-                                         join category in _context.SecurityTipCategories on securityTip.SecurityTipCategoryId equals category.Id
-                                         join alertLevel in _context.AlertLevels on securityTip.AlertLevelId equals alertLevel.Id
-                                         where broadcaster.Id == Userid
+                var userSecurityTips = await (from securityTip in _context.SecurityTips
+                                              join broadcaster in _context.Users on securityTip.BroadcasterId equals broadcaster.Id
+                                              join category in _context.SecurityTipCategories on securityTip.SecurityTipCategoryId equals category.Id
+                                              join alertLevel in _context.AlertLevels on securityTip.AlertLevelId equals alertLevel.Id
+                                              where broadcaster.Id == Userid
+                                              select new GetSecurityTipResponse
+                                              {
+                                                  Id = securityTip.Id.ToString(),
+                                                  Subject = securityTip.Subject,
+                                                  Description = securityTip.Body,
+                                                  Coordinates = securityTip.Coordinates,
+                                                  SecurityTipStatus = securityTip.Status.ToString(),
+                                                  BroadcasterName = $"{broadcaster.FirstName} {broadcaster.LastName}",
+                                                  AlertLevel = alertLevel.Name,
+                                                  IsBroadcasted = securityTip.IsBroadcasted,
+                                                  AlertCategoryType = new AlertCategoryType
+                                                  {
+                                                      Id = category.CategoryType.Id.ToString(),
+                                                      Name = category.CategoryType.Name,
+                                                      Description = category.CategoryType.Description
+                                                  },
+                                                  SecurityTipCategory = new AlertCategory
+                                                  {
+                                                      Id = category.Id.ToString(),
+                                                      Name = category.Name,
+                                                      Description = category.Description
+                                                  },
+                                                  Broadcaster = new Broadcaster
+                                                  {
+                                                      Id = broadcaster.Id,
+                                                      FullName = $"{broadcaster.FirstName} {broadcaster.LastName}",
+                                                      ProfilePhotoUrl = broadcaster.CustomerProfileUrl
+                                                  }
+                                              }).Skip((pageNumber - 1) * pageSize)
+                                              .Take(pageSize)
+                                              .AsNoTracking()
+                                              .ToListAsync();
 
-                                         select new GetSecurityTipResponse
-                                         {
-                                             Id = securityTip.Id.ToString(),
-                                             Subject = securityTip.Subject,
-                                             Body = securityTip.Body,
-                                             BroadcasterName = $"{broadcaster.FirstName} {broadcaster.LastName}",
-                                             TipStatus = securityTip.TipStatusString,
-                                             AlertLevel = alertLevel.Name,
-                                             SecurityTipCategory = category.Name,
-                                             BroadcastLevelId = securityTip.BroadcastLevelId.ToString(),
-                                             BroadcastLocationId = securityTip.LocationId,
-                                             BroadcasterTownId = broadcaster.TownId.ToString(),
-                                         }).Skip((pageNumber - 1) * pageSize)
-                                         .Take(pageSize)
-                                         .AsNoTracking()
-                                         .ToListAsync();
-
-                // Get UserandTipLocations
-                var broadcasterAndTipLocations = await GetBroadcasterandTipLocations(UserSecuritytips.First().BroadcastLevelId, UserSecuritytips.First().BroadcastLocationId, UserSecuritytips.First().BroadcasterTownId);
-
-                if (broadcasterAndTipLocations == null)
+                if (userSecurityTips == null || !userSecurityTips.Any())
                 {
-                    getSecurityTipsListResponse = null;
-                    return getSecurityTipsListResponse;
-                }   
+                    _logger.LogWarning($"No security tips found for user with ID {Userid}");
+                    return null;
+                }
 
-                getSecurityTipsListResponse.SecurityTipsList = UserSecuritytips;
+                getSecurityTipsListResponse.SecurityTipsList = userSecurityTips;
 
                 foreach (var securityTip in getSecurityTipsListResponse.SecurityTipsList)
                 {
-                    securityTip.BroadcastLevel = broadcasterAndTipLocations.BroadcastLocationLevel;
-                    securityTip.BroadcastLocation = broadcasterAndTipLocations.BroadcastLocation;
-                    securityTip.BroadcasterFullLocation = broadcasterAndTipLocations.BroadcasterFullLocation;
+                    // Get location details using coordinates
+                    var locationDetails = await _geocodingService.GetCustomerLiveAddresses(securityTip.Coordinates);
+                    if (locationDetails != null && locationDetails.Data != null)
+                    {
+                        securityTip.AlertLocation = new AlertLocation
+                        {
+                            City = locationDetails.Data.TownOrDistrict,
+                            StateOrProvince = locationDetails.Data.StateOrProvinceOrRegion,
+                            Country = locationDetails.Data.Country
+                        };
+                    }
                 }
 
                 return getSecurityTipsListResponse;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"An error occurred while retrieving security tip: {ex.StackTrace}");
+                _logger.LogError($"An error occurred while retrieving security tips for user {Userid}: {ex.StackTrace}");
                 getSecurityTipsListResponse = null;
                 return getSecurityTipsListResponse;
             }
         }
+
 
         public async Task<GetLiveLocationSecurityTipResponse> GetSecurityTipsForUserLiveLocation(string Userid, string BroadcastLevel, string coordinates, int pageNumber, int pageSize) // state, lga and town
         {

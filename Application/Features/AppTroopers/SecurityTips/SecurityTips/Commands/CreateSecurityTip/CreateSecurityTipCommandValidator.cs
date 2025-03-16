@@ -45,7 +45,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
              .NotEmpty().WithMessage("{PropertyName} is required.")
             .NotNull();
 
-            RuleFor(p => p.LocationId)
+            RuleFor(p => p.Coordinates)
             .NotEmpty().WithMessage("{PropertyName} is required.")
            .NotNull();
 
@@ -54,7 +54,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
                .NotNull()
                .MaximumLength(50).WithMessage("{PropertyName} must not exceed 50 characters.");
 
-            RuleFor(p => p.Body)
+            RuleFor(p => p.Description)
              .NotEmpty().WithMessage("{PropertyName} is required.")
              .NotNull()
              .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");

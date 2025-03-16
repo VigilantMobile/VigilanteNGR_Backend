@@ -104,10 +104,6 @@ namespace Domain.Entities.Identity
         public bool IsExternalSuperAdmin { get; set; }
         public bool IsExternalAdmin { get; set; }
         public bool IsExternalOperator { get; set; }
-        public virtual ICollection<SecurityTip> ExternalStaffIniatedTips { get; set; }
-        public virtual ICollection<SecurityTip> ExternalStaffAuthorizedTips { get; set; }
-        public virtual ICollection<EscalatedTip> ApprovedEscalatedTips { get; set; }
-        //
 
         //Comments
         public virtual ICollection<Comment> Comments { get; set; }
