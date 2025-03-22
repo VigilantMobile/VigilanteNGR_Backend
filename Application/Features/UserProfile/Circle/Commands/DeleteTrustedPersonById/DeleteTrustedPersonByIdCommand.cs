@@ -17,10 +17,10 @@ namespace Application.Features.UserProfile
         public string TrustedPersonId { get; set; }
         public class DeleteTrustedPersonByIdCommandHandler : IRequestHandler<DeleteTrustedPersonByIdCommand, Response<UserCircle>>
         {
-            private readonly ITrustedPersonRepositoryAsync _trustedPersonRepository;
+            private readonly ICircleRepositoryAsync _trustedPersonRepository;
             private readonly IUserAccessor _userAccessor;
 
-            public DeleteTrustedPersonByIdCommandHandler(ITrustedPersonRepositoryAsync trustedPersonRepository, IUserAccessor userAccessor)
+            public DeleteTrustedPersonByIdCommandHandler(ICircleRepositoryAsync trustedPersonRepository, IUserAccessor userAccessor)
             {
                 _trustedPersonRepository = trustedPersonRepository;
                 _userAccessor = userAccessor;

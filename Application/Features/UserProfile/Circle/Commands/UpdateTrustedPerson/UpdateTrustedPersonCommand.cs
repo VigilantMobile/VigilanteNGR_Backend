@@ -33,10 +33,10 @@ namespace Application.Features.UserProfile
 
         public class UpdateTrustedPersonCommandHandler : IRequestHandler<UpdateTrustedPersonCommand, Response<UserCircle>>
         {
-            private readonly ITrustedPersonRepositoryAsync _trustedPersonRepository;
+            private readonly ICircleRepositoryAsync _trustedPersonRepository;
             private readonly IUserAccessor _userAccessor;
 
-            public UpdateTrustedPersonCommandHandler(ITrustedPersonRepositoryAsync trustedPersonRepository, IUserAccessor userAccessor)
+            public UpdateTrustedPersonCommandHandler(ICircleRepositoryAsync trustedPersonRepository, IUserAccessor userAccessor)
             {
                 _trustedPersonRepository = trustedPersonRepository;
                 _userAccessor = userAccessor ?? throw new ArgumentNullException(nameof(userAccessor));

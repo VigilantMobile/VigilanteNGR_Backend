@@ -10,27 +10,29 @@ using System.Threading.Tasks;
 
 namespace Application.Features.AppTroopers.SecurityTips.GetAllSecurityTipCategories
 {
-    public class GetAllSecurityTipCategoriesQuery : IRequest<PagedResponse<IEnumerable<GetAllSecurityTipCategoriesViewModel>>>
+    public class GetAllSecurityTipCategoriesQuery : IRequest<Response<IEnumerable<GetAllSecurityTipCategoriesViewModel>>>
     {
-        public int PageNumber { get; set; }
-        public int PageSize { get; set; }
     }
-    public class GetAllSecurityTipCategoriesQueryHandler : IRequestHandler<GetAllSecurityTipCategoriesQuery, PagedResponse<IEnumerable<GetAllSecurityTipCategoriesViewModel>>>
+
+    public class GetAllSecurityTipCategoriesQueryHandler
+        : IRequestHandler<GetAllSecurityTipCategoriesQuery, Response<IEnumerable<GetAllSecurityTipCategoriesViewModel>>>
     {
         private readonly ISecurityTipCategoryRepositoryAsync _securityTipCategoryRepository;
         private readonly IMapper _mapper;
+
         public GetAllSecurityTipCategoriesQueryHandler(ISecurityTipCategoryRepositoryAsync securityTipCategoryRepository, IMapper mapper)
         {
             _securityTipCategoryRepository = securityTipCategoryRepository;
             _mapper = mapper;
         }
 
-        public async Task<PagedResponse<IEnumerable<GetAllSecurityTipCategoriesViewModel>>> Handle(GetAllSecurityTipCategoriesQuery request, CancellationToken cancellationToken)
+        public async Task<Response<IEnumerable<GetAllSecurityTipCategoriesViewModel>>> Handle(
+            GetAllSecurityTipCategoriesQuery request,
+            CancellationToken cancellationToken)
         {
-            //var validFilter = _mapper.Map<GetAllSecurityTipCategoriesQueryParameter>(request);
-            var securityTipCategories = await _securityTipCategoryRepository.GetPagedReponseAsync(request.PageNumber, request.PageSize);
+            var securityTipCategories = await _securityTipCategoryRepository.GetAllAsync();
             var securityTipCategoryViewModel = _mapper.Map<IEnumerable<GetAllSecurityTipCategoriesViewModel>>(securityTipCategories);
-            return new PagedResponse<IEnumerable<GetAllSecurityTipCategoriesViewModel>>(securityTipCategoryViewModel, request.PageNumber, request.PageSize);
+            return new Response<IEnumerable<GetAllSecurityTipCategoriesViewModel>>(securityTipCategoryViewModel, "Success", "Categories retrieved successfully");
         }
     }
 }

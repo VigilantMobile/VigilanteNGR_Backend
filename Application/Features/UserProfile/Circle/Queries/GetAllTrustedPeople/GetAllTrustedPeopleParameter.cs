@@ -2,7 +2,7 @@
 
 namespace Application.Features.UserProfile
 {
-    public class GetAllTrustedPeopleParameter : RequestParameter
+    public class GetAllTrustedPeopleParameter : PaginationRequestParameter
     {
     }
 }

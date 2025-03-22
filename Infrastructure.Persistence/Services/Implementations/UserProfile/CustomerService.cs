@@ -50,11 +50,11 @@ namespace Infrastructure.Persistence.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger _logger;
         private readonly IGeoCodingService _geoCodingService;
-        ITrustedPersonRepositoryAsync _trustedPersonRepositoryAsync;
+        ICircleRepositoryAsync _trustedPersonRepositoryAsync;
         private readonly IUtilities _utilities;
         private readonly IEmailService _emailService;
         private readonly ILocationService _locationService;
-        public CustomerService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ITrustedPersonRepositoryAsync trustedPersonRepositoryAsync,
+        public CustomerService(ApplicationDbContext context, UserManager<ApplicationUser> userManager, ICircleRepositoryAsync trustedPersonRepositoryAsync,
         ILogger logger, IEmailService emailService, IUtilities utilities, IGeoCodingService geoCodingService, ILocationService locationService)
         {
             _context = context;
@@ -218,7 +218,7 @@ namespace Infrastructure.Persistence.Services
             try
             {
 
-                return await _trustedPersonRepositoryAsync.GetCustomerTrustedContactsAsync(CustomerId);
+                return await _trustedPersonRepositoryAsync.GetCustomerCircleMembersAsync(CustomerId);
             }
             catch (Exception ex)
             {

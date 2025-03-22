@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.Features.AppTroopers.SecurityTips
 {
-    public class GetSecurityTipsListQueryParameter : RequestParameter
+    public class GetSecurityTipsListQueryParameter : PaginationRequestParameter
     {
 
     }
 
-    public class GetLiveLocationSecurityTipsQueryParameter : RequestParameter
+    public class GetLiveLocationSecurityTipsQueryParameter : PaginationRequestParameter
     {
         [Required]
         public string BroadcastLevel { get; set; }

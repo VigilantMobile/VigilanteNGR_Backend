@@ -6,9 +6,9 @@ namespace Application.Features.UserProfile
 {
     public class CreateTrustedPersonsCommandValidator : AbstractValidator<UserCircle>
     {
-        private readonly ITrustedPersonRepositoryAsync trustedPersonRepository;
+        private readonly ICircleRepositoryAsync trustedPersonRepository;
 
-        public CreateTrustedPersonsCommandValidator(ITrustedPersonRepositoryAsync trustedPersonRepository)
+        public CreateTrustedPersonsCommandValidator(ICircleRepositoryAsync trustedPersonRepository)
         {
             this.trustedPersonRepository = trustedPersonRepository;
 

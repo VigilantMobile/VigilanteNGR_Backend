@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Location.LiveLocation.Queries
 {
-    public class GetLiveLocationParameter : RequestParameter
+    public class GetLiveLocationParameter : PaginationRequestParameter
     {
     }
 }

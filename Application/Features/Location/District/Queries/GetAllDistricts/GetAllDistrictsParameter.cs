@@ -2,7 +2,7 @@
 
 namespace Application.Features.Location
 {
-    public class GetAllDistrictsParameter : RequestParameter
+    public class GetAllDistrictsParameter : PaginationRequestParameter
     {
     }
 }

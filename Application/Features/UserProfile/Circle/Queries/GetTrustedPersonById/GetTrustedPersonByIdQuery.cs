@@ -14,8 +14,8 @@ namespace Application.Features.UserProfile
         public string Id { get; set; }
         public class GetTrustedPersonByIdQueryHandler : IRequestHandler<GetTrustedPersonByIdQuery, Response<UserCircle>>
         {
-            private readonly ITrustedPersonRepositoryAsync _trustedPersonRepository;
-            public GetTrustedPersonByIdQueryHandler(ITrustedPersonRepositoryAsync trustedPersonRepository)
+            private readonly ICircleRepositoryAsync _trustedPersonRepository;
+            public GetTrustedPersonByIdQueryHandler(ICircleRepositoryAsync trustedPersonRepository)
             {
                 _trustedPersonRepository = trustedPersonRepository;
             }

@@ -31,6 +31,7 @@ namespace Infrastructure.Persistence.Seeds
                 LastName = "Odu",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
+                isActive = true
             };
 
             if (userManager.Users.All(u => u.Id != superAdminUser.Id))

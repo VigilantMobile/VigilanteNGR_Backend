@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories.Panic
 {
-    public class TrustedPersonRepositoryAsync : GenericRepositoryAsync<UserCircle>, ITrustedPersonRepositoryAsync
+    public class CircleRepositoryAsync : GenericRepositoryAsync<UserCircle>, ICircleRepositoryAsync
     {
         private readonly DbSet<UserCircle> _trustedPerson;
         private readonly ApplicationDbContext _context;
 
-        public TrustedPersonRepositoryAsync(ApplicationDbContext dbContext) : base(dbContext)
+        public CircleRepositoryAsync(ApplicationDbContext dbContext) : base(dbContext)
         {
             _context = dbContext;
             _trustedPerson = dbContext.Set<UserCircle>();
@@ -28,7 +28,7 @@ namespace Infrastructure.Persistence.Repositories.Panic
             return await _trustedPerson.Where(x => x.Id == Guid.Parse(id) && x.InviterId == contactOwnerId).FirstOrDefaultAsync();
         }
 
-        public async Task<List<CircleMemberViewModel>> GetCustomerTrustedContactsAsync(string customerId)
+        public async Task<List<CircleMemberViewModel>> GetCustomerCircleMembersAsync(string customerId)
         {
             var trustedContacts = await (from contact in _context.UserCircle
                                          join customer in _context.Users on contact.InviterId equals customer.Id

@@ -2,7 +2,7 @@
 
 namespace Application.Features.Location
 {
-    public class GetDistrictsinLGAParameter : RequestParameter
+    public class GetDistrictsinLGAParameter : PaginationRequestParameter
     {
     }
 }

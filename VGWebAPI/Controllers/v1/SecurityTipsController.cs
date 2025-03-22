@@ -1,12 +1,15 @@
-﻿using Application.Features.AppTroopers.SecurityTips;
+﻿using Application.DTOs.AlertCategories;
+using Application.Features.AppTroopers.SecurityTips;
 using Application.Features.AppTroopers.SecurityTips.Commands;
 using Application.Features.AppTroopers.SecurityTips.GetAllSecurityTipCategories;
+using Application.Features.AppTroopers.SecurityTips.GetCategoryTypesWithCategories;
 using Application.Features.AppTroopers.SecurityTips.GetSecurityTipCategoryById;
 using Application.Features.Location;
 using Application.Features.Products.Commands.DeleteProductById;
 using Application.Features.Products.Commands.UpdateProduct;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -64,7 +67,7 @@ namespace VGWebAPI.Controllers.v1
         [HttpGet("categories")]
         public async Task<IActionResult> GetSecurityTipCategories([FromQuery] GetAllSecurityTipCategoriesQueryParameter filter)
         {
-            return Ok(await Mediator.Send(new GetAllSecurityTipCategoriesQuery { PageNumber = filter.PageNumber, PageSize = filter.PageSize }));
+            return Ok(await Mediator.Send(new GetAllSecurityTipCategoriesQuery {}));
         }
 
         [HttpGet("categories/{CategoryId}")] //All tips posted in a district 
@@ -72,6 +75,15 @@ namespace VGWebAPI.Controllers.v1
         {
             return Ok(await Mediator.Send(new GetSecurityTipCategoryByIdQuery { Id = CategoryId }));
         }
+
+        [HttpGet("categories-with-types")]
+        public async Task<IActionResult> GetCategoryTypesWithCategories()
+        {
+            var query = new GetCategoryTypesWithCategoriesQuery();
+            var result = await Mediator.Send(query);
+            return Ok(result);
+        }
+
 
         // Security Tip AlertLevelss   
         [HttpGet("alertlevels")]

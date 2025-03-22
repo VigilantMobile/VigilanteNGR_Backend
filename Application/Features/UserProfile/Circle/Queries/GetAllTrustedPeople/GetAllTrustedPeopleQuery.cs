@@ -17,9 +17,9 @@ namespace Application.Features.UserProfile
     }
     public class GetAllTrustedPeopleQueryHandler : IRequestHandler<GetAllTrustedPeopleQuery, PagedResponse<IEnumerable<GetAllTrustedPeopleViewModel>>>
     {
-        private readonly ITrustedPersonRepositoryAsync _trustedPersonRepositoryAsync;
+        private readonly ICircleRepositoryAsync _trustedPersonRepositoryAsync;
         private readonly IMapper _mapper;
-        public GetAllTrustedPeopleQueryHandler(ITrustedPersonRepositoryAsync trustedPersonRepositoryAsync, IMapper mapper)
+        public GetAllTrustedPeopleQueryHandler(ICircleRepositoryAsync trustedPersonRepositoryAsync, IMapper mapper)
         {
             _trustedPersonRepositoryAsync = trustedPersonRepositoryAsync;
             _mapper = mapper;
