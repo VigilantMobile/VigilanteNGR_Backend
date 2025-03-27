@@ -66,6 +66,8 @@ namespace Infrastructure.Persistence.Contexts
         public DbSet<SecurityTipCategory> SecurityTipCategories { get; set; }
         public DbSet<SecurityTipCategoryType> SecurityTipCategoryTypes { get; set; }
         public DbSet<SecurityTip> SecurityTips { get; set; }        //
+        public DbSet<SecurityTipVote> SecurityTipVotes { get; set; }
+
         public DbSet<BroadcasterType> BroadcasterTypes { get; set; }
         public DbSet<BroadcastLevel> BroadcastLevels { get; set; }
         public DbSet<AlertLevel> AlertLevels { get; set; }
@@ -96,7 +98,7 @@ namespace Infrastructure.Persistence.Contexts
 
         //Comments
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<CommentFlags> CommentFlags { get; set; }
+        //public DbSet<CommentFlags> CommentFlags { get; set; }
 
         //Subscriptions
         public DbSet<Subscription> Subscriptions { get; set; }
@@ -561,7 +563,6 @@ namespace Infrastructure.Persistence.Contexts
             builder.Entity<MissingPerson>().HasOne(s => s.ApplicationUser)
             .WithMany(g => g.CustomerMissingPeople).HasForeignKey(s => s.LoserId).OnDelete(DeleteBehavior.Restrict);
 
-
             //SecurityTips
 
             builder.Entity<Source>().HasOne(s => s.SourceCategory)
@@ -577,6 +578,45 @@ namespace Infrastructure.Persistence.Contexts
 
             builder.Entity<SecurityTip>().HasMany(s => s.Comments)
             .WithOne(g => g.SecurityTip).HasForeignKey(s => s.SecurityTipId).OnDelete(DeleteBehavior.Restrict);
+            // tip comments 
+            builder.Entity<Comment>()
+                .Property(c => c.UpvoteCount)
+                .HasDefaultValue(0);
+
+            builder.Entity<Comment>()
+                .Property(c => c.DownvoteCount)
+                .HasDefaultValue(0);
+
+            // Configure SecurityTip with vote counts
+            builder.Entity<SecurityTip>()
+                .Property(st => st.UpvoteCount)
+                .HasDefaultValue(0);
+
+            builder.Entity<SecurityTip>()
+                .Property(st => st.DownvoteCount)
+                .HasDefaultValue(0);
+            //Security Tip Votes
+            builder.Entity<SecurityTipVote>()
+               .HasOne(v => v.SecurityTip)
+               .WithMany(st => st.Votes)
+               .HasForeignKey(v => v.SecurityTipId)
+               .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<SecurityTipVote>()
+                .HasOne(v => v.ApplicationUser)
+                .WithMany()
+                .HasForeignKey(v => v.VoterId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Ensure one vote per user per security tip
+            builder.Entity<SecurityTipVote>()
+                .HasIndex(v => new { v.SecurityTipId, v.VoterId })
+                .IsUnique();
+
+            // Ensure one vote per user per comment
+            builder.Entity<CommentFlags>()
+                .HasIndex(v => new { v.CommentId, v.VoterId })
+                .IsUnique();
 
             //Curfew
             builder.Entity<Curfew>().HasOne(s => s.AdminAuthorizer)
@@ -603,11 +643,11 @@ namespace Infrastructure.Persistence.Contexts
             // .WithOne(g => g.Subscription).HasForeignKey(s => s.SubscriptionId).OnDelete(DeleteBehavior.Restrict);
 
             //Comments
-            builder.Entity<Comment>().HasMany(s => s.CommentFlags)
-             .WithOne(g => g.Comment).HasForeignKey(s => s.CommentId).OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<Comment>().HasMany(s => s.CommentFlags)
+            // .WithOne(g => g.Comment).HasForeignKey(s => s.CommentId).OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Comment>().HasMany(s => s.CommentFlags)
-            .WithOne(g => g.Comment).HasForeignKey(s => s.CommentId).OnDelete(DeleteBehavior.Restrict);
+            //builder.Entity<Comment>().HasMany(s => s.CommentFlags)
+            //.WithOne(g => g.Comment).HasForeignKey(s => s.CommentId).OnDelete(DeleteBehavior.Restrict);
 
             //Wallet
             builder.Entity<ApplicationUser>().HasOne(e => e.Wallet).WithOne(e => e.Customer).OnDelete(DeleteBehavior.Cascade);

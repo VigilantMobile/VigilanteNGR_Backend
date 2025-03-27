@@ -50,7 +50,6 @@ namespace Domain.Entities.AppTroopers.SecurityTips
         //public virtual BroadcastLevel BroadcastLevel { get; set; }
 
         // Broadcaster type
-
         public Guid BroadcasterTypeId { get; set; }
         public BroadcasterTypeEnum BroadcasterType { get; set; }
 
@@ -59,10 +58,8 @@ namespace Domain.Entities.AppTroopers.SecurityTips
         public Guid SecurityTipCategoryId { get; set; }
         public virtual SecurityTipCategory SecurityTipCategory { get; set; }
 
-        [Required]
-        [ForeignKey("AlertLevel")]
-        public Guid AlertLevelId { get; set; }
-        public virtual AlertLevel AlertLevel { get; set; }
+        // Replaced AlertLevelId and AlertLevel navigation property with direct enum
+        public AlertLevelEnum AlertLevel { get; set; }
 
         // Time Information
         public DateTime IncidentDateTime { get; set; }
@@ -75,11 +72,20 @@ namespace Domain.Entities.AppTroopers.SecurityTips
         // Analytics
         public int ViewCount { get; set; }
         public int ShareCount { get; set; }
+        public int UpvoteCount { get; set; }
+        public int DownvoteCount { get; set; }
 
         // Privacy
         //public bool IsAnonymous { get; set; }
         //public VisibilityLevel Visibility { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<SecurityTipVote> Votes { get; set; }
+
+        public SecurityTip()
+        {
+            Comments = new HashSet<Comment>();
+            Votes = new HashSet<SecurityTipVote>();
+        }
     }
 }

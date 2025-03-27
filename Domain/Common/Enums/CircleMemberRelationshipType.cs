@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace Domain.Common.Enums
 {
-    public enum TrustedContactStatus
+    public enum CircleMemberRelationshipType
     {
-        Pending,
-        Accepted,
-        Rejected
-        // You might add other statuses (e.g., Expired) as needed.
+        Family,
+        Friend
     }
-
 }

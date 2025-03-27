@@ -21,19 +21,11 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
         {
             this._securityTipRepositoryAsync = securityTipRepositoryAsync;
 
-            RuleFor(p => p.AlertLevelId)
-                .NotEmpty().WithMessage("{PropertyName} is required.")
-                .NotNull();
-
-            RuleFor(p => p.BroadcastLevelId)
-              .NotEmpty().WithMessage("{PropertyName} is required.")
-              .NotNull();
-
             RuleFor(p => p.SourceId)
              .NotEmpty().WithMessage("{PropertyName} is required.")
              .NotNull();
 
-            RuleFor(p => p.BroadcasterId)
+            RuleFor(p => p.BroadcasterUserId)
              .NotEmpty().WithMessage("{PropertyName} is required.")
              .NotNull();
 
@@ -45,7 +37,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
              .NotEmpty().WithMessage("{PropertyName} is required.")
             .NotNull();
 
-            RuleFor(p => p.Coordinates)
+            RuleFor(p => p.IncidentCoordinates)
             .NotEmpty().WithMessage("{PropertyName} is required.")
            .NotNull();
 

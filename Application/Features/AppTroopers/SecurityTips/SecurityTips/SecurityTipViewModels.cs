@@ -56,14 +56,32 @@ namespace Application.Features.AppTroopers.SecurityTips
         public string Description { get; set; }
         public string Coordinates { get; set; }
         public string SecurityTipStatus { get; set; }
+        public DateTime Created { get; set; }
+        public string UpvoteCount { get; set; }
+        public string DownvoteCount { get; set; }
+        public string ViewCount { get; set; }
         public string BroadcasterName { get; set; }
         public AlertCategoryType AlertCategoryType { get; set; }
         public AlertCategory SecurityTipCategory { get; set; }
         public AlertLocation AlertLocation { get; set; }
         public string AlertLevel { get; set; }
         public bool IsBroadcasted { get; set; }
-        public Broadcaster Broadcaster { get; set; }
         //Broadcaster
+        public Broadcaster Broadcaster { get; set; }
+        public List<CommentViewModel> Comments { get; set; }
+
+    }
+
+    public class CommentViewModel
+    {
+        public string Id { get; set; }
+        public string Comment { get; set; }
+        public string CommenterId { get; set; }
+        public string CommenterName { get; set; }
+        public string CommenterProfileUrl { get; set; }
+        public DateTime Created { get; set; }
+        public int UpvoteCount { get; set; }
+        public int DownvoteCount { get; set; }
     }
 
     public class AlertLocation

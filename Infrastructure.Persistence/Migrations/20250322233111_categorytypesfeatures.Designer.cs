@@ -4,6 +4,7 @@ using Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 
@@ -12,9 +13,11 @@ using NetTopologySuite.Geometries;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250322233111_categorytypesfeatures")]
+    partial class categorytypesfeatures
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -513,12 +516,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsInviteeEmergencyContact")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsInviterEmergencyContact")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
@@ -531,9 +528,6 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Relationship")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RelationshipType")
-                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -658,9 +652,6 @@ namespace Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CommentVote")
-                        .HasColumnType("int");
-
                     b.Property<string>("CommenterId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -671,11 +662,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DownvoteCount")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("datetime2");
 
@@ -684,11 +670,6 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<Guid>("SecurityTipId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("UpvoteCount")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
 
                     b.Property<string>("UserComment")
                         .IsRequired()
@@ -734,10 +715,9 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("VoterId");
+                    b.HasIndex("CommentId");
 
-                    b.HasIndex("CommentId", "VoterId")
-                        .IsUnique();
+                    b.HasIndex("VoterId");
 
                     b.ToTable("CommentFlags");
                 });
@@ -792,10 +772,7 @@ namespace Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("AlertLevel")
-                        .HasColumnType("int");
-
-                    b.Property<Guid?>("AlertLevelId")
+                    b.Property<Guid>("AlertLevelId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Body")
@@ -828,11 +805,6 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DownvoteCount")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
 
                     b.Property<DateTime>("IncidentDateTime")
                         .HasColumnType("datetime2");
@@ -880,11 +852,6 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<Guid>("TownId1")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("UpvoteCount")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
 
                     b.Property<int>("ViewCount")
                         .HasColumnType("int");
@@ -980,44 +947,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SecurityTipCategoryTypes");
-                });
-
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipVote", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("SecurityTipId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("VoteType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("VoterId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("VoterId");
-
-                    b.HasIndex("SecurityTipId", "VoterId")
-                        .IsUnique();
-
-                    b.ToTable("SecurityTipVotes");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Source", b =>
@@ -2204,9 +2133,9 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.CommentFlags", b =>
                 {
                     b.HasOne("Domain.Entities.AppTroopers.SecurityTips.Comment", "Comment")
-                        .WithMany()
+                        .WithMany("CommentFlags")
                         .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.Identity.ApplicationUser", "ApplicationUser")
@@ -2247,9 +2176,11 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTip", b =>
                 {
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.AlertLevel", null)
+                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.AlertLevel", "AlertLevel")
                         .WithMany("SecurityTips")
-                        .HasForeignKey("AlertLevelId");
+                        .HasForeignKey("AlertLevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.AppTroopers.SecurityTips.BroadcastLevel", null)
                         .WithMany("VGNGAAdminApprovedSecurityTips")
@@ -2303,6 +2234,8 @@ namespace Infrastructure.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("AlertLevel");
+
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("SecurityTipCategory");
@@ -2321,25 +2254,6 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("CategoryType");
-                });
-
-            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipVote", b =>
-                {
-                    b.HasOne("Domain.Entities.AppTroopers.SecurityTips.SecurityTip", "SecurityTip")
-                        .WithMany("Votes")
-                        .HasForeignKey("SecurityTipId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Entities.Identity.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("VoterId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("SecurityTip");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Source", b =>
@@ -2537,11 +2451,14 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("SecurityTips");
                 });
 
+            modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.Comment", b =>
+                {
+                    b.Navigation("CommentFlags");
+                });
+
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTip", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("Votes");
                 });
 
             modelBuilder.Entity("Domain.Entities.AppTroopers.SecurityTips.SecurityTipCategory", b =>

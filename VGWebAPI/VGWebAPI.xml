@@ -4,5 +4,25 @@
         <name>VGWebAPI</name>
     </assembly>
     <members>
+        <member name="M:VGWebAPI.Controllers.v1.SecurityTipsController.CreateComment(System.String,Application.Features.AppTroopers.SecurityTips.Commands.CreateComment.CreateCommentCommand)">
+            <summary>
+            Creates a new comment on a security tip
+            </summary>
+        </member>
+        <member name="M:VGWebAPI.Controllers.v1.SecurityTipsController.UpdateComment(System.String,Application.Features.AppTroopers.SecurityTips.Commands.UpdateComment.UpdateCommentCommand)">
+            <summary>
+            Updates an existing comment
+            </summary>
+        </member>
+        <member name="M:VGWebAPI.Controllers.v1.SecurityTipsController.DeleteComment(System.String,System.String)">
+            <summary>
+            Deletes a comment from a security tip
+            </summary>
+        </member>
+        <member name="M:VGWebAPI.Controllers.v1.SecurityTipsController.ToggleCommentVote(System.String,Application.Features.AppTroopers.SecurityTips.Commands.ToggleCommentVote.ToggleCommentVoteCommand)">
+            <summary>
+            Toggles a vote (upvote/downvote) on a comment
+            </summary>
+        </member>
     </members>
 </doc>

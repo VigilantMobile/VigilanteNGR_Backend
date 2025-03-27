@@ -33,7 +33,6 @@ namespace Infrastructure.Persistence.Repositories.SecurityTips
                                                      join broadcaster in _context.Users on securityTip.BroadcasterId equals broadcaster.Id
                                                      join category in _context.SecurityTipCategories on securityTip.SecurityTipCategoryId equals category.Id
                                                      join categoryType in _context.SecurityTipCategoryTypes on category.CategoryTypeId equals categoryType.Id
-                                                     join alertLevel in _context.AlertLevels on securityTip.AlertLevelId equals alertLevel.Id
                                                      join town in _context.Towns on securityTip.TownId equals town.Id
                                                      join lga in _context.LGAs on town.LGAId equals lga.Id
                                                      join state in _context.States on lga.StateId equals state.Id
@@ -49,7 +48,7 @@ namespace Infrastructure.Persistence.Repositories.SecurityTips
                                                          Coordinates = securityTip.Coordinates,
                                                          SecurityTipStatus = securityTip.Status.ToString(),
                                                          BroadcasterName = $"{broadcaster.FirstName} {broadcaster.LastName}",
-                                                         AlertLevel = alertLevel.Name,
+                                                         AlertLevel = securityTip.AlertLevel.ToString(),
                                                          SecurityTipCategory = new AlertCategory
                                                          {
                                                              Id = category.Id.ToString(),
@@ -94,7 +93,6 @@ namespace Infrastructure.Persistence.Repositories.SecurityTips
                                                      join broadcaster in _context.Users on securityTip.BroadcasterId equals broadcaster.Id
                                                      join category in _context.SecurityTipCategories on securityTip.SecurityTipCategoryId equals category.Id
                                                      join categoryType in _context.SecurityTipCategoryTypes on category.CategoryTypeId equals categoryType.Id
-                                                     join alertLevel in _context.AlertLevels on securityTip.AlertLevelId equals alertLevel.Id
                                                      join lga in _context.LGAs on securityTip.Coordinates equals LGAId
                                                      join town in _context.Towns on broadcaster.TownId equals town.Id
                                                      where securityTip.Coordinates == LGAId
@@ -108,7 +106,7 @@ namespace Infrastructure.Persistence.Repositories.SecurityTips
                                                          Coordinates = securityTip.Coordinates,
                                                          SecurityTipStatus = securityTip.Status.ToString(),
                                                          BroadcasterName = $"{broadcaster.FirstName} {broadcaster.LastName}",
-                                                         AlertLevel = alertLevel.Name,
+                                                         AlertLevel = securityTip.AlertLevel.ToString(),
                                                          SecurityTipCategory = new AlertCategory
                                                          {
                                                              Id = category.Id.ToString(),
@@ -152,7 +150,6 @@ namespace Infrastructure.Persistence.Repositories.SecurityTips
                                                      join broadcaster in _context.Users on securityTip.BroadcasterId equals broadcaster.Id
                                                      join category in _context.SecurityTipCategories on securityTip.SecurityTipCategoryId equals category.Id
                                                      join categoryType in _context.SecurityTipCategoryTypes on category.CategoryTypeId equals categoryType.Id
-                                                     join alertLevel in _context.AlertLevels on securityTip.AlertLevelId equals alertLevel.Id
                                                      join state in _context.States on securityTip.Coordinates equals StateId
                                                      join town in _context.Towns on broadcaster.TownId equals town.Id
                                                      join lga in _context.LGAs on town.LGAId equals lga.Id
@@ -167,7 +164,7 @@ namespace Infrastructure.Persistence.Repositories.SecurityTips
                                                          Coordinates = securityTip.Coordinates,
                                                          SecurityTipStatus = securityTip.Status.ToString(),
                                                          BroadcasterName = $"{broadcaster.FirstName} {broadcaster.LastName}",
-                                                         AlertLevel = alertLevel.Name,
+                                                         AlertLevel = securityTip.AlertLevel.ToString(),
                                                          SecurityTipCategory = new AlertCategory
                                                          {
                                                              Id = category.Id.ToString(),

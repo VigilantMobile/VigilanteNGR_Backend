@@ -40,7 +40,7 @@ namespace Infrastructure.Persistence.Repositories.Panic
                                              fullName = contact.FullName,
                                              phoneNumber = contact.PhoneNumber,
                                              invitationStatus = contact.Status.ToString(),
-                                             profilePicUrl = contact.Status != TrustedContactStatus.Accepted ? null : contactProfile.CustomerProfileUrl
+                                             profilePicUrl = contact.Status != CircleMemberInvitationStatus.Accepted ? null : contactProfile.CustomerProfileUrl
                                          }).ToListAsync();
 
             return trustedContacts;

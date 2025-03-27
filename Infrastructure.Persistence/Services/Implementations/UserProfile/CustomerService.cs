@@ -170,7 +170,7 @@ namespace Infrastructure.Persistence.Services
                         FullName = contact.fullName,
                         FullAddress = contact.fullAddress,
                         PhoneNumber = contact.phoneNumber,
-                        Status = TrustedContactStatus.Pending,
+                        Status = CircleMemberInvitationStatus.Pending,
                         Created = DateTime.UtcNow.AddHours(1),
                         CreatedBy = "Admin",
                         Inviter = inviter,
@@ -238,7 +238,7 @@ namespace Infrastructure.Persistence.Services
 
                 // Map accepted contacts to members.
                 var members = circle
-                    .Where(x => x.Status == TrustedContactStatus.Accepted)
+                    .Where(x => x.Status == CircleMemberInvitationStatus.Accepted)
                     .Select(x => new CircleMembersViewModel
                     {
                         membershipId = x.Id.ToString(),
@@ -254,7 +254,7 @@ namespace Infrastructure.Persistence.Services
 
                 // Map pending invitations.
                 var invitations = circle
-                    .Where(x => x.Status == TrustedContactStatus.Pending)
+                    .Where(x => x.Status == CircleMemberInvitationStatus.Pending)
                     .Select(x => new CircleMemberInvitationViewModel
                     {
                         invitationId = x.Id.ToString(),
@@ -333,7 +333,7 @@ namespace Infrastructure.Persistence.Services
                 var invitation = await _context.UserCircle
                     .FirstOrDefaultAsync(x => x.InviteeId == model.userId &&
                                               x.InviterId == model.inviterId &&
-                                              x.Status == TrustedContactStatus.Pending);
+                                              x.Status == CircleMemberInvitationStatus.Pending);
 
                 if (invitation == null)
                 {
@@ -348,7 +348,7 @@ namespace Infrastructure.Persistence.Services
                 }
 
                 // Update the invitation status to Accepted.
-                invitation.Status = TrustedContactStatus.Accepted;
+                invitation.Status = CircleMemberInvitationStatus.Accepted;
                 // Optionally, update a timestamp if you have one (e.g., invitation.Updated = DateTime.UtcNow;)
                 await _context.SaveChangesAsync();
 
@@ -369,7 +369,7 @@ namespace Infrastructure.Persistence.Services
                 var invitation = await _context.UserCircle
                     .FirstOrDefaultAsync(x => x.InviteeId == model.userId &&
                                               x.InviterId == model.inviterId &&
-                                              x.Status == TrustedContactStatus.Pending);
+                                              x.Status == CircleMemberInvitationStatus.Pending);
 
                 if (invitation == null)
                 {
@@ -384,7 +384,7 @@ namespace Infrastructure.Persistence.Services
                 }
 
                 // Update the invitation status to Rejected.
-                invitation.Status = TrustedContactStatus.Rejected;
+                invitation.Status = CircleMemberInvitationStatus.Rejected;
                 // Optionally, update a timestamp if you have one (e.g., invitation.Updated = DateTime.UtcNow;)
                 await _context.SaveChangesAsync();
 
@@ -404,7 +404,7 @@ namespace Infrastructure.Persistence.Services
             {
                 // Retrieve the accepted friendship (active connection) where the customer is involved.
                 var connection = await _context.UserCircle.FirstOrDefaultAsync(x =>
-                    x.Status == TrustedContactStatus.Accepted &&
+                    x.Status == CircleMemberInvitationStatus.Accepted &&
                     x.IsActive &&
                     ((x.InviterId == model.userId && x.InviteeId == model.memberId) ||
                      (x.InviterId == model.memberId && x.InviteeId == model.userId))
@@ -432,7 +432,7 @@ namespace Infrastructure.Persistence.Services
             {
                 // Retrieve the inactive friendship record where the connection is currently accepted but deactivated.
                 var connection = await _context.UserCircle.FirstOrDefaultAsync(x =>
-                    x.Status == TrustedContactStatus.Accepted &&
+                    x.Status == CircleMemberInvitationStatus.Accepted &&
                     !x.IsActive &&
                     ((x.InviterId == model.userId && x.InviteeId == model.memberId) ||
                      (x.InviterId == model.userId && x.InviteeId == model.memberId))
@@ -445,7 +445,7 @@ namespace Infrastructure.Persistence.Services
 
                 // Update the record to indicate that a reactivation request is in progress.
                 // Setting Status to Pending will require the other party to approve reactivation.
-                connection.Status = TrustedContactStatus.Pending;
+                connection.Status = CircleMemberInvitationStatus.Pending;
                 // Note: IsActive remains false until the other user accepts the reactivation.
 
                 await _context.SaveChangesAsync();
@@ -490,7 +490,7 @@ namespace Infrastructure.Persistence.Services
             {
                 // Retrieve the accepted connection between the two users.
                 var connection = await _context.UserCircle.FirstOrDefaultAsync(x =>
-                    x.Status == TrustedContactStatus.Accepted &&
+                    x.Status == CircleMemberInvitationStatus.Accepted &&
                     ((x.InviterId == model.userId && x.InviteeId == model.memberId) ||
                      (x.InviterId == model.memberId && x.InviteeId == model.userId))
                 );
@@ -583,5 +583,102 @@ namespace Infrastructure.Persistence.Services
                 return false;
             }
         }
+
+        //Emergency Contacts: 
+        /// <summary>
+        /// Toggles the emergency contact status for a circle member
+        /// </summary>
+        /// <param name="model">Model containing user ID, member ID, and emergency contact setting</param>
+        /// <returns>True if the operation was successful, otherwise false</returns>
+        public async Task<bool> ToggleEmergencyContactStatus(ToggleEmergencyContactViewModel model)
+        {
+            try
+            {
+                // Retrieve the active connection between the two users.
+                var connection = await _context.UserCircle.FirstOrDefaultAsync(x =>
+                    x.Status == CircleMemberInvitationStatus.Accepted &&
+                    x.IsActive &&
+                    ((x.InviterId == model.userId && x.InviteeId == model.memberId) ||
+                     (x.InviterId == model.memberId && x.InviteeId == model.userId))
+                );
+
+                if (connection == null)
+                {
+                    throw new ApiException("Active circle membership not found.");
+                }
+
+                // Determine which emergency contact flag to update based on who is making the request
+                if (connection.InviterId == model.userId)
+                {
+                    // If the user is the inviter, they're toggling whether the invitee is their emergency contact
+                    connection.IsInviteeEmergencyContact = model.isEmergencyContact;
+                }
+                else if (connection.InviteeId == model.userId)
+                {
+                    // If the user is the invitee, they're toggling whether the inviter is their emergency contact
+                    connection.IsInviterEmergencyContact = model.isEmergencyContact;
+                }
+                else
+                {
+                    throw new ApiException("User is not part of the connection.");
+                }
+
+                await _context.SaveChangesAsync();
+
+                // Log the emergency contact change
+                _logger.LogInformation(
+                    "Emergency contact status updated: User {UserId} set {MemberId} as {Status}",
+                    model.userId,
+                    model.memberId,
+                    model.isEmergencyContact ? "emergency contact" : "regular contact");
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error updating emergency contact status: {ex.Message}", ex);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets all emergency contacts for a user
+        /// </summary>
+        /// <param name="userId">The ID of the user</param>
+        /// <returns>List of emergency contacts</returns>
+        public async Task<List<EmergencyContactViewModel>> GetUserEmergencyContacts(string userId)
+        {
+            try
+            {
+                // Get all active accepted connections where the user is either inviter or invitee
+                // and either the invitee or inviter is marked as emergency contact
+                var emergencyContacts = await _context.UserCircle
+                    .Where(x =>
+                        x.Status == CircleMemberInvitationStatus.Accepted &&
+                        x.IsActive &&
+                        ((x.InviterId == userId && x.IsInviteeEmergencyContact) ||
+                         (x.InviteeId == userId && x.IsInviterEmergencyContact)))
+                    .Select(x => new EmergencyContactViewModel
+                    {
+                        membershipId = x.Id.ToString(),
+                        userId = userId,
+                        contactId = x.InviterId == userId ? x.InviteeId : x.InviterId,
+                        fullName = x.FullName,
+                        phoneNumber = x.PhoneNumber,
+                        emailAddress = x.EmailAddress,
+                        relationship = x.Relationship,
+                        relationshipType = x.RelationshipType.ToString()
+                    })
+                    .ToListAsync();
+
+                return emergencyContacts;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error retrieving emergency contacts: {ex.Message}", ex);
+                return new List<EmergencyContactViewModel>();
+            }
+        }
+
     }
 }

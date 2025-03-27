@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace Domain.Common.Enums
 {
-    public  enum CommentVoteEnum
+    public enum CircleMemberInvitationStatus
     {
-        None,
-        Upvote,
-        Downvote
+        Pending,
+        Accepted,
+        Rejected
+        // You might add other statuses (e.g., Expired) as needed.
     }
+
 }
