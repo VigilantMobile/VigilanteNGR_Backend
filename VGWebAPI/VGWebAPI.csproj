@@ -14,7 +14,10 @@
 	<NoWarn>1701;1702;1591</NoWarn>
   </PropertyGroup>
 
-
+	<PropertyGroup>
+		<AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+	</PropertyGroup>
+	
   <ItemGroup>
     <Content Remove="JSONDocs\ngstatesboundaries.json" />
     <Content Remove="JSONDocs\towns_in_nigeria.json" />

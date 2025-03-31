@@ -22,41 +22,59 @@ namespace Application.Wrappers
             Message = message;
         }
 
-        //public Response(string responsestatus, string message)
-        //{
-        //    status = responsestatus;
-        //    Message = message;
-        //}
-
-        //public Response(T data, string responsestatus, string message = null)
-        //{
-        //    status = responsestatus;
-        //    Message = message;
-        //    Data = data;
-        //}
-
-        //public Response(T data, string responsestatus, string message = null)
-        //{
-        //    status = responsestatus;
-        //    Message = message;
-        //    Data = data;
-        //}
-
-        //public Response(T data, int HttpStatusCode, string message = null, bool successStatus = false)
-        //{
-        //    Succeeded = successStatus;
-        //    Message = message;
-        //    Data = data;
-        //}
-
         //public bool status { get; set; }
         public string status { get; set; }
         public string Message { get; set; }
         public List<string> Errors { get; set; }
         public T Data { get; set; }
 
-        //For Jsend
-        //public string status { get; set; }
+        public static Response<T> NotFound(string message = "Record not found")
+        {
+            return new Response<T>
+            {
+                status = APIResponseStatus.fail.ToString(),
+                Message = message,
+                Data = default(T)
+            };
+        }
+
+        /// <summary>
+        /// Creates a success response
+        /// </summary>
+        public static Response<T> Success(T data, string message = "Operation completed successfully")
+        {
+            return new Response<T>
+            {
+                status = APIResponseStatus.success.ToString(),
+                Message = message,
+                Data = data
+            };
+        }
+
+        /// <summary>
+        /// Creates a failure response
+        /// </summary>
+        public static Response<T> Fail(string message, T data = default)
+        {
+            return new Response<T>
+            {
+                status = APIResponseStatus.fail.ToString(),
+                Message = message,
+                Data = data
+            };
+        }
+
+        /// <summary>
+        /// Checks if response represents a not found condition
+        /// </summary>
+        public bool IsNotFound =>
+            status == APIResponseStatus.fail.ToString() && Data == null;
+
+        /// <summary>
+        /// Checks if response represents a success condition
+        /// </summary>
+        public bool IsSuccess =>
+            status == APIResponseStatus.success.ToString();
 
     }
 
@@ -104,6 +122,13 @@ namespace Application.Wrappers
         public string Message { get; set; }
         public List<string> Errors { get; set; }
         public T Data { get; set; }
+
+        // New constructors and static methods for better null handling
+
+        /// <summary>
+        /// Creates a not found response with default message
+        /// </summary>
+       
     }
     public class Errors
     {
