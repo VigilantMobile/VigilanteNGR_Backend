@@ -31,35 +31,59 @@ namespace Infrastructure.Persistence.Repositories.SecurityTips
 
             var SecurityTipsForLiveLocation = await (from securityTip in _context.SecurityTips
                                                      join broadcaster in _context.Users on securityTip.BroadcasterId equals broadcaster.Id
-                                                     join broadcastLevel in _context.BroadcastLevels on securityTip.BroadcastLevelId equals broadcastLevel.Id
                                                      join category in _context.SecurityTipCategories on securityTip.SecurityTipCategoryId equals category.Id
-                                                     join alertLevel in _context.AlertLevels on securityTip.AlertLevelId equals alertLevel.Id
-                                                     join town in _context.Towns on securityTip.LocationId equals Townid
-                                                     where securityTip.LocationId == Townid
+                                                     join categoryType in _context.SecurityTipCategoryTypes on category.CategoryTypeId equals categoryType.Id
+                                                     join town in _context.Towns on securityTip.TownId equals town.Id
+                                                     join lga in _context.LGAs on town.LGAId equals lga.Id
+                                                     join state in _context.States on lga.StateId equals state.Id
+                                                     join country in _context.Countries on state.CountryId equals country.Id
+                                                     where securityTip.TownId.ToString() == Townid
                                                      && securityTip.IsBroadcasted == true
 
                                                      select new GetSecurityTipResponse
                                                      {
-                                                        Id = securityTip.Id.ToString(),
-                                                        Subject = securityTip.Subject,
-                                                        Body = securityTip.Body,
-                                                        BroadcasterName = $"{broadcaster.FirstName} {broadcaster.LastName}",
-                                                        TipStatus = securityTip.TipStatusString,
-                                                        AlertLevel = alertLevel.Name,
-                                                        SecurityTipCategory = category.Name,
-                                                        BroadcastLevelId = securityTip.BroadcastLevelId.ToString(),
-                                                        BroadcastLocationId = securityTip.LocationId,
-                                                        BroadcasterTownId = broadcaster.TownId.ToString(),
-                                                        BroadcastLevel = broadcastLevel.Name,
-                                                        BroadcastLocation = town.Name
+                                                         Id = securityTip.Id.ToString(),
+                                                         Subject = securityTip.Subject,
+                                                         Description = securityTip.Body,
+                                                         Coordinates = securityTip.Coordinates,
+                                                         SecurityTipStatus = securityTip.Status.ToString(),
+                                                         BroadcasterName = $"{broadcaster.FirstName} {broadcaster.LastName}",
+                                                         AlertLevel = securityTip.AlertLevel.ToString(),
+                                                         SecurityTipCategory = new AlertCategory
+                                                         {
+                                                             Id = category.Id.ToString(),
+                                                             Name = category.Name,
+                                                             Description = category.Description
+                                                         },
+                                                         AlertCategoryType = new AlertCategoryType
+                                                         {
+                                                             Id = categoryType.Id.ToString(),
+                                                             Name = categoryType.Name,
+                                                             Description = categoryType.Description
+                                                         },
+                                                         AlertLocation = new AlertLocation
+                                                         {
+                                                             City = town.Name,
+                                                             StateOrProvince = state.Name,
+                                                             Country = country.Name,
+                                                         },
+                                                         IsBroadcasted = securityTip.IsBroadcasted,
+                                                         Broadcaster = new Broadcaster
+                                                         {
+                                                             Id = broadcaster.Id,
+                                                             FullName = $"{broadcaster.FirstName} {broadcaster.LastName}",
+                                                             ProfilePhotoUrl = broadcaster.CustomerProfileUrl
+                                                         }
                                                      }).Skip((pageNumber - 1) * pageSize)
-                                          .Take(pageSize)
-                                          .AsNoTracking()
-                                          .ToListAsync();
+                                               .Take(pageSize)
+                                               .AsNoTracking()
+                                               .ToListAsync();
 
             SecurityTipsListResponse.SecurityTipsList = SecurityTipsForLiveLocation;
             return SecurityTipsListResponse;
         }
+
+
 
         public async Task<GetLiveLocationSecurityTipResponse> GetSecurityTipDataForLGA(string LGAId, int pageNumber, int pageSize)
         {
@@ -67,36 +91,56 @@ namespace Infrastructure.Persistence.Repositories.SecurityTips
 
             var SecurityTipsForLiveLocation = await (from securityTip in _context.SecurityTips
                                                      join broadcaster in _context.Users on securityTip.BroadcasterId equals broadcaster.Id
-                                                     join broadcastLevel in _context.BroadcastLevels on securityTip.BroadcastLevelId equals broadcastLevel.Id
                                                      join category in _context.SecurityTipCategories on securityTip.SecurityTipCategoryId equals category.Id
-                                                     join alertLevel in _context.AlertLevels on securityTip.AlertLevelId equals alertLevel.Id
-                                                     join lga in _context.LGAs on securityTip.LocationId equals LGAId
-
-                                                     where securityTip.LocationId == LGAId
+                                                     join categoryType in _context.SecurityTipCategoryTypes on category.CategoryTypeId equals categoryType.Id
+                                                     join lga in _context.LGAs on securityTip.Coordinates equals LGAId
+                                                     join town in _context.Towns on broadcaster.TownId equals town.Id
+                                                     where securityTip.Coordinates == LGAId
                                                      && securityTip.IsBroadcasted == true
 
                                                      select new GetSecurityTipResponse
                                                      {
                                                          Id = securityTip.Id.ToString(),
                                                          Subject = securityTip.Subject,
-                                                         Body = securityTip.Body,
+                                                         Description = securityTip.Body,
+                                                         Coordinates = securityTip.Coordinates,
+                                                         SecurityTipStatus = securityTip.Status.ToString(),
                                                          BroadcasterName = $"{broadcaster.FirstName} {broadcaster.LastName}",
-                                                         TipStatus = securityTip.TipStatusString,
-                                                         AlertLevel = alertLevel.Name,
-                                                         SecurityTipCategory = category.Name,
-                                                         BroadcastLevelId = securityTip.BroadcastLevelId.ToString(),
-                                                         BroadcastLocationId = securityTip.LocationId,
-                                                         BroadcasterTownId = broadcaster.TownId.ToString(),
-                                                         BroadcastLevel = broadcastLevel.Name,
-                                                         BroadcastLocation = lga.Name
-                                                     }).Skip((pageNumber - 1) * pageSize)
-                                          .Take(pageSize)
-                                          .AsNoTracking()
-                                          .ToListAsync();
+                                                         AlertLevel = securityTip.AlertLevel.ToString(),
+                                                         SecurityTipCategory = new AlertCategory
+                                                         {
+                                                             Id = category.Id.ToString(),
+                                                             Name = category.Name,
+                                                             Description = category.Description
+                                                         },
+                                                         AlertCategoryType = new AlertCategoryType
+                                                         {
+                                                             Id = categoryType.Id.ToString(),
+                                                             Name = categoryType.Name,
+                                                             Description = categoryType.Description
+                                                         },
+                                                         AlertLocation = new AlertLocation
+                                                         {
+                                                             City = town.Name,
+                                                             StateOrProvince = lga.Name,
+                                                         },
+                                                         IsBroadcasted = securityTip.IsBroadcasted,
+                                                         Broadcaster = new Broadcaster
+                                                         {
+                                                             Id = broadcaster.Id,
+                                                             FullName = $"{broadcaster.FirstName} {broadcaster.LastName}",
+                                                             ProfilePhotoUrl = broadcaster.CustomerProfileUrl
+                                                         }
+                                                     })
+                                                   .Skip((pageNumber - 1) * pageSize)
+                                                   .Take(pageSize)
+                                                   .AsNoTracking()
+                                                   .ToListAsync();
 
             SecurityTipsListResponse.SecurityTipsList = SecurityTipsForLiveLocation;
             return SecurityTipsListResponse;
         }
+
 
         public async Task<GetLiveLocationSecurityTipResponse> GetSecurityTipDataForState(string StateId, int pageNumber, int pageSize)
         {
@@ -104,32 +148,52 @@ namespace Infrastructure.Persistence.Repositories.SecurityTips
 
             var SecurityTipsForLiveLocation = await (from securityTip in _context.SecurityTips
                                                      join broadcaster in _context.Users on securityTip.BroadcasterId equals broadcaster.Id
-                                                     join broadcastLevel in _context.BroadcastLevels on securityTip.BroadcastLevelId equals broadcastLevel.Id
                                                      join category in _context.SecurityTipCategories on securityTip.SecurityTipCategoryId equals category.Id
-                                                     join alertLevel in _context.AlertLevels on securityTip.AlertLevelId equals alertLevel.Id
-                                                     join state in _context.States on securityTip.LocationId equals StateId
-
-                                                     where securityTip.LocationId == StateId
+                                                     join categoryType in _context.SecurityTipCategoryTypes on category.CategoryTypeId equals categoryType.Id
+                                                     join state in _context.States on securityTip.Coordinates equals StateId
+                                                     join town in _context.Towns on broadcaster.TownId equals town.Id
+                                                     join lga in _context.LGAs on town.LGAId equals lga.Id
+                                                     where securityTip.Coordinates == StateId
                                                      && securityTip.IsBroadcasted == true
 
                                                      select new GetSecurityTipResponse
                                                      {
                                                          Id = securityTip.Id.ToString(),
                                                          Subject = securityTip.Subject,
-                                                         Body = securityTip.Body,
+                                                         Description = securityTip.Body,
+                                                         Coordinates = securityTip.Coordinates,
+                                                         SecurityTipStatus = securityTip.Status.ToString(),
                                                          BroadcasterName = $"{broadcaster.FirstName} {broadcaster.LastName}",
-                                                         TipStatus = securityTip.TipStatusString,
-                                                         AlertLevel = alertLevel.Name,
-                                                         SecurityTipCategory = category.Name,
-                                                         BroadcastLevelId = securityTip.BroadcastLevelId.ToString(),
-                                                         BroadcastLocationId = securityTip.LocationId,
-                                                         BroadcasterTownId = broadcaster.TownId.ToString(),
-                                                         BroadcastLevel = broadcastLevel.Name,
-                                                         BroadcastLocation = state.Name
-                                                     }).Skip((pageNumber - 1) * pageSize)
-                                          .Take(pageSize)
-                                          .AsNoTracking()
-                                          .ToListAsync();
+                                                         AlertLevel = securityTip.AlertLevel.ToString(),
+                                                         SecurityTipCategory = new AlertCategory
+                                                         {
+                                                             Id = category.Id.ToString(),
+                                                             Name = category.Name,
+                                                             Description = category.Description
+                                                         },
+                                                         AlertCategoryType = new AlertCategoryType
+                                                         {
+                                                             Id = categoryType.Id.ToString(),
+                                                             Name = categoryType.Name,
+                                                             Description = categoryType.Description
+                                                         },
+                                                         AlertLocation = new AlertLocation
+                                                         {
+                                                             City = town.Name,
+                                                             StateOrProvince = state.Name
+                                                         },
+                                                         IsBroadcasted = securityTip.IsBroadcasted,
+                                                         Broadcaster = new Broadcaster
+                                                         {
+                                                             Id = broadcaster.Id,
+                                                             FullName = $"{broadcaster.FirstName} {broadcaster.LastName}",
+                                                             ProfilePhotoUrl = broadcaster.CustomerProfileUrl
+                                                         }
+                                                     })
+                                                   .Skip((pageNumber - 1) * pageSize)
+                                                   .Take(pageSize)
+                                                   .AsNoTracking()
+                                                   .ToListAsync();
 
             SecurityTipsListResponse.SecurityTipsList = SecurityTipsForLiveLocation;
             return SecurityTipsListResponse;

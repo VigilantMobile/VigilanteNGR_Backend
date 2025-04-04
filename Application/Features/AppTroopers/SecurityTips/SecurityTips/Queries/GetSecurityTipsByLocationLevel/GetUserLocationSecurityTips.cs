@@ -13,13 +13,13 @@ using System.Threading.Tasks;
 
 namespace Application.Features.AppTroopers.SecurityTips.Commands
 {
-    public class GetUserLocationSecurityTipsByIdQuery : IRequest<Response<GetSecurityTipsForUserTownLGAandStateResponse>>
+    public class GetUserLocationSecurityTipsByIdQuery : IRequest<Response<GetSecurityTipsListResponse>>
     {
         public string UserId { get; set; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
 
-        public class GetUserLocationSecurityTipsByIdQueryHandler : IRequestHandler<GetUserLocationSecurityTipsByIdQuery, Response<GetSecurityTipsForUserTownLGAandStateResponse>>
+        public class GetUserLocationSecurityTipsByIdQueryHandler : IRequestHandler<GetUserLocationSecurityTipsByIdQuery, Response<GetSecurityTipsListResponse>>
         {
             private readonly ISecurityTipService _securityTipService;
             private readonly IMapper _mapper;
@@ -30,12 +30,12 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
                 _mapper = mapper;
             }
 
-            public async Task<Response<GetSecurityTipsForUserTownLGAandStateResponse>> Handle(GetUserLocationSecurityTipsByIdQuery query, CancellationToken cancellationToken)
+            public async Task<Response<GetSecurityTipsListResponse>> Handle(GetUserLocationSecurityTipsByIdQuery query, CancellationToken cancellationToken)
             {
                 var validFilter = _mapper.Map<GetSecurityTipsListQueryParameter>(query);
-                var SecurityTipsForUser = await _securityTipService.GetSecurityTipsForUserLocations(query.UserId,  validFilter.PageNumber, validFilter.PageSize);
+                var SecurityTipsForUser = await _securityTipService.GetSecurityTipsForUserRegisteredLocation(query.UserId,  validFilter.PageNumber, validFilter.PageSize);
                 if (SecurityTipsForUser == null) throw new ApiException($"No security tips found for the specified User location.");
-                return new Response<GetSecurityTipsForUserTownLGAandStateResponse>(SecurityTipsForUser, $"Security tip retrieval for user {query.UserId} successful");
+                return new Response<GetSecurityTipsListResponse>(SecurityTipsForUser, $"Security tip retrieval for user {query.UserId} successful");
             }
         }
     }

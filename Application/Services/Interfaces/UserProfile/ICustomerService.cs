@@ -22,5 +22,7 @@ namespace Application.Services.Interfaces.UserProfile
         Task<bool> ReactivateFriendship(ReactivateCircleMembershipViewModel model);
         Task<bool> UpdateCustomerProfileAsync(UpdateUserProfileViewModel model);
         Task<bool> ToggleCustomerProfileVisibility(ToggleCircleMembershipVisibilityViewModel model);
+        Task<bool> ToggleEmergencyContactStatus(ToggleEmergencyContactViewModel model);
+        Task<List<EmergencyContactViewModel>> GetUserEmergencyContacts(string userId);
     }
 }

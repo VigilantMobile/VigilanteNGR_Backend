@@ -15,16 +15,16 @@ using System.Threading.Tasks;
 
 namespace Application.Features.AppTroopers.SecurityTips.Commands
 {
-    public class GetUserLiveLocationSecurityTipsQuery : IRequest<Response<GetLiveLocationSecurityTipResponse>>
+    public class GetUserLiveLocationSecurityTipsQuery : IRequest<Response<GetSecurityTipsListResponse>>
     {
+        [Required]
         public string UserId { get; set; }
-        public string DesiredBroadcastLevel { get; set; }
         [Required]
         public string Coordinates { get; set; }
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
 
-        public class GetUserLiveLocationSecurityTipsByIdQueryHandler : IRequestHandler<GetUserLiveLocationSecurityTipsQuery, Response<GetLiveLocationSecurityTipResponse>>
+        public class GetUserLiveLocationSecurityTipsByIdQueryHandler : IRequestHandler<GetUserLiveLocationSecurityTipsQuery, Response<GetSecurityTipsListResponse>>
         {
             private readonly ISecurityTipService _securityTipService;
             private readonly IMapper _mapper;
@@ -35,14 +35,14 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
                 _mapper = mapper;
             }
 
-            public async Task<Response<GetLiveLocationSecurityTipResponse>> Handle(GetUserLiveLocationSecurityTipsQuery query, CancellationToken cancellationToken)
+            public async Task<Response<GetSecurityTipsListResponse>> Handle(GetUserLiveLocationSecurityTipsQuery query, CancellationToken cancellationToken)
             {
                 //var validFilter = _mapper.Map<GetSecurityTipsListQueryParameter>(query);
-                var SecurityTipsForUserLiveLocation = await _securityTipService.GetSecurityTipsForUserLiveLocation(query.UserId, query.DesiredBroadcastLevel, query.Coordinates, query.PageNumber, query.PageSize);
+                var SecurityTipsForUserLiveLocation = await _securityTipService.GetSecurityTipsForUserLiveLocation(query.UserId, query.Coordinates, query.PageNumber, query.PageSize);
                 if (!SecurityTipsForUserLiveLocation.Success) 
                     throw new ApiException($"{SecurityTipsForUserLiveLocation.Message}");
 
-                return new Response<GetLiveLocationSecurityTipResponse>(SecurityTipsForUserLiveLocation, $"Security tip retrieval for {SecurityTipsForUserLiveLocation.SecurityTipsList.First().BroadcasterFullLocation} user successful");
+                return new Response<GetSecurityTipsListResponse>(SecurityTipsForUserLiveLocation, $"Security tip retrieval for {SecurityTipsForUserLiveLocation.SecurityTipsList.First().Coordinates} user successful");
             }
         }
     }

@@ -62,7 +62,8 @@ namespace VGWebAPI
                         await Infrastructure.Persistence.Seeds.DefaultBasicUser.SeedAsync(userManager, roleManager);
                         await Infrastructure.Persistence.Seeds.DefaultSuperAdmin.SeedAsync(userManager, roleManager);
                     }
-                
+
+
                     //Seed Default Entities
 
                     Log.Information("Application Starting");

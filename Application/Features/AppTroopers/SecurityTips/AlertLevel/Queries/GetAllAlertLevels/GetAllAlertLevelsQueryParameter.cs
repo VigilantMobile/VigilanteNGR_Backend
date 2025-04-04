@@ -2,7 +2,7 @@
 
 namespace Application.Features.AppTroopers.SecurityTips.GetAllSecurityTipCategories
 {
-    public class GetAllAlertLevelsQueryParameter : RequestParameter
+    public class GetAllAlertLevelsQueryParameter : PaginationRequestParameter
     {
     }
 }

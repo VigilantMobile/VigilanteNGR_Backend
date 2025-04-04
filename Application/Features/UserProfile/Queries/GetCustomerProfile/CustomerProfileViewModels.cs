@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Common.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -28,15 +29,7 @@ namespace Application.Features.UserProfile
         public List<CircleMemberInvitationViewModel> invitations { get; set; }
     }
 
-    public class CircleMembersViewModel
-    {
-        public string membershipId { get; set; }
-        public string userId { get; set; }
-        public string memberId { get; set; }
-        public string status { get; set; }
-        public bool userVisible { get; set; }
-        public bool memberVisible { get; set; }
-    }
+
 
     public class CircleMemberInvitationViewModel
     {
@@ -50,6 +43,12 @@ namespace Application.Features.UserProfile
         /// If true, the invitation is outgoing; if false, it's an incoming invitation.
         /// </summary>
         public bool sentByUser { get; set; }
+        // Add relationship information
+        public string relationship { get; set; }
+        public string relationshipType { get; set; }
+        // Add emergency contact flags
+        public bool isUserEmergencyContact { get; set; }
+        public bool isMemberEmergencyContact { get; set; }
     }
 
     public class CreateCircleMemberViewModel
@@ -130,6 +129,21 @@ namespace Application.Features.UserProfile
         public string fullName { get; set; }
         public string coordinates { get; set; }
     }
+    public class CircleMembersViewModel
+    {
+        public string membershipId { get; set; }
+        public string userId { get; set; }
+        public string memberId { get; set; }
+        public string status { get; set; }
+        public bool userVisible { get; set; }
+        public bool memberVisible { get; set; }
+        // Add relationship information
+        public string relationship { get; set; }
+        public string relationshipType { get; set; }
+        // Add emergency contact status
+        public bool isUserEmergencyContact { get; set; }
+        public bool isMemberEmergencyContact { get; set; }
+    }
 
     public class CircleMemberViewModel
     {
@@ -143,10 +157,14 @@ namespace Application.Features.UserProfile
         [Required]
         [EmailAddress]
         public string emailAddress { get; set; }
-        [Required]
         public string gender { get; set; }
         public string profilePicUrl { get; set; }
         public string invitationStatus { get; set; }
+        public string relationship { get; set; }
+        public CircleMemberRelationshipType relationshipType { get; set; }
+        // Add emergency contact flags
+        public bool? isInviterEmergencyContact { get; set; }
+        public bool? isInviteeEmergencyContact { get; set; }
     }
 
     public class UserLocationViewModel
@@ -189,5 +207,30 @@ namespace Application.Features.UserProfile
     {
         public string subscriptionPlanId { get; set; }
         public string subscriptionPlanName { get; set; }
+    }
+
+    //Emergency Contact:
+    public class ToggleEmergencyContactViewModel
+    {
+        [Required]
+        public string userId { get; set; }
+
+        [Required]
+        public string memberId { get; set; }
+
+        [Required]
+        public bool isEmergencyContact { get; set; }
+    }
+
+    public class EmergencyContactViewModel
+    {
+        public string membershipId { get; set; }
+        public string userId { get; set; }
+        public string contactId { get; set; }
+        public string fullName { get; set; }
+        public string phoneNumber { get; set; }
+        public string emailAddress { get; set; }
+        public string relationship { get; set; }
+        public string relationshipType { get; set; }
     }
 }

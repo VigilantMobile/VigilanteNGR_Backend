@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces.Repositories.AppTroopers.SecurityTips;
 using Application.Services.Interfaces;
+using Application.Services.Interfaces.AppTroopers.SecurityTipCategories;
 using Application.Services.Interfaces.AppTroopers.SecurityTips;
 using Application.Services.Interfaces.Location;
 using Application.Services.Interfaces.UserProfile;
@@ -34,7 +35,8 @@ namespace Infrastructure.Persistence.Helpers
             builder.RegisterType<GeocodingService>().As<IGeoCodingService>().InstancePerLifetimeScope();
             builder.RegisterType<LocationService>().As<ILocationService>().InstancePerLifetimeScope();
             builder.RegisterType<Utilities>().As<IUtilities>().InstancePerLifetimeScope();
-            
+            builder.RegisterType<SecurityTipCategoryService>().As<ISecurityTipCategoryService>().InstancePerLifetimeScope();
+
         }
     }
 }

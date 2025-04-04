@@ -34,7 +34,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
                 var validFilter = _mapper.Map<GetSecurityTipsListQueryParameter>(query);
                 var SecurityTipsForLGA = await _securityTipService.GetSecurityTipsForLGA(query.LGAId, validFilter.PageNumber, validFilter.PageSize);
                 if (SecurityTipsForLGA == null) throw new ApiException($"No security tips found for the specified LGA.");
-                return new Response<GetSecurityTipsListResponse>(SecurityTipsForLGA, $"Security tip retrieval for {SecurityTipsForLGA.SecurityTipsList.First().BroadcasterFullLocation} LGA successful");
+                return new Response<GetSecurityTipsListResponse>(SecurityTipsForLGA, $"Security tip retrieval for {SecurityTipsForLGA.SecurityTipsList.First().AlertLocation.StateOrProvince},{SecurityTipsForLGA.SecurityTipsList.First().AlertLocation.Country} LGA successful");
             }
         }
     }

@@ -8,10 +8,8 @@ namespace Domain.Common.Enums
 {
     public enum SecurityTipStatusEnum
     {
-        PendingApproval,
+        Pending,
         Approved,
-        Rejected,
-        BroadcastedPendingVerification,
-        BroadcastedandApproved,
+        Rejected
     }
 }
