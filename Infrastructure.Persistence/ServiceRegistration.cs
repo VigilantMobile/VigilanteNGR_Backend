@@ -189,6 +189,7 @@ namespace Infrastructure.Persistence
             #region Repositories
             services.AddScoped(typeof(IGenericRepositoryAsync<>), typeof(GenericRepositoryAsync<>));
             services.AddScoped<IProductRepositoryAsync, ProductRepositoryAsync>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             //User Profile
 
             //App Troopers
@@ -208,7 +209,7 @@ namespace Infrastructure.Persistence
             //services.AddScoped<IGeoCodingService, GeocodingService>();
 
             //Panic
-            services.AddTransient<ITrustedPersonRepositoryAsync, TrustedPersonRepositoryAsync>();
+            services.AddTransient<ICircleRepositoryAsync, CircleRepositoryAsync>();
 
             #endregion
 

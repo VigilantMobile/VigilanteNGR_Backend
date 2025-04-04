@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Application.Features.Location;
 using Application.Features.Products.Commands;
@@ -87,6 +88,18 @@ namespace VGWebAPI.Controllers.v1
             return Ok(response);
         }
 
+        [HttpPost("circle/toggle-emergency-contact")]
+        public async Task<IActionResult> ToggleEmergencyContact([FromBody] ToggleEmergencyContactCommand command)
+        {
+            return Ok(await Mediator.Send(command));
+        }
+
+        [HttpGet("circle/emergency-contacts")]
+        public async Task<IActionResult> GetEmergencyContacts([FromQuery] string userId)
+        {
+            var query = new GetEmergencyContactsQuery { userId = userId ?? User.FindFirst(ClaimTypes.NameIdentifier)?.Value };
+            return Ok(await Mediator.Send(query));
+        }
 
         // New endpoint for updating customer profile
         [HttpPost("update-profile")]

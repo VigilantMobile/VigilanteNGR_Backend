@@ -2,7 +2,7 @@
 
 namespace Application.Features.Products.Queries.GetAllProducts
 {
-    public class GetAllProductsParameter : RequestParameter
+    public class GetAllProductsParameter : PaginationRequestParameter
     {
 
     }

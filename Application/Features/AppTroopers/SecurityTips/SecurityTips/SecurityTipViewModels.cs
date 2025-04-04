@@ -53,19 +53,63 @@ namespace Application.Features.AppTroopers.SecurityTips
     {
         public string Id { get; set; }
         public string Subject { get; set; }
-        public string Body { get; set; }
-        public string TipStatus { get; set; }
+        public string Description { get; set; }
+        public string Coordinates { get; set; }
+        public string SecurityTipStatus { get; set; }
+        public DateTime Created { get; set; }
+        public string UpvoteCount { get; set; }
+        public string DownvoteCount { get; set; }
+        public string ViewCount { get; set; }
         public string BroadcasterName { get; set; }
-        public string SecurityTipCategory { get; set; }
+        public AlertCategoryType AlertCategoryType { get; set; }
+        public AlertCategory SecurityTipCategory { get; set; }
+        public AlertLocation AlertLocation { get; set; }
         public string AlertLevel { get; set; }
-        public string BroadcastLevel { get; set; }
         public bool IsBroadcasted { get; set; }
-        public string BroadcastLevelId { get; set; }
-        public string BroadcastLocationId { get; set; }
-        public string BroadcastLocation { get; set; }
         //Broadcaster
-        public string BroadcasterTownId { get; set; }
-        public string BroadcasterFullLocation { get; set; }
+        public Broadcaster Broadcaster { get; set; }
+        public List<CommentViewModel> Comments { get; set; }
+
+    }
+
+    public class CommentViewModel
+    {
+        public string Id { get; set; }
+        public string Comment { get; set; }
+        public string CommenterId { get; set; }
+        public string CommenterName { get; set; }
+        public string CommenterProfileUrl { get; set; }
+        public DateTime Created { get; set; }
+        public int UpvoteCount { get; set; }
+        public int DownvoteCount { get; set; }
+    }
+
+    public class AlertLocation
+    {
+        public string City { get; set; }
+        public string StateOrProvince { get; set; }
+        public string Country { get; set; }
+    }
+
+    public class AlertCategoryType
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class AlertCategory
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
+    public class Broadcaster
+    {
+        public string Id { get; set; }
+        public string FullName { get; set; }
+        public string ProfilePhotoUrl { get; set; }
     }
 
     public class BroadcasterandTipLocations

@@ -20,7 +20,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Queries
             }
             public async Task<Response<GetSecurityTipResponse>> Handle(GetSecurityTipByIdQuery query, CancellationToken cancellationToken)
             {
-                var securityTip = await _securityTipService.GetSecurityTip(query.Id);
+                var securityTip = await _securityTipService.GetSecurityTipByIdAsync(query.Id);
                 if (securityTip == null) throw new ApiException($"Security tip not found.");
 
                 return new Response<GetSecurityTipResponse>(securityTip, $"Security tip retrieval successful");

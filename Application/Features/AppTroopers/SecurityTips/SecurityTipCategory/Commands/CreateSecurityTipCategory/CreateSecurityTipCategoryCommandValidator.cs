@@ -24,7 +24,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands.CreateSecurityT
 
         private async Task<bool> IsUniqueCategoryName(string CategoryName, CancellationToken cancellationToken)
         {
-            return await securityTipCategoryRepository.IsUniqueCategoryName(CategoryName);
+            return await securityTipCategoryRepository.IsUniqueCategoryNameAsync(CategoryName);
         }
     }
 }

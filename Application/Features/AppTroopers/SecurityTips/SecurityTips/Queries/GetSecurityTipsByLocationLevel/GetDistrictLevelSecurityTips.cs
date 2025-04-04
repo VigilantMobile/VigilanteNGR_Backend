@@ -34,7 +34,7 @@ namespace Application.Features.AppTroopers.SecurityTips.Commands
                 var validFilter = _mapper.Map<GetSecurityTipsListQueryParameter>(query);
                 var SecurityTipsForDistrict = await _securityTipService.GetSecurityTipsForTown(query.DistrictId, validFilter.PageNumber, validFilter.PageSize);
                 if (SecurityTipsForDistrict == null) throw new ApiException($"No security tips found for the specified district.");
-                return new Response<GetSecurityTipsListResponse>(SecurityTipsForDistrict, $"Security tip retrieval for {SecurityTipsForDistrict.SecurityTipsList.First().BroadcasterFullLocation} district successful");
+                return new Response<GetSecurityTipsListResponse>(SecurityTipsForDistrict, $"Security tip retrieval for {SecurityTipsForDistrict.SecurityTipsList.First().AlertLocation.City},{SecurityTipsForDistrict.SecurityTipsList.First().AlertLocation.Country} district successful");
             }
         }
     }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Application.Features.Location
 {
-    public class GetLGAsinStateParameter : RequestParameter
+    public class GetLGAsinStateParameter : PaginationRequestParameter
     {
     }
 }

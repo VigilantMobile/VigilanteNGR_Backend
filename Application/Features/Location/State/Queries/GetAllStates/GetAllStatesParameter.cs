@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Location.State
 {
-    public class GetAllStatesParameter : RequestParameter
+    public class GetAllStatesParameter : PaginationRequestParameter
     {
     }
 }

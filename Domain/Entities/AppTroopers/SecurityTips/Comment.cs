@@ -28,7 +28,11 @@ namespace Domain.Entities.AppTroopers.SecurityTips
         public string CommenterId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
 
-        public virtual ICollection<CommentFlags> CommentFlags { get; set; }
-    }
+        // Vote counts
+        public int UpvoteCount { get; set; }
+        public int DownvoteCount { get; set; }
 
+        public CommentVoteEnum CommentVote { get; set; }
+        //public virtual ICollection<CommentFlags> CommentFlags { get; set; }
+    }
 }

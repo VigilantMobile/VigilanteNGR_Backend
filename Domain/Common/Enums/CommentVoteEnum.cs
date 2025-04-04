@@ -8,7 +8,8 @@ namespace Domain.Common.Enums
 {
     public  enum CommentVoteEnum
     {
+        None,
         Upvote,
-        DownVote
+        Downvote
     }
 }
